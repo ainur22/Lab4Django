@@ -1,0 +1,610 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Викторина</title>
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+</head>
+<body class="quiz-modern-page">
+
+  <header class="main-header">
+    <div class="top-mini-bar">
+      <div class="top-mini-right">
+        <button class="lang-switch" type="button">🌐 Қазақша</button>
+      </div>
+    </div>
+
+    <div class="main-nav-wrap">
+      <div class="main-brand">
+        <div class="main-brand-logo">E</div>
+        <div>
+          <div class="main-brand-title">EduMentor AI</div>
+          <div class="main-brand-sub">Викторина</div>
+        </div>
+      </div>
+
+      <nav class="main-site-nav">
+        <a href="/">Басты бет</a>
+        <a href="/guide/">Нұсқаулық</a>
+        <a href="/contact/">Байланыс</a>
+        <a href="/profile/">Профиль</a>
+        <a href="/progress/">Прогресс</a>
+        <a href="/quiz/" class="active">Quiz</a>
+      </nav>
+
+      <div class="main-nav-actions">
+        <a href="/" class="main-login-btn ghost">Басты бет</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="quiz-modern-shell">
+
+      <div class="quiz-main-col">
+        <div class="quiz-hero-card">
+          <div class="quiz-hero-top">
+            <div>
+              <div class="quiz-badge">ҰБТ Mini-тест</div>
+              <h1 id="subjectTitle">Информатика</h1>
+              <p id="subjectDesc">Қысқа форматтағы тест. Әр сұраққа жауап беріп, соңында нәтижені көр.</p>
+            </div>
+
+            <div class="quiz-stat-chip">
+              <span id="quizCurrentNum">1</span> / <span id="quizTotalNum">5</span>
+            </div>
+          </div>
+
+          <div class="quiz-progress">
+            <span id="quizProgressBar" style="width:20%"></span>
+          </div>
+        </div>
+
+        <div class="quiz-card">
+          <form id="quizForm" class="quiz-modern-form">
+            <div id="quizStepsContainer"></div>
+
+            <div class="quiz-actions-row">
+              <button type="button" class="quiz-btn secondary" id="btnPrev">Артқа</button>
+              <button type="button" class="quiz-btn primary" id="btnNext">Келесі</button>
+              <button type="submit" class="quiz-btn success" id="btnFinish" hidden>Аяқтау</button>
+            </div>
+
+            <div class="quiz-result-card" id="quizResult" hidden>
+              <div class="quiz-result-top">
+                <div class="quiz-result-badge">Нәтиже</div>
+                <h3 id="quizResultTitle">Тест аяқталды</h3>
+              </div>
+
+              <div class="quiz-score-circle">
+                <span id="quizScoreText">0 / 5</span>
+              </div>
+
+              <div class="quiz-result-summary" id="quizResultSummary"></div>
+
+              <div class="quiz-review-list" id="quizReviewList"></div>
+
+              <div class="quiz-result-actions">
+                <button type="button" class="quiz-btn primary" id="btnRestart">Қайта бастау</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <aside class="quiz-side-col">
+        <div class="quiz-side-card">
+          <div class="quiz-side-title">Пәндер</div>
+
+          <div class="quiz-subject-list">
+            <a href="/quiz/?subject=informatika" class="quiz-subject-pill" data-subject="informatika">Информатика</a>
+            <a href="/quiz/?subject=math" class="quiz-subject-pill" data-subject="math">Математикалық сауаттылық</a>
+            <a href="/quiz/?subject=reading" class="quiz-subject-pill" data-subject="reading">Оқу сауаттылығы</a>
+            <a href="/quiz/?subject=history" class="quiz-subject-pill" data-subject="history">Қазақстан тарихы</a>
+            <a href="/quiz/?subject=biology" class="quiz-subject-pill" data-subject="biology">Биология</a>
+            <a href="/quiz/?subject=chemistry" class="quiz-subject-pill" data-subject="chemistry">Химия</a>
+            <a href="/quiz/?subject=physics" class="quiz-subject-pill" data-subject="physics">Физика</a>
+            <a href="/quiz/?subject=geography" class="quiz-subject-pill" data-subject="geography">География</a>
+            <a href="/quiz/?subject=kazakh" class="quiz-subject-pill" data-subject="kazakh">Қазақ тілі</a>
+          </div>
+        </div>
+
+        <div class="quiz-side-card">
+          <div class="quiz-side-title">Нұсқаулық</div>
+          <div class="quiz-side-text">
+            Барлық сұраққа жауап бер. Соңында жүйе дұрыс және қате жауаптарды көрсетеді.
+          </div>
+        </div>
+      </aside>
+
+    </section>
+  </main>
+
+  <a href="/ai-chat/" class="ai-chat-btn" title="AI Chat">
+    <span>AI чат</span>
+  </a>
+
+  <script>
+    (function () {
+      const quizData = {
+        informatika: {
+          title: "Информатика",
+          description: "Информатика пәні бойынша қысқа тест.",
+          questions: [
+            {
+              question: "Компьютердің ең негізгі құрылғысы қайсысы?",
+              options: ["Монитор", "Процессор", "Пернетақта", "Принтер"],
+              answer: "B"
+            },
+            {
+              question: "Ақпаратты енгізу құрылғысын таңда.",
+              options: ["Тінтуір", "Баған", "Монитор", "Проектор"],
+              answer: "A"
+            },
+            {
+              question: "1 байт неше биттен тұрады?",
+              options: ["2 бит", "4 бит", "8 бит", "16 бит"],
+              answer: "C"
+            },
+            {
+              question: "MS Word қандай бағдарламалар тобына жатады?",
+              options: ["Мәтіндік редактор", "Графикалық редактор", "Операциялық жүйе", "Браузер"],
+              answer: "A"
+            },
+            {
+              question: "Интернеттегі сайт адресі қалай аталады?",
+              options: ["Формула", "URL", "Код", "Архив"],
+              answer: "B"
+            }
+          ]
+        },
+
+        math: {
+          title: "Математикалық сауаттылық",
+          description: "Математикалық сауаттылық бойынша қысқа тест.",
+          questions: [
+            {
+              question: "25 + 17 мәнін тап.",
+              options: ["40", "41", "42", "43"],
+              answer: "C"
+            },
+            {
+              question: "12 · 3 неге тең?",
+              options: ["36", "24", "30", "48"],
+              answer: "A"
+            },
+            {
+              question: "Егер x = 5 болса, x² нешеге тең?",
+              options: ["10", "15", "20", "25"],
+              answer: "D"
+            },
+            {
+              question: "Шеңбердің 1/2 бөлігі қалай аталады?",
+              options: ["Квадрат", "Диаметр", "Жарты шеңбер", "Үшбұрыш"],
+              answer: "C"
+            },
+            {
+              question: "60 санының 10%-ы қанша?",
+              options: ["5", "6", "7", "8"],
+              answer: "B"
+            }
+          ]
+        },
+
+        reading: {
+          title: "Оқу сауаттылығы",
+          description: "Оқу сауаттылығы бойынша қысқа тест.",
+          questions: [
+            {
+              question: "Мәтіннің негізгі ойын табу нені білдіреді?",
+              options: ["Әр сөзді жаттау", "Автордың басты ойын түсіну", "Тек тақырыпты оқу", "Суретке қарау"],
+              answer: "B"
+            },
+            {
+              question: "Мәтіндегі деректі ақпарат дегеніміз не?",
+              options: ["Дәлелсіз пікір", "Қиялдан туған ой", "Нақты мәлімет", "Мақал-мәтел"],
+              answer: "C"
+            },
+            {
+              question: "Антоним сөздерді таңда.",
+              options: ["Үлкен – зор", "Ақ – қара", "Сұлу – әдемі", "Жылдам – тез"],
+              answer: "B"
+            },
+            {
+              question: "Мәтіннің тақырыбы нені білдіреді?",
+              options: ["Мәтінде не туралы айтылғанын", "Сөйлем санын", "Автордың жасын", "Қаріп түрін"],
+              answer: "A"
+            },
+            {
+              question: "Жоспар құрудың мақсаты қандай?",
+              options: ["Мәтінді қысқарту", "Мазмұнын жүйелеу", "Сөз санын көбейту", "Сөйлемдерді өзгерту"],
+              answer: "B"
+            }
+          ]
+        },
+
+        history: {
+          title: "Қазақстан тарихы",
+          description: "Қазақстан тарихы бойынша қысқа тест.",
+          questions: [
+            {
+              question: "Қазақ хандығы қай ғасырда құрылды?",
+              options: ["XIII ғасыр", "XIV ғасыр", "XV ғасыр", "XVI ғасыр"],
+              answer: "C"
+            },
+            {
+              question: "Қазақ хандығын құрған хандар кімдер?",
+              options: ["Тәуке мен Абылай", "Керей мен Жәнібек", "Есім мен Қасым", "Абылай мен Кенесары"],
+              answer: "B"
+            },
+            {
+              question: "Қазақстан тәуелсіздігін қашан алды?",
+              options: ["1990", "1991", "1992", "1993"],
+              answer: "B"
+            },
+            {
+              question: "Алтын Орда қай мемлекеттен бөлініп шықты?",
+              options: ["Түрік қағанаты", "Моңғол империясы", "Қарахан мемлекеті", "Ноғай Ордасы"],
+              answer: "B"
+            },
+            {
+              question: "Қасым ханның қасқа жолы нені білдіреді?",
+              options: ["Заңдар жинағы", "Салық түрі", "Әскери жорық", "Жер атауы"],
+              answer: "A"
+            }
+          ]
+        },
+
+        biology: {
+          title: "Биология",
+          description: "Биология пәні бойынша қысқа тест.",
+          questions: [
+            {
+              question: "Жасушаның негізгі бөлігі қайсысы?",
+              options: ["Ядро", "Бұлшықет", "Сүйек", "Қан"],
+              answer: "A"
+            },
+            {
+              question: "Фотосинтез қайда жүреді?",
+              options: ["Тамырда", "Жапырақта", "Гүлде", "Тұқымда"],
+              answer: "B"
+            },
+            {
+              question: "Адамда қанша жүрек бар?",
+              options: ["1", "2", "3", "4"],
+              answer: "A"
+            },
+            {
+              question: "Тыныс алу мүшесін белгіле.",
+              options: ["Бауыр", "Өкпе", "Асқазан", "Бүйрек"],
+              answer: "B"
+            },
+            {
+              question: "ДНҚ нені сақтайды?",
+              options: ["Энергияны", "Генетикалық ақпаратты", "Суды", "Минералды"],
+              answer: "B"
+            }
+          ]
+        },
+
+        chemistry: {
+          title: "Химия",
+          description: "Химия пәні бойынша қысқа тест.",
+          questions: [
+            {
+              question: "H2O қандай зат?",
+              options: ["Оттек", "Сутек", "Су", "Тұз"],
+              answer: "C"
+            },
+            {
+              question: "Химиялық элементтердің кестесі қалай аталады?",
+              options: ["Менделеев кестесі", "Көбейту кестесі", "Тарих картасы", "Физика заңы"],
+              answer: "A"
+            },
+            {
+              question: "NaCl қандай зат?",
+              options: ["Қант", "Ас тұзы", "Су", "Көмірқышқыл газы"],
+              answer: "B"
+            },
+            {
+              question: "Оттектің химиялық таңбасы:",
+              options: ["O", "H", "N", "C"],
+              answer: "A"
+            },
+            {
+              question: "Қышқылдың дәмі қандай болады?",
+              options: ["Ащы", "Қышқыл", "Тәтті", "Тұзды"],
+              answer: "B"
+            }
+          ]
+        },
+
+        physics: {
+          title: "Физика",
+          description: "Физика пәні бойынша қысқа тест.",
+          questions: [
+            {
+              question: "Күштің өлшем бірлігі қандай?",
+              options: ["Вт", "Ньютон", "Паскаль", "Метр"],
+              answer: "B"
+            },
+            {
+              question: "Жылдамдықтың формуласы:",
+              options: ["v = s / t", "v = m / t", "v = F / s", "v = p / t"],
+              answer: "A"
+            },
+            {
+              question: "Жерге денелердің құлау себебі:",
+              options: ["Үйкеліс", "Қысым", "Ауырлық күші", "Жылу"],
+              answer: "C"
+            },
+            {
+              question: "Температураны өлшейтін құрал:",
+              options: ["Сызғыш", "Термометр", "Таразы", "Секундомер"],
+              answer: "B"
+            },
+            {
+              question: "Электр тогының өлшем бірлігі:",
+              options: ["Ампер", "Метр", "Литр", "Кельвин"],
+              answer: "A"
+            }
+          ]
+        },
+
+        geography: {
+          title: "География",
+          description: "География пәні бойынша қысқа тест.",
+          questions: [
+            {
+              question: "Қазақстанның астанасы қай қала?",
+              options: ["Алматы", "Шымкент", "Астана", "Тараз"],
+              answer: "C"
+            },
+            {
+              question: "Ең үлкен мұхит:",
+              options: ["Атлант", "Үнді", "Солтүстік Мұзды", "Тынық"],
+              answer: "D"
+            },
+            {
+              question: "Картадағы көк түс нені білдіреді?",
+              options: ["Тауларды", "Өзен-көлдерді", "Ормандарды", "Жолдарды"],
+              answer: "B"
+            },
+            {
+              question: "Экватор дегеніміз не?",
+              options: ["Ең ұзын өзен", "Жерді екіге бөлетін сызық", "Таудың түрі", "Климат атауы"],
+              answer: "B"
+            },
+            {
+              question: "Қазақстан қай материкте орналасқан?",
+              options: ["Африка", "Еуразия", "Аустралия", "Оңтүстік Америка"],
+              answer: "B"
+            }
+          ]
+        },
+
+        kazakh: {
+          title: "Қазақ тілі",
+          description: "Қазақ тілі пәні бойынша қысқа тест.",
+          questions: [
+            {
+              question: "Зат есімді таңда.",
+              options: ["Жүгіру", "Әдемі", "Кітап", "Бес"],
+              answer: "C"
+            },
+            {
+              question: "Етістікті белгіле.",
+              options: ["Мектеп", "Оқу", "Жасыл", "Биік"],
+              answer: "B"
+            },
+            {
+              question: "Көптік жалғауын көрсет.",
+              options: ["-лар, -лер", "-ның, -нің", "-ға, -ге", "-мен"],
+              answer: "A"
+            },
+            {
+              question: "Сын есім нені білдіреді?",
+              options: ["Қимылды", "Заттың санын", "Заттың сынын", "Мезгілді"],
+              answer: "C"
+            },
+            {
+              question: "Бастауыш пен баяндауыштан тұратын сөйлем түрі:",
+              options: ["Жалаң сөйлем", "Құрмалас сөйлем", "Лепті сөйлем", "Сұраулы сөйлем"],
+              answer: "A"
+            }
+          ]
+        }
+      };
+
+      const params = new URLSearchParams(window.location.search);
+      const currentSubjectKey = params.get("subject") || "informatika";
+      const currentSubject = quizData[currentSubjectKey] || quizData.informatika;
+
+      const subjectTitle = document.getElementById("subjectTitle");
+      const subjectDesc = document.getElementById("subjectDesc");
+      const quizStepsContainer = document.getElementById("quizStepsContainer");
+
+      const form = document.getElementById("quizForm");
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+      const btnFinish = document.getElementById("btnFinish");
+      const btnRestart = document.getElementById("btnRestart");
+      const currentNum = document.getElementById("quizCurrentNum");
+      const totalNum = document.getElementById("quizTotalNum");
+      const progressBar = document.getElementById("quizProgressBar");
+      const resultCard = document.getElementById("quizResult");
+      const resultTitle = document.getElementById("quizResultTitle");
+      const scoreText = document.getElementById("quizScoreText");
+      const resultSummary = document.getElementById("quizResultSummary");
+      const reviewList = document.getElementById("quizReviewList");
+
+      let currentStep = 1;
+      const questions = currentSubject.questions;
+      const totalQuestions = questions.length;
+
+      subjectTitle.textContent = currentSubject.title;
+      subjectDesc.textContent = currentSubject.description;
+      totalNum.textContent = totalQuestions;
+
+      document.querySelectorAll(".quiz-subject-pill").forEach((pill) => {
+        if (pill.dataset.subject === currentSubjectKey) {
+          pill.classList.add("active");
+        } else {
+          pill.classList.remove("active");
+        }
+      });
+
+      function renderQuestions() {
+        let html = "";
+
+        questions.forEach((q, index) => {
+          const step = index + 1;
+          const letters = ["A", "B", "C", "D"];
+
+          html += `
+            <div class="quiz-question-step ${step === 1 ? 'active' : ''}" data-step="${step}" id="step${step}">
+              <div class="quiz-question-head">
+                <div class="quiz-question-label">Сұрақ ${step}</div>
+                <div class="quiz-question-points">1 балл</div>
+              </div>
+
+              <h2 class="quiz-question-title">${q.question}</h2>
+
+              <div class="quiz-options">
+                ${q.options.map((option, i) => `
+                  <label class="quiz-option">
+                    <input type="radio" name="q${step}" value="${letters[i]}">
+                    <span>${letters[i]}) ${option}</span>
+                  </label>
+                `).join("")}
+              </div>
+            </div>
+          `;
+        });
+
+        quizStepsContainer.innerHTML = html;
+      }
+
+      function showStep(step) {
+        const steps = document.querySelectorAll(".quiz-question-step");
+        steps.forEach((item) => item.classList.remove("active"));
+
+        const activeStep = document.getElementById("step" + step);
+        if (activeStep) activeStep.classList.add("active");
+
+        currentStep = step;
+        currentNum.textContent = step;
+
+        const percent = (step / totalQuestions) * 100;
+        progressBar.style.width = percent + "%";
+
+        btnPrev.disabled = step === 1;
+        btnNext.hidden = step === totalQuestions;
+        btnFinish.hidden = step !== totalQuestions;
+      }
+
+      function clearStates() {
+        document.querySelectorAll(".quiz-option").forEach((opt) => {
+          opt.classList.remove("correct", "wrong");
+        });
+      }
+
+      function getCheckedValue(name) {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        return checked ? checked.value : null;
+      }
+
+      function markAnswers() {
+        clearStates();
+
+        questions.forEach((q, index) => {
+          const key = "q" + (index + 1);
+          const selected = form.querySelector(`input[name="${key}"]:checked`);
+          const correct = form.querySelector(`input[name="${key}"][value="${q.answer}"]`);
+
+          if (selected) {
+            const option = selected.closest(".quiz-option");
+            if (selected.value === q.answer) {
+              option.classList.add("correct");
+            } else {
+              option.classList.add("wrong");
+            }
+          }
+
+          if (correct) {
+            correct.closest(".quiz-option").classList.add("correct");
+          }
+        });
+      }
+
+      function buildResult() {
+        let score = 0;
+        let reviewHtml = "";
+
+        questions.forEach((q, index) => {
+          const key = "q" + (index + 1);
+          const selectedValue = getCheckedValue(key);
+          const isCorrect = selectedValue === q.answer;
+
+          if (isCorrect) score++;
+
+          reviewHtml += `
+            <div class="quiz-review-item ${isCorrect ? 'good' : 'bad'}">
+              <div class="quiz-review-question">Сұрақ ${index + 1}</div>
+              <div class="quiz-review-answer">
+                ${isCorrect ? 'Дұрыс жауап берілді' : 'Қате жауап'}
+              </div>
+            </div>
+          `;
+        });
+
+        scoreText.textContent = `${score} / ${totalQuestions}`;
+
+        resultTitle.textContent =
+          score === totalQuestions
+            ? "Тамаша нәтиже!"
+            : score >= Math.ceil(totalQuestions * 0.6)
+              ? "Жақсы нәтиже!"
+              : "Қайта дайындалып көр";
+
+        const percent = Math.round((score / totalQuestions) * 100);
+        resultSummary.innerHTML = `Жалпы нәтиже: <strong>${percent}%</strong>`;
+        reviewList.innerHTML = reviewHtml;
+
+        resultCard.hidden = false;
+        resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+
+      btnNext.addEventListener("click", function () {
+        if (currentStep < totalQuestions) {
+          showStep(currentStep + 1);
+        }
+      });
+
+      btnPrev.addEventListener("click", function () {
+        if (currentStep > 1) {
+          showStep(currentStep - 1);
+        }
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        markAnswers();
+        buildResult();
+      });
+
+      btnRestart.addEventListener("click", function () {
+        form.reset();
+        clearStates();
+        resultCard.hidden = true;
+        showStep(1);
+      });
+
+      renderQuestions();
+      showStep(1);
+    })();
+  </script>
+</body>
+</html>

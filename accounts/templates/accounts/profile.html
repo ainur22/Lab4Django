@@ -1,0 +1,162 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Профиль</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+</head>
+<body class="profile-modern-page">
+
+  <header class="main-header">
+    <div class="top-mini-bar">
+      <div class="top-mini-right">
+        <button class="lang-switch" type="button">🌐 Қазақша</button>
+      </div>
+    </div>
+
+    <div class="main-nav-wrap">
+      <div class="main-brand">
+        <div class="main-brand-logo">EМ</div>
+        <div>
+          <div class="main-brand-title">EduMentor AI</div>
+          <div class="main-brand-sub">Профиль</div>
+        </div>
+      </div>
+
+      <nav class="main-site-nav">
+        <a href="/">Басты бет</a>
+        <a href="{% url 'guide' %}">Нұсқаулық</a>
+        <a href="{% url 'contact' %}">Байланыс</a>
+        <a href="{% url 'profile' %}" class="active">Профиль</a>
+        <a href="{% url 'progress' %}">Прогресс</a>
+        <a href="{% url 'quiz' %}">Quiz</a>
+      </nav>
+
+      <div class="main-nav-actions">
+        <a href="/" class="main-login-btn ghost">Басты бет</a>
+        <a href="{% url 'logout' %}" class="main-login-btn">Шығу</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="profile-modern-shell">
+
+      <div class="profile-modern-top">
+        <div class="profile-modern-avatar-wrap">
+          {% if user.profile_image %}
+            <img src="{{ user.profile_image.url }}" alt="Профиль суреті" class="profile-modern-avatar">
+          {% else %}
+            <img src="{% static 'accounts/default-avatar.png.jpg' %}" alt="Профиль суреті" class="profile-modern-avatar">
+          {% endif %}
+        </div>
+
+        <h1>Менің профилім</h1>
+
+        <div class="profile-modern-user">
+          <div><strong>Пайдаланушы:</strong> {{ user.username }}</div>
+          <div><strong>Email:</strong> {{ user.email }}</div>
+        </div>
+
+        <div class="profile-modern-stats">
+          <div class="profile-stat-card">
+            <div class="profile-stat-num">24</div>
+            <div class="profile-stat-label">Өткен тақырып</div>
+          </div>
+
+          <div class="profile-stat-card">
+            <div class="profile-stat-num">71%</div>
+            <div class="profile-stat-label">Дәлдік</div>
+          </div>
+
+          <div class="profile-stat-card">
+            <div class="profile-stat-num">7</div>
+            <div class="profile-stat-label">Streak</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="profile-modern-form-card">
+        <div class="profile-form-head">
+          <h2>Профильді жаңарту</h2>
+          <p>Суретіңізді және био бөлімін өзгерте аласыз.</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="profile-modern-form">
+          {% csrf_token %}
+
+         <div class="profile-modern-form-card">
+  <div class="profile-form-head">
+    <h2>Профильді жаңарту</h2>
+    <p>Суретіңізді және био бөлімін өзгерте аласыз.</p>
+  </div>
+
+  <form method="POST" enctype="multipart/form-data" class="profile-modern-form">
+    {% csrf_token %}
+
+    
+
+     <div class="profile-upload-card">
+  <div class="profile-upload-preview">
+    {% if user.profile_image %}
+      <img src="{{ user.profile_image.url }}" alt="Қазіргі профиль суреті" id="profilePreview">
+    {% else %}
+      <img src="{% static 'accounts/default-avatar.png.jpg' %}" alt="Профиль суреті" id="profilePreview">
+    {% endif %}
+  </div>
+
+  <div class="profile-upload-info">
+    <div class="profile-upload-title">Профиль суреті</div>
+    <div class="profile-upload-sub">
+      JPG, PNG форматындағы суретті жүктей аласыз.
+    </div>
+
+    <label for="{{ form.profile_image.id_for_label }}" class="profile-upload-btn">
+      Жаңа фото таңдау
+    </label>
+
+    <div class="profile-file-name" id="profileFileName">Файл таңдалмаған</div>
+
+    <div class="profile-hidden-input">
+      <input
+        type="file"
+        name="{{ form.profile_image.html_name }}"
+        id="{{ form.profile_image.id_for_label }}"
+        accept="image/*"
+      >
+    </div>
+  </div>
+</div>
+    </div>
+
+    <div class="field profile-bio-field">
+      <label for="{{ form.bio.id_for_label }}">Өзіңіз туралы</label>
+      {{ form.bio }}
+    </div>
+
+    <div class="profile-form-actions">
+      <button class="btn primary profile-save-btn" type="submit">Сақтау</button>
+    </div>
+  </form>
+</div>
+        </form>
+      </div>
+
+    </section>
+  </div>
+
+  <a href="{% url 'ai_chat' %}" class="ai-chat-btn" title="AI Chat">
+    <span>AI чат</span>
+  </a>
+
+</body>
+</html>

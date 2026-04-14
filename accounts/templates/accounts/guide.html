@@ -1,0 +1,257 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Нұсқаулық</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+</head>
+<body class="guide-page">
+
+  <div class="wrap">
+    <!-- TOP -->
+    <div class="guide-topbar">
+      <a href="/" class="guide-brand">
+        <div class="guide-brand-logo">E</div>
+        <div>
+          <div class="guide-brand-title">EduMentor AI</div>
+          <div class="guide-brand-sub">Нұсқаулық және кітаптар</div>
+        </div>
+      </a>
+
+      <nav class="guide-nav">
+        <a href="/">Басты бет</a>
+        <a href="/guide/" class="active">Нұсқаулық</a>
+        <a href="/contact/">Байланыс</a>
+        <a href="/progress/">Прогресс</a>
+        <a href="/profile/">Профиль</a>
+      </nav>
+
+      <div class="guide-top-actions">
+        <a href="/login/" class="guide-link-btn">Кіру</a>
+        <a href="/register/" class="guide-main-btn">Тіркелу</a>
+      </div>
+    </div>
+
+    <!-- TITLE -->
+    <section class="guide-head-block">
+      <div>
+        <div class="guide-mini-badge">Оқу материалдары</div>
+        <h1>Нұсқаулық және пайдалы <span>кітаптар</span></h1>
+        <p>
+          Бұл бетте дайындыққа арналған кітаптар, оқу материалдары және
+          сатып алу сілтемелері орналасады.
+        </p>
+      </div>
+    </section>
+
+    <!-- CAROUSEL -->
+    <section class="guide-carousel-section">
+      <div class="guide-carousel" id="guideCarousel">
+        <div class="guide-slides">
+          <!-- 1 -->
+        <div class="guide-slide active">
+  <div class="guide-slide-content">
+    <div class="guide-slide-text">
+      <div class="guide-slide-badge">Кітап дүкені</div>
+      <h2>ҰБТ байқау сынақтарының топтамасы шықты</h2>
+      <p>
+        Нақты форматтағы байқау тесттері, дұрыс жауаптар және жан-жақты
+        талдау арқылы дайындық деңгейіңді көтере аласың.
+      </p>
+      <div class="guide-slide-actions">
+        <a href="#books" class="guide-buy-btn">Сатып алу</a>
+      </div>
+    </div>
+
+    <div class="guide-slide-image">
+      <img src="{% static 'accounts/guide-slide-3.jpg' %}" alt="Кітаптар баннері">
+    </div>
+  </div>
+</div>
+
+          <!-- 2 -->
+          <div class="guide-slide">
+  <div class="guide-slide-content">
+    <div class="guide-slide-text">
+      <div class="guide-slide-badge">Жинақ</div>
+      <h2>10–11 сынып оқушыларына керемет ұсыныс</h2>
+      <p>
+        EduBox ішінде пән кітаптары, видеосабақтар және тақырыптық тесттер
+        жинақталған ыңғайлы форматта ұсынылады.
+      </p>
+      <div class="guide-slide-actions">
+        <a href="#books" class="guide-buy-btn">Сатып алу</a>
+      </div>
+    </div>
+
+    <div class="guide-slide-image">
+      <img src="{% static 'accounts/guide-slide-2.jpg' %}" alt="EduBox">
+    </div>
+  </div>
+</div>
+
+          <!-- 3 -->
+          <div class="guide-slide">
+  <div class="guide-slide-content">
+    <div class="guide-slide-text">
+      <div class="guide-slide-badge">Байқау тесті</div>
+      <h2>EDUCON кітаптары мен оқу материалдары</h2>
+      <p>
+        ҰБТ-ға және мектеп бағдарламасына арналған пайдалы кітаптар мен
+        оқу құралдарын осы бөлімнен көре аласыз.
+      </p>
+      <div class="guide-slide-actions">
+        <a href="#books" class="guide-buy-btn">Сатып алу</a>
+      </div>
+    </div>
+
+    <div class="guide-slide-image">
+      <img src="{% static 'accounts/guide-slide-1.jpg' %}" alt="Байқау тесті">
+    </div>
+  </div>
+</div>
+          
+
+        <button class="guide-arrow prev" id="guidePrev" type="button">‹</button>
+        <button class="guide-arrow next" id="guideNext" type="button">›</button>
+
+        <div class="guide-dots" id="guideDots">
+          <button class="active" type="button" data-slide="0"></button>
+          <button type="button" data-slide="1"></button>
+          <button type="button" data-slide="2"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BOOKS -->
+    <section class="guide-books-section" id="books">
+     <div class="guide-books-grid">
+
+  <article class="guide-book-card">
+    <div class="guide-book-image">
+      <img src="{% static 'accounts/biologiya-kitap.jpg' %}" alt="Биология">
+    </div>
+    <div class="guide-book-body">
+      <h3>Биология</h3>
+      <p>ҰБТ-ға дайындыққа арналған биология кітабы. Теориялық материалдар, тақырыптық тапсырмалар және қайталауға ыңғайлы құрылым берілген.</p>
+      <p><strong>Бағасы: 6900 ₸</strong> Kaspi сілтемесінде қарау</p>
+      <a href="https://l.kaspi.kz/shop/FWWC5nsQ65HPct4" target="_blank" class="guide-buy-link">
+        Сатып алу
+      </a>
+    </div>
+  </article>
+
+  <article class="guide-book-card">
+    <div class="guide-book-image">
+      <img src="{% static 'accounts/matematika-kitap.jpg' %}" alt="Математика">
+    </div>
+    <div class="guide-book-body">
+      <h3>Математика</h3>
+      <p>ЕНТ/ҰБТ форматына бейімделген математика жинағы. Формулалар, есеп шығару тәсілдері және практикаға арналған тапсырмалар топтастырылған.</p>
+      <p><strong>Бағасы:16900 ₸</strong> Kaspi сілтемесінде қарау</p>
+      <a href="https://l.kaspi.kz/shop/CrQXaCsNjEqPbs6" target="_blank" class="guide-buy-link">
+        Сатып алу
+      </a>
+    </div>
+  </article>
+
+  <article class="guide-book-card">
+    <div class="guide-book-image">
+      <img src="{% static 'accounts/fizika-kitap.jpg' %}" alt="Физика">
+    </div>
+    <div class="guide-book-body">
+      <h3>Физика</h3>
+      <p>Физика пәні бойынша дайындыққа арналған кітаптар жинағы. Формулалар, есептер және тақырыптық түсіндірмелер арқылы емтиханға жүйелі дайындалуға көмектеседі.</p>
+      <p><strong>Бағасы:20200 ₸</strong> Kaspi сілтемесінде қарау</p>
+      <a href="https://l.kaspi.kz/shop/3HYhKsCJRSwrCJf" target="_blank" class="guide-buy-link">
+        Сатып алу
+      </a>
+    </div>
+  </article>
+
+  <article class="guide-book-card">
+    <div class="guide-book-image">
+      <img src="{% static 'accounts/khimiya-kitap.jpg' %}" alt="Химия">
+    </div>
+    <div class="guide-book-body">
+      <h3>Химия</h3>
+      <p>Химиядан ҰБТ-ға арналған оқу құралы. Теория, реакциялар, формулалар және есептерді кезең-кезеңімен меңгеруге қолайлы материалдар жинақталған.</p>
+      <p><strong>Бағасы: 7990 ₸</strong> Kaspi сілтемесінде қарау</p>
+      <a href="https://l.kaspi.kz/shop/H52cq5t9KQgthY7" target="_blank" class="guide-buy-link">
+        Сатып алу
+      </a>
+    </div>
+  </article>
+
+  <article class="guide-book-card">
+    <div class="guide-book-image">
+      <img src="{% static 'accounts/kazakh-tarikh.jpg' %}" alt="Қазақстан тарихы">
+    </div>
+    <div class="guide-book-body">
+      <h3>Қазақстан тарихы</h3>
+      <p>Қазақстан тарихы пәнінен тестке дайындалуға арналған кітап. Маңызды даталар, тарихи оқиғалар және қысқаша конспект түріндегі материалдар қамтылған.</p>
+      <p><strong>Бағасы: 1500 ₸</strong> Kaspi сілтемесінде қарау</p>
+      <a href="https://l.kaspi.kz/shop/FxH6odDobUdVvv1" target="_blank" class="guide-buy-link">
+        Сатып алу
+      </a>
+    </div>
+  </article>
+
+  <article class="guide-book-card">
+    <div class="guide-book-image">
+      <img src="{% static 'accounts/informatika-kitap.jpg' %}" alt="Информатика">
+    </div>
+    <div class="guide-book-body">
+      <h3>Информатика</h3>
+      <p>Информатика пәнінен тестке дайындыққа арналған оқу құралы. Теориялық бөлім, терминдер, алгоритмдер және практикалық тапсырмалар берілген.</p>
+      <p><strong>Бағасы: 6990₸</strong> Kaspi сілтемесінде қарау</p>
+      <a href="https://l.kaspi.kz/shop/25T3fLbtrYAuVqP" target="_blank" class="guide-buy-link">
+        Сатып алу
+      </a>
+    </div>
+  </article>
+
+</div>
+    </section>
+
+ <!-- HOW TO USE -->
+<section class="guide-info-section">
+  <div class="guide-info-card">
+    <h2>Нұсқаулық бөлімі</h2>
+    <ul>
+      <li>Бұл бөлім оқушыларға арналған оқу құралдары мен кітаптарды ыңғайлы түрде ұсынады.</li>
+      <li>Карусельде арнайы ұсыныстар, оқу жинақтары және дайындық материалдары көрсетіледі.</li>
+      <li>Төменгі карточкаларда пәндер бойынша кітаптар мен олардың қысқаша мәліметтері орналасқан.</li>
+      <li>Әр кітапқа бекітілген “Сатып алу” батырмасы арқылы Kaspi дүкеніндегі сілтемеге өте аласыз.</li>
+    </ul>
+  </div>
+</section>
+
+    <!-- FOOTER -->
+    <footer class="guide-footer">
+      <div>© EduMentor AI</div>
+      <div class="guide-footer-links">
+        <a href="/">Басты бет</a>
+        <a href="/guide/">Нұсқаулық</a>
+        <a href="/contact/">Байланыс</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- AI CHAT -->
+  <a href="/ai-chat/" class="ai-chat-btn" title="AI Chat">
+    <span>AI чат</span>
+  </a>
+
+  <script src="{% static 'accounts/script.js' %}"></script>
+</body>
+</html>

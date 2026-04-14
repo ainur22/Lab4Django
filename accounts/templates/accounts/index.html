@@ -1,0 +1,324 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Басты бет</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+</head>
+<body class="home-page">
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="top-mini-bar">
+      <div class="top-mini-right">
+        <button class="lang-switch" type="button">🌐 Қазақша</button>
+      </div>
+    </div>
+
+    <div class="main-nav-wrap">
+      <div class="main-brand">
+        <div class="main-brand-logo">EМ</div>
+        <div>
+          <div class="main-brand-title">EduMentor AI</div>
+          <div class="main-brand-sub">Ақылды оқу платформасы</div>
+        </div>
+      </div>
+
+      <nav class="main-site-nav">
+        <a href="/" class="active">Басты бет</a>
+        <a href="/courses/">Курстар</a>
+        
+        <a href="{% url 'guide' %}">Нұсқаулық</a>
+        <a href="{% url 'contact' %}">Байланыс</a>
+        <a href="{% url 'profile' %}">Профиль</a>
+        <a href="{% url 'progress' %}">Прогресс</a>
+        <a href="{% url 'quiz' %}">Quiz</a>
+      </nav>
+
+    <div class="main-nav-actions">
+  <a href="/login/" class="main-login-btn ghost">Кіру</a>
+  <a href="/register/" class="main-login-btn">Тіркелу</a>
+</div>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- HERO -->
+    <section class="home-hero">
+      <div class="home-hero-inner">
+        <div class="home-hero-content">
+          <div class="home-hero-logo">
+            <div class="home-hero-logo-badge">AI</div>
+            <div>EDUMENTOR AI</div>
+          </div>
+
+          <h1>Қазір оқуды бастаңыз</h1>
+          <p>
+            EduMentor AI-пен дайындалып, пәндерді терең түсініңіз,
+            прогресті бақылаңыз және ҰБТ-ға тиімді дайындалыңыз.
+          </p>
+
+          <div class="home-hero-actions">
+            <a href="/register/" class="home-hero-btn">Курсқа қатысу</a>
+          </div>
+
+          <div class="home-hero-note">
+            Жеке оқу траекториясы • AI көмекші • Байқау тесттері
+          </div>
+
+          <div class="home-slider-dots">
+            <span></span>
+            <span></span>
+            <span class="active"></span>
+            <span></span>
+          </div>
+        </div>
+
+        <div class="home-hero-visual">
+          <div class="home-hero-image-box">
+            <img src="{% static 'accounts/hero-banner.png' %}" alt="EduMentor AI баннері">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- COURSES BLOCK -->
+    <section class="home-section" id="courses">
+      <div class="home-courses">
+
+        <article class="home-course-card modern-course-card">
+          <button class="course-fav" type="button">♡</button>
+
+          <div class="modern-course-title">
+            ҰБТ комбо 2025–2026
+          </div>
+
+          <div class="modern-course-rating">
+            <span class="modern-rating-num">4.7</span>
+            <span class="modern-stars">★ ★ ★ ★ ☆</span>
+            <span class="modern-rating-count">(789 отзывов)</span>
+          </div>
+
+          <div class="modern-course-tags">
+            <span class="modern-tag">📘 1901 сабақтар</span>
+            <span class="modern-tag">🌐 Қазақ тілі</span>
+          </div>
+
+          <div class="modern-course-bottom">
+            <a href="/courses/" class="modern-course-btn">Толығырақ</a>
+          </div>
+        </article>
+
+        <article class="home-course-card modern-course-card">
+          <button class="course-fav" type="button">♡</button>
+
+          <div class="modern-course-title">
+            ҰБТ шығармашылық комбо 2025–2026
+          </div>
+
+          <div class="modern-course-rating">
+            <span class="modern-rating-num">4.6</span>
+            <span class="modern-stars">★ ★ ★ ★ ☆</span>
+            <span class="modern-rating-count">(286 отзывов)</span>
+          </div>
+
+          <div class="modern-course-tags">
+            <span class="modern-tag">📘 181 сабақтар</span>
+            <span class="modern-tag">🌐 Қазақ тілі</span>
+          </div>
+
+          <div class="modern-course-bottom">
+            <a href="/courses/" class="modern-course-btn">Толығырақ</a>
+          </div>
+        </article>
+
+        <article class="home-course-card modern-course-card">
+          <button class="course-fav" type="button">♡</button>
+
+          <div class="modern-course-title">
+            ЕНТ КОМБО основные предметы
+          </div>
+
+          <div class="modern-course-rating">
+            <span class="modern-rating-num">5</span>
+            <span class="modern-stars">★ ★ ★ ★ ★</span>
+            <span class="modern-rating-count">(8 отзывов)</span>
+          </div>
+
+          <div class="modern-course-tags">
+            <span class="modern-tag">📘 213 сабақтар</span>
+            <span class="modern-tag">🌐 Орыс тілі</span>
+          </div>
+
+          <div class="modern-course-bottom">
+            <a href="/courses/" class="modern-course-btn">Толығырақ</a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="home-section" id="features">
+      <div class="home-features-grid">
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-1.png' %}" alt="Адаптация">
+          </div>
+          <div class="home-feature-title">Адаптация</div>
+          <div class="home-feature-text">
+            Жүйе оқушы деңгейіне қарай материалдарды бейімдеп ұсынады.
+          </div>
+        </article>
+
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-2.png' %}" alt="Платформа">
+          </div>
+          <div class="home-feature-title">Платформа</div>
+          <div class="home-feature-text">
+            Барлық курс, тест, статистика және жеке кабинет бір жерде орналасады.
+          </div>
+        </article>
+
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-3.png' %}" alt="Тікелей эфир">
+          </div>
+          <div class="home-feature-title">Тікелей эфир</div>
+          <div class="home-feature-text">
+            Мұғаліммен тікелей байланыс жасап, сұрақтарға жауап алуға болады.
+          </div>
+        </article>
+
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-4.png' %}" alt="Байқау тесті">
+          </div>
+          <div class="home-feature-title">Байқау тесті</div>
+          <div class="home-feature-text">
+            ҰБТ форматына жақын тесттер арқылы өз деңгейіңді анықтайсың.
+          </div>
+        </article>
+
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-5.png' %}" alt="Диагностика">
+          </div>
+          <div class="home-feature-title">Диагностика</div>
+          <div class="home-feature-text">
+            Әлсіз тақырыптарды анықтап, сол бағытта ұсыныстар береді.
+          </div>
+        </article>
+
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-6.png' %}" alt="Рейтинг жүйесі">
+          </div>
+          <div class="home-feature-title">Рейтинг жүйесі</div>
+          <div class="home-feature-text">
+            Прогресті бақылауға және мотивацияны ұстап тұруға көмектеседі.
+          </div>
+        </article>
+
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-7.png' %}" alt="Куратор маманы">
+          </div>
+          <div class="home-feature-title">Куратор маманы</div>
+          <div class="home-feature-text">
+            Оқу процесінде бағыт беріп, қолдау көрсететін маман көмегі болады.
+          </div>
+        </article>
+
+        <article class="home-feature-card">
+          <div class="home-feature-image">
+            <img src="{% static 'accounts/feature-8.png' %}" alt="Профориентация">
+          </div>
+          <div class="home-feature-title">Профориентация</div>
+          <div class="home-feature-text">
+            Мамандық таңдауға көмектесетін пайдалы бағыттар мен кеңестер беріледі.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- FAQ PREVIEW -->
+    <section class="home-section" id="faq">
+      <div class="home-section-head">
+        <h2>Сұрақтар қалды <span>ма?</span></h2>
+      </div>
+
+      <div class="home-faq">
+        <div class="home-faq-item">
+          <button class="home-faq-q" type="button">
+            <span>Қолданушы келісімшартын қайдан көруге болады?</span>
+            <span>⌄</span>
+          </button>
+          <div class="home-faq-a">
+            Қолданушы келісімшарты сайттағы көмек немесе ақпарат бөлімінде беріледі.
+          </div>
+        </div>
+
+        <div class="home-faq-item">
+          <button class="home-faq-q" type="button">
+            <span>Байқау тесті ҰБТ сұрақтарымен сәйкес келе ме?</span>
+            <span>⌄</span>
+          </button>
+          <div class="home-faq-a">
+            Иә, тест құрылымы мен мазмұны нақты емтихан форматына барынша жақын жасалған.
+          </div>
+        </div>
+
+        <div class="home-faq-item">
+          <button class="home-faq-q" type="button">
+            <span>Құпия сөзді ұмытып қалдым, не істеуге болады?</span>
+            <span>⌄</span>
+          </button>
+          <div class="home-faq-a">
+            Кіру бетінде құпия сөзді қалпына келтіру функциясын пайдалануға болады.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="home-section">
+      <div class="card" style="display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;">
+        <div>
+          <h2>EduMentor AI-мен дайындалуға дайынсың ба?</h2>
+          <p class="muted">Қазіргі заманға сай, ыңғайлы және түсінікті оқу интерфейсі.</p>
+        </div>
+        <a href="{% url 'register' %}" class="btn primary">Тіркелу</a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer">
+        <div>
+          <strong>EduMentor AI</strong><br>
+          <span>Ақылды оқу платформасы</span>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- AI CHAT BUTTON -->
+  <a href="{% url 'ai_chat' %}" class="ai-chat-btn" title="AI Chat">
+    <span>AI чат</span>
+  </a>
+
+  <script src="{% static 'accounts/script.js' %}"></script>
+</body>
+</html>

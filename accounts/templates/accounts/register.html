@@ -1,0 +1,98 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Тіркелу</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  >
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+</head>
+<body class="auth-modern-page">
+
+  <div class="auth-modern-shell">
+    <div class="auth-modern-left">
+      <a href="/" class="auth-modern-brand">
+        <div class="auth-modern-logo">EМ</div>
+        <div>
+          <div class="auth-modern-brand-title">EduMentor AI</div>
+          <div class="auth-modern-brand-sub">Ақылды оқу платформасы</div>
+        </div>
+      </a>
+
+      <div class="auth-modern-content">
+        <div class="auth-modern-badge">Жаңа аккаунт</div>
+        <h1>Тіркелуді бастаңыз</h1>
+        <p>
+          EduMentor AI платформасына тіркеліп, курстарға, тесттерге,
+          прогресс пен жеке кабинетке қол жеткізіңіз.
+        </p>
+
+        <div class="auth-modern-points">
+          <div class="auth-point">Курстар мен тесттер</div>
+          <div class="auth-point">Жеке профиль</div>
+          <div class="auth-point">Ақылды ұсыныстар</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-modern-right">
+      <div class="auth-modern-card">
+        <div class="auth-modern-head">
+          <h2>Тіркелу</h2>
+          <p>Жаңа аккаунт жасау үшін мәліметтерді толтырыңыз</p>
+        </div>
+
+        {% if form.errors %}
+          <div class="error-box">{{ form.errors }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="auth-form auth-modern-form">
+          {% csrf_token %}
+
+          <div class="field">
+            <label for="{{ form.username.id_for_label }}">Пайдаланушы аты</label>
+            {{ form.username }}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.email.id_for_label }}">Email</label>
+            {{ form.email }}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.profile_image.id_for_label }}">Профиль суреті</label>
+            {{ form.profile_image }}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.password1.id_for_label }}">Құпия сөз</label>
+            {{ form.password1 }}
+          </div>
+
+          <div class="field">
+            <label for="{{ form.password2.id_for_label }}">Құпия сөзді растау</label>
+            {{ form.password2 }}
+          </div>
+
+          <button class="auth-modern-submit" type="submit">Тіркелу</button>
+
+          <div class="auth-modern-footer">
+            Аккаунтың бар ма? <a href="/login/">Кіру</a>
+          </div>
+
+          <div class="auth-modern-links">
+            <a href="/">Басты бет</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

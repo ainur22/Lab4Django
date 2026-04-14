@@ -1,0 +1,143 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Үлгерім</title>
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+</head>
+<body class="progress-app-page">
+
+  <header class="main-header">
+    <div class="top-mini-bar">
+      <div class="top-mini-right">
+        <button class="lang-switch" type="button">🌐 Қазақша</button>
+      </div>
+    </div>
+
+    <div class="main-nav-wrap">
+      <div class="main-brand">
+        <div class="main-brand-logo">EМ</div>
+        <div>
+          <div class="main-brand-title">EduMentor AI</div>
+          <div class="main-brand-sub">Үлгерім</div>
+        </div>
+      </div>
+
+      <nav class="main-site-nav">
+        <a href="/">Басты бет</a>
+        <a href="/guide/">Нұсқаулық</a>
+        <a href="/contact/">Байланыс</a>
+        <a href="/profile/">Профиль</a>
+        <a href="/progress/" class="active">Прогресс</a>
+        <a href="/quiz/">Quiz</a>
+      </nav>
+
+      <div class="main-nav-actions">
+        <a href="/" class="main-login-btn ghost">Басты бет</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <section class="progress-app-shell">
+
+      <div class="progress-app-hero">
+        <div class="progress-app-title">Profile &amp; Progress</div>
+
+        <div class="progress-user-card">
+          <div class="progress-user-avatar">A</div>
+          <div class="progress-user-meta">
+            <div class="progress-user-name">{{ request.user.username|default:"Aidar Bekov" }}</div>
+            <div class="progress-user-level">Intermediate</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="progress-week-card">
+        <div class="progress-card-head">
+          <div class="progress-card-title">Weekly Progress</div>
+        </div>
+
+        <div class="progress-week-row">
+          <span>This week</span>
+          <strong>68%</strong>
+        </div>
+
+        <div class="progress-line">
+          <span style="width:68%"></span>
+        </div>
+      </div>
+
+      <div class="progress-mini-grid">
+        <div class="progress-mini-card">
+          <div class="progress-mini-icon green">◎</div>
+          <div class="progress-mini-num">24/50</div>
+          <div class="progress-mini-label">Topics</div>
+        </div>
+
+        <div class="progress-mini-card">
+          <div class="progress-mini-icon blue">◉</div>
+          <div class="progress-mini-num">71%</div>
+          <div class="progress-mini-label">Accuracy</div>
+        </div>
+      </div>
+
+      <div class="progress-review-card">
+        <div class="progress-review-title">Topics to Review</div>
+
+        <div class="progress-review-list">
+          <div class="progress-review-item">Қазақстан тарихы — даталар</div>
+          <div class="progress-review-item">Математика — логарифм</div>
+          <div class="progress-review-item">Биология — жасуша құрылысы</div>
+        </div>
+      </div>
+
+      <div class="progress-subject-card">
+        <div class="progress-card-title">Subject Progress</div>
+
+        <div class="progress-subject-list">
+
+          <div class="progress-subject-item">
+            <div class="progress-subject-top">
+              <span>Математика</span>
+              <strong>68%</strong>
+            </div>
+            <div class="progress-line">
+              <span style="width:68%"></span>
+            </div>
+          </div>
+
+          <div class="progress-subject-item">
+            <div class="progress-subject-top">
+              <span>Қазақстан тарихы</span>
+              <strong>54%</strong>
+            </div>
+            <div class="progress-line">
+              <span style="width:54%"></span>
+            </div>
+          </div>
+
+          <div class="progress-subject-item">
+            <div class="progress-subject-top">
+              <span>Биология</span>
+              <strong>72%</strong>
+            </div>
+            <div class="progress-line">
+              <span style="width:72%"></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <a href="/ai-chat/" class="ai-chat-btn" title="AI Chat">
+    <span>AI чат</span>
+  </a>
+
+</body>
+</html>

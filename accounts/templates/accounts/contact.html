@@ -1,0 +1,160 @@
+{% load static %}
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Байланыс</title>
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+  <link rel="stylesheet" href="{% static 'contact.css' %}" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+</head>
+<body>
+
+<header class="topbar">
+  <button class="iconbtn" id="btnMenu" type="button" aria-label="Menu">
+    <i class="burger"><span></span></i>
+  </button>
+
+  <div class="brand">
+    <div class="logo">EM</div>
+    <div>
+      <div class="brand-title">Байланыс</div>
+      <div class="brand-subtitle">Бізбен хабарласу</div>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <a class="auth-pill-v2 gray" href="{% url 'login' %}">Кіру</a>
+    <a class="auth-pill-v2 blue" href="{% url 'register' %}">Тіркелу</a>
+  </div>
+</header>
+
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-top">
+    <div class="logo big">EM</div>
+    <div>
+      <div class="drawer-title">EduMentor AI</div>
+      <div class="drawer-sub">Navigation</div>
+    </div>
+    <button class="iconbtn" id="btnCloseDrawer" type="button" aria-label="Жабу">✕</button>
+  </div>
+
+  <nav class="drawer-nav">
+    <a class="drawer-link" href="{% url 'home' %}">Басты бет</a>
+    <a class="drawer-link" href="{% url 'guide' %}">Нұсқаулық</a>
+    <a class="drawer-link" href="{% url 'downloads' %}">Материалдар</a>
+    <a class="drawer-link" href="{% url 'quiz' %}">Викторина</a>
+    <a class="drawer-link" href="{% url 'progress' %}">Прогресс</a>
+    <a class="drawer-link active" href="{% url 'contact' %}">Байланыс</a>
+  </nav>
+</aside>
+
+<div class="backdrop" id="backdrop" hidden></div>
+
+<main class="wrap contact-page-v2">
+
+  {% if messages %}
+    <div class="messages-wrap">
+      {% for message in messages %}
+        <div class="alert-success">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <section class="contact-grid-v2">
+    <div class="contact-col-v2">
+
+      <div class="contact-card-v2 socials-box-v2">
+        <h2 class="contact-title-v2 center">Әлеуметтік желілер</h2>
+        <div class="social-row-v2">
+          <a href="https://instagram.com/edumentor.ai" target="_blank" class="social-circle-v2 instagram" aria-label="Instagram">
+            <i class="fa-brands fa-instagram"></i>
+          </a>
+          <a href="https://t.me/edumentor_ai" target="_blank" class="social-circle-v2 telegram" aria-label="Telegram">
+            <i class="fa-brands fa-telegram"></i>
+          </a>
+          <a href="https://wa.me/77000000000" target="_blank" class="social-circle-v2 whatsapp" aria-label="WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="contact-card-v2">
+        <h2 class="contact-title-v2">Байланыс ақпараты</h2>
+        <div class="info-list-v2">
+          <div class="info-item-v2">
+            <span>Мекенжай</span>
+            <strong>Алматы қ., оқу технологиялары орталығы</strong>
+          </div>
+          <div class="info-item-v2">
+            <span>Email</span>
+            <strong><a href="mailto:edumentor.ai@example.com">edumentor.ai@example.com</a></strong>
+          </div>
+          <div class="info-item-v2">
+            <span>Телефон</span>
+            <strong><a href="tel:+77000000000">+7 (700) 000 00 00</a></strong>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-card-v2">
+        <h2 class="contact-title-v2">Карта</h2>
+        <div class="map-box-v2">
+          <iframe
+            src="https://www.google.com/maps?q=Almaty&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-card-v2">
+      <h2 class="contact-title-v2">Өтініш қалдыру</h2>
+      <p class="contact-desc-v2">
+        Аты-жөніңізді, телефон нөміріңізді және сұрағыңызды жазыңыз.
+        Біздің менеджер сізбен өзі хабарласады.
+      </p>
+
+      <form method="post" class="form-v2" id="contactFormV2">
+        {% csrf_token %}
+
+        <div class="field-wrap-v2">{{ form.name }}</div>
+        <div class="field-wrap-v2">{{ form.phone }}</div>
+        <div class="field-wrap-v2">{{ form.question }}</div>
+
+        <label class="consent-row-v2">
+          <input type="checkbox" id="consentCheckbox" required>
+          <span class="consent-box-v2"></span>
+          <span class="consent-text-v2">
+            <a href="#">Жеке деректерді</a> өңдеуге келісім беремін
+          </span>
+        </label>
+
+        <button type="submit" class="submit-v2" id="submitBtnV2">
+          Қатысуға өтінім қалдыру
+        </button>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script src="{% static 'accounts/script.js' %}"></script>
+<script>
+  const consent = document.getElementById('consentCheckbox');
+  const submitBtn = document.getElementById('submitBtnV2');
+
+  if (consent && submitBtn) {
+    const syncButton = () => {
+      if (consent.checked) {
+        submitBtn.classList.add('active');
+      } else {
+        submitBtn.classList.remove('active');
+      }
+    };
+    consent.addEventListener('change', syncButton);
+    syncButton();
+  }
+</script>
+</body>
+</html>

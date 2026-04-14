@@ -1,0 +1,189 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Материалдар</title>
+  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+</head>
+<body>
+
+<header class="topbar">
+  <button class="iconbtn" id="btnMenu" type="button" aria-label="Menu">
+    <i class="burger"><span></span></i>
+  </button>
+
+  <div class="brand">
+    <div class="logo">EM</div>
+    <div>
+      <div class="brand-title">Материалдар</div>
+      <div class="brand-subtitle">PDF • Сурет • Видео • ZIP • Аудио</div>
+    </div>
+  </div>
+
+  <div class="top-actions">
+    <a class="chip" href="{% url 'home' %}">Басты бет</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <h1>ҰБТ материалдарын жүктеу</h1>
+    <p class="lead">
+      Файлдарды таңдап, пән, формат және қиындық деңгейін көрсет.
+    </p>
+  </section>
+
+  <section class="card">
+    <form class="form" id="dlForm">
+      <h2>1) Файлдарды таңда</h2>
+
+      <label class="check">
+        <input type="checkbox" name="file" value="history_pdf" />
+        <span>📄 Қазақстан тарихы — конспект (PDF)</span>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" name="file" value="bio_img" />
+        <span>🖼 Биология — схема (Image)</span>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" name="file" value="math_video" />
+        <span>🎬 Математика — видео түсіндірме (MP4)</span>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" name="file" value="tests_zip" />
+        <span>🗂 ҰБТ тесттері — жинақ (ZIP)</span>
+      </label>
+
+      <label class="check">
+        <input type="checkbox" name="file" value="eng_audio" />
+        <span>🎧 English — listening (Audio)</span>
+      </label>
+
+      <h2>2) Қосымша параметрлер</h2>
+
+      <div class="field">
+        <label for="subjectSelect">Пән</label>
+        <select id="subjectSelect" class="field-input">
+          <option value="history">Тарих</option>
+          <option value="math">Математика</option>
+          <option value="bio">Биология</option>
+          <option value="geo">География</option>
+          <option value="eng">Ағылшын</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Формат</label>
+        <label class="radio">
+          <input type="radio" name="format" value="short" checked />
+          <span>Қысқа конспект</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="format" value="full" />
+          <span>Толық материал</span>
+        </label>
+        <label class="radio">
+          <input type="radio" name="format" value="practice" />
+          <span>Тек практика</span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="levelRange">Қиындық деңгейі</label>
+        <input id="levelRange" type="range" min="1" max="5" step="1" value="3">
+        <div class="muted">Деңгей: <b id="levelOut">3</b>/5</div>
+      </div>
+
+      <div class="actions">
+        <button class="btn primary" id="btnDownload" type="button">Жүктеу</button>
+        <button class="btn" id="btnPreview" type="button">Preview</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card" id="previewCard" hidden>
+    <h2>Preview</h2>
+    <p class="muted" id="previewText"></p>
+  </section>
+</main>
+
+<script src="{% static 'accounts/script.js' %}"></script>
+<script>
+  const files = {
+    history_pdf: { url: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf", name: "history.pdf" },
+    bio_img: { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Example.jpg/800px-Example.jpg", name: "bio.jpg" },
+    math_video: { url: "https://filesamples.com/samples/video/mp4/sample_640x360.mp4", name: "math.mp4" },
+    tests_zip: { url: "https://filesamples.com/samples/archive/zip/sample1.zip", name: "tests.zip" },
+    eng_audio: { url: "https://filesamples.com/samples/audio/mp3/sample3.mp3", name: "audio.mp3" }
+  };
+
+  function downloadByLink(url, filename) {
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename || "";
+    a.target = "_blank";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function getSelectedKeys() {
+    return Array.from(document.querySelectorAll('input[name="file"]:checked')).map(x => x.value);
+  }
+
+  function getFormat() {
+    const r = document.querySelector('input[name="format"]:checked');
+    return r ? r.value : "short";
+  }
+
+  const range = document.getElementById("levelRange");
+  const levelOut = document.getElementById("levelOut");
+  const previewCard = document.getElementById("previewCard");
+  const previewText = document.getElementById("previewText");
+
+  if (range && levelOut) {
+    range.addEventListener("input", () => {
+      levelOut.textContent = range.value;
+    });
+  }
+
+  document.getElementById("btnPreview")?.addEventListener("click", () => {
+    const keys = getSelectedKeys();
+    const subject = document.getElementById("subjectSelect").value;
+    const format = getFormat();
+    const lvl = range.value;
+
+    if (keys.length === 0) {
+      alert("Кемінде 1 материал таңда!");
+      return;
+    }
+
+    const names = keys.map(k => files[k]?.name || k).join(", ");
+    previewText.innerHTML =
+      `<b>Пән:</b> ${subject} • <b>Формат:</b> ${format} • <b>Деңгей:</b> ${lvl}/5<br>` +
+      `<b>Таңдалған файлдар:</b> ${names}`;
+
+    previewCard.hidden = false;
+  });
+
+  document.getElementById("btnDownload")?.addEventListener("click", () => {
+    const keys = getSelectedKeys();
+
+    if (keys.length === 0) {
+      alert("Кемінде 1 материал таңда!");
+      return;
+    }
+
+    keys.forEach(k => {
+      const item = files[k];
+      if (item) downloadByLink(item.url, item.name);
+    });
+  });
+</script>
+</body>
+</html>

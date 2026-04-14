@@ -1,0 +1,532 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EduMentor AI — Курстар</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(180deg, #f5f8ff 0%, #eef3fb 100%);
+      color: #1c2740;
+    }
+
+    .courses-header {
+      background: rgba(255, 255, 255, 0.94);
+      border-bottom: 1px solid #e2e9f3;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .courses-navbar {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 22px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 28px;
+    }
+
+    .courses-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+
+    .courses-logo {
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #0e1830, #1a2a4d);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+    }
+
+    .courses-brand-title {
+      font-size: 19px;
+      font-weight: 800;
+      color: #152038;
+    }
+
+    .courses-brand-sub {
+      font-size: 14px;
+      color: #74829a;
+      margin-top: 4px;
+    }
+
+    .courses-nav {
+      display: flex;
+      align-items: center;
+      gap: 34px;
+      flex-wrap: wrap;
+    }
+
+    .courses-nav a {
+      text-decoration: none;
+      color: #33425c;
+      font-size: 16px;
+      font-weight: 700;
+      position: relative;
+      padding: 8px 0;
+    }
+
+    .courses-nav a.active {
+      color: #245bdb;
+    }
+
+    .courses-nav a.active::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -8px;
+      width: 100%;
+      height: 4px;
+      border-radius: 999px;
+      background: #245bdb;
+    }
+
+    .courses-page {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 34px 28px 50px;
+    }
+
+    .courses-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 310px;
+      gap: 28px;
+      align-items: start;
+    }
+
+    .courses-search {
+      height: 64px;
+      border-radius: 20px;
+      border: 1px solid #dde6f2;
+      background: rgba(255, 255, 255, 0.96);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 18px;
+      box-shadow: 0 10px 24px rgba(14, 30, 72, 0.05);
+    }
+
+    .courses-search input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 18px;
+      color: #1d2842;
+    }
+
+    .courses-search input::placeholder {
+      color: #8a97ac;
+    }
+
+    .courses-search-icon {
+      font-size: 26px;
+      color: #7f8ba1;
+    }
+
+    .courses-tags {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 18px 0 26px;
+    }
+
+    .courses-tag {
+      border: 1px solid #cdd8e8;
+      background: #fff;
+      color: #36455f;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .courses-tag.active,
+    .courses-tag:hover {
+      background: #edf4ff;
+      color: #245bdb;
+      border-color: #bfd2ff;
+    }
+
+    .courses-found {
+      margin-bottom: 20px;
+      font-size: 28px;
+      color: #22314d;
+    }
+
+    .courses-list {
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .course-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #e2e9f3;
+      border-radius: 28px;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 24px;
+      box-shadow: 0 18px 40px rgba(22, 38, 79, 0.06);
+    }
+
+    .course-image {
+      width: 100%;
+      height: 210px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #eef4ff, #e8eefb);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .course-placeholder {
+      font-size: 68px;
+    }
+
+    .course-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .course-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 8px 16px;
+      border-radius: 999px;
+      background: #edf4ff;
+      color: #245bdb;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .course-badge.light {
+      background: #eef2f7;
+      color: #62728c;
+    }
+
+    .course-content h3 {
+      margin-bottom: 14px;
+      font-size: 32px;
+      line-height: 1.15;
+      color: #1a2640;
+    }
+
+    .course-info {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .course-info div {
+      background: #f8fbff;
+      border: 1px solid #e6edf8;
+      border-radius: 18px;
+      padding: 14px 16px;
+    }
+
+    .course-info strong {
+      display: block;
+      font-size: 14px;
+      color: #24314d;
+      margin-bottom: 6px;
+    }
+
+    .course-info span {
+      color: #667790;
+      font-size: 15px;
+    }
+
+    .course-content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.7;
+      color: #71809a;
+    }
+
+    .course-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 160px;
+      height: 52px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #2d66f6, #1849d6);
+      color: #fff;
+      text-decoration: none;
+      font-size: 17px;
+      font-weight: 800;
+      box-shadow: 0 14px 30px rgba(45, 102, 246, 0.22);
+      transition: 0.2s ease;
+    }
+
+    .course-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .courses-sidebar {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .sidebar-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid #e2e9f3;
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: 0 12px 30px rgba(22, 38, 79, 0.05);
+    }
+
+    .sidebar-card h4 {
+      margin-bottom: 18px;
+      font-size: 22px;
+      color: #1d2942;
+    }
+
+    .sidebar-link {
+      display: block;
+      text-decoration: none;
+      color: #4d5d77;
+      font-size: 17px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      margin-bottom: 8px;
+      transition: 0.2s ease;
+    }
+
+    .sidebar-link.active,
+    .sidebar-link:hover {
+      background: #edf4ff;
+      color: #245bdb;
+    }
+
+    .sidebar-check {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+      font-size: 17px;
+      color: #4d5d77;
+    }
+
+    .sidebar-check input {
+      width: 18px;
+      height: 18px;
+      accent-color: #2d66f6;
+    }
+
+    @media (max-width: 1100px) {
+      .course-card {
+        grid-template-columns: 1fr;
+      }
+
+      .course-info {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .courses-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .courses-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .courses-nav {
+        gap: 18px;
+      }
+
+      .courses-page {
+        padding: 20px 14px 30px;
+      }
+
+      .course-info {
+        grid-template-columns: 1fr;
+      }
+
+      .course-content h3 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header class="courses-header">
+  <div class="courses-navbar">
+    <div class="courses-brand">
+      <div class="courses-logo">EM</div>
+      <div>
+        <div class="courses-brand-title">EduMentor AI</div>
+        <div class="courses-brand-sub">Ақылды оқу платформасы</div>
+      </div>
+    </div>
+
+    <nav class="courses-nav">
+      <a href="{% url 'home' %}">Басты бет</a>
+      <a href="{% url 'courses' %}" class="active">Курстар</a>
+      <a href="/ai-chat/">Сұрақ-жауап</a>
+      <a href="{% url 'guide' %}">Нұсқаулық</a>
+      <a href="{% url 'contact' %}">Байланыс</a>
+      <a href="/profile/">Профиль</a>
+      <a href="{% url 'progress' %}">Прогресс</a>
+      <a href="{% url 'quiz' %}">Quiz</a>
+    </nav>
+  </div>
+</header>
+
+<main class="courses-page">
+  <section class="courses-layout">
+
+    <div class="courses-main">
+      <div class="courses-search">
+        <span class="courses-search-icon">⌕</span>
+        <input type="text" placeholder="Сіз қандай курсты іздеп жүрсіз?" />
+      </div>
+
+      <div class="courses-tags">
+        <button class="courses-tag active" type="button">Барлығы</button>
+        <button class="courses-tag" type="button">ҰБТ</button>
+        <button class="courses-tag" type="button">Мектеп пәндері</button>
+        <button class="courses-tag" type="button">Жаңа</button>
+      </div>
+
+      <h2 class="courses-found">Табылған курстар</h2>
+
+      <div class="courses-list">
+
+        <article class="course-card">
+          <div class="course-image"><div class="course-placeholder">💻</div></div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="course-badge">ҰБТ</span>
+              <span class="course-badge light">Негізгі курс</span>
+            </div>
+            <h3>Информатика</h3>
+            <div class="course-info">
+              <div><strong>Сабақтар</strong><span>12 бөлім</span></div>
+              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
+              <div><strong>Формат</strong><span>Теория + тест</span></div>
+            </div>
+            <p>Информатика пәні бойынша негізгі тақырыптар, қысқа түсіндірулер және тесттер.</p>
+            <a href="{% url 'quiz' %}?subject=informatika" class="course-btn">Өту</a>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-image"><div class="course-placeholder">📘</div></div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="course-badge">ҰБТ</span>
+              <span class="course-badge light">Танымал</span>
+            </div>
+            <h3>Математикалық сауаттылық</h3>
+            <div class="course-info">
+              <div><strong>Сабақтар</strong><span>10 бөлім</span></div>
+              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
+              <div><strong>Формат</strong><span>Теория + тест</span></div>
+            </div>
+            <p>Логика, есептер, пайыз және ҰБТ-ға арналған қысқа дайындық материалы.</p>
+            <a href="{% url 'quiz' %}?subject=math" class="course-btn">Өту</a>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-image"><div class="course-placeholder">📖</div></div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="course-badge">ҰБТ</span>
+              <span class="course-badge light">Жаңа</span>
+            </div>
+            <h3>Оқу сауаттылығы</h3>
+            <div class="course-info">
+              <div><strong>Сабақтар</strong><span>8 бөлім</span></div>
+              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
+              <div><strong>Формат</strong><span>Теория + тест</span></div>
+            </div>
+            <p>Мәтінді түсіну, негізгі ойды табу және талдау дағдыларына арналған курс.</p>
+            <a href="{% url 'quiz' %}?subject=reading" class="course-btn">Өту</a>
+          </div>
+        </article>
+
+        <article class="course-card">
+          <div class="course-image"><div class="course-placeholder">🏛️</div></div>
+          <div class="course-content">
+            <div class="course-badges">
+              <span class="course-badge">ҰБТ</span>
+              <span class="course-badge light">Негізгі курс</span>
+            </div>
+            <h3>Қазақстан тарихы</h3>
+            <div class="course-info">
+              <div><strong>Сабақтар</strong><span>11 бөлім</span></div>
+              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
+              <div><strong>Формат</strong><span>Теория + тест</span></div>
+            </div>
+            <p>Тарихи кезеңдер, маңызды даталар және тақырыптар бойынша курс.</p>
+            <a href="{% url 'quiz' %}?subject=history" class="course-btn">Өту</a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+
+    <aside class="courses-sidebar">
+      <div class="sidebar-card">
+        <h4>Санаттар</h4>
+        <a href="#" class="sidebar-link active">Барлығы</a>
+        <a href="#" class="sidebar-link">ҰБТ</a>
+        <a href="#" class="sidebar-link">Мектеп пәндері</a>
+        <a href="#" class="sidebar-link">Қысқа курстар</a>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>Тілі</h4>
+        <label class="sidebar-check"><input type="checkbox" checked><span>Қазақ тілі</span></label>
+        <label class="sidebar-check"><input type="checkbox"><span>Орыс тілі</span></label>
+      </div>
+
+      <div class="sidebar-card">
+        <h4>Формат</h4>
+        <label class="sidebar-check"><input type="checkbox" checked><span>Теория</span></label>
+        <label class="sidebar-check"><input type="checkbox" checked><span>Тест</span></label>
+      </div>
+    </aside>
+
+  </section>
+</main>
+
+</body>
+</html>
