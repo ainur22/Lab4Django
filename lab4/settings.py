@@ -133,3 +133,5 @@ LOGOUT_REDIRECT_URL = 'login'
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'
