@@ -17,9 +17,7 @@ DEBUG = False
 ALLOWED_HOSTS = [
     'lab4django.onrender.com',
     '127.0.0.1',
-    'localhost',
-    'ainuragx.beget.tech',
-    'www.ainuragx.beget.tech',
+    'localhost'
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -105,6 +103,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 AUTH_USER_MODEL = 'accounts.CustomUser'
 
 LOGIN_REDIRECT_URL = 'home'
+
 LOGOUT_REDIRECT_URL = 'login'
 
 GEMINI_API_KEY = "AIzaSyC-Fl2o4YmAf3tPIbP_6DyfLpktOJqV4nE"
