@@ -11,9 +11,15 @@ urlpatterns = [
     path('ai-chat/transcribe/', views.transcribe_audio, name='transcribe_audio'),
     path('progress/', views.progress_view, name='progress'),
     path('contact/', views.contact_view, name='contact'),
+    path('courses/', views.courses_view, name='courses'),
+
     path('login/', views.login_view, name='login'),
     path('register/', views.register, name='register'),
-    path('profile/', views.profile_view, name='profile'),
     path('logout/', views.logout_view, name='logout'),
-    path('courses/', views.courses_view, name='courses'),
+
+    path('profile/', views.profile_view, name='profile'),
+    path('profile/progress/', views.profile_progress_view, name='profile_progress'),
+    path('profile/grants/', views.profile_grants_view, name='profile_grants'),
+    path('profile/leaderboard/', views.profile_leaderboard_view, name='profile_leaderboard'),
+    path('profile/settings/', views.profile_settings_view, name='profile_settings'),
 ]

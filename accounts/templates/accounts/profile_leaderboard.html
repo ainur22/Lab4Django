@@ -1,0 +1,695 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMentor AI — Лидерборд</title>
+    <style>
+        :root {
+            --text-main: #23395d;
+            --text-soft: #7e91b4;
+            --blue: #4a86f7;
+            --blue-dark: #2f5fb8;
+            --blue-soft: #edf4ff;
+            --shadow: 0 12px 35px rgba(67, 115, 208, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at left bottom, rgba(108, 209, 180, 0.12), transparent 18%),
+                linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: min(1380px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #edf2fc;
+        }
+
+        .nav-wrap {
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            min-width: 240px;
+        }
+
+        .brand-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            font-size: 14px;
+            color: var(--text-soft);
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: #4d6793;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 10px 4px;
+            transition: .2s ease;
+        }
+
+        .main-nav a:hover {
+            color: var(--blue-dark);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 16px;
+            font-weight: 800;
+            color: white;
+            background: var(--blue);
+            transition: .2s ease;
+        }
+
+        .nav-btn-light {
+            text-decoration: none;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--blue-dark);
+            background: var(--blue-soft);
+            border: 1px solid #d9e6fd;
+            transition: .2s ease;
+        }
+
+        .nav-btn:hover,
+        .nav-btn-light:hover {
+            transform: translateY(-1px);
+        }
+
+        .nav-avatar,
+        .nav-avatar-fallback {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .nav-avatar-fallback {
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            font-weight: 800;
+        }
+
+        .page {
+            padding: 28px 0 60px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 112px;
+        }
+
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid #e7eefc;
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #95a6c8;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .sidebar-link {
+            display: block;
+            text-decoration: none;
+            color: #4f668f;
+            font-weight: 700;
+            padding: 13px 14px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            transition: .2s ease;
+        }
+
+        .sidebar-link:hover {
+            background: #f4f8ff;
+            color: var(--blue-dark);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, #5f99ff, #4a86f7);
+            color: white;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e8effc;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            padding: 26px;
+        }
+
+        .leader-hero {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 18px;
+            align-items: stretch;
+            margin-bottom: 22px;
+        }
+
+        .hero-box {
+            border-radius: 24px;
+            padding: 22px;
+            background: linear-gradient(135deg, #edf4ff, #f8fbff);
+            border: 1px solid #dbe7fb;
+        }
+
+        .hero-box h1 {
+            margin: 0 0 10px;
+            font-size: 36px;
+            color: #203963;
+        }
+
+        .hero-box p {
+            margin: 0;
+            color: var(--text-soft);
+            font-weight: 700;
+            line-height: 1.7;
+        }
+
+        .my-rank-card {
+            border-radius: 24px;
+            padding: 22px;
+            background: linear-gradient(135deg, #5f99ff, #4a86f7);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .my-rank-card span {
+            font-size: 14px;
+            font-weight: 800;
+            opacity: .9;
+            margin-bottom: 8px;
+        }
+
+        .my-rank-card strong {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 6px;
+        }
+
+        .my-rank-card small {
+            font-size: 13px;
+            font-weight: 700;
+            opacity: .9;
+            line-height: 1.5;
+        }
+
+        .title {
+            margin: 0 0 18px;
+            font-size: 34px;
+            color: #203963;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            border: 1px solid #d9e6fb;
+            background: white;
+            border-radius: 999px;
+            padding: 14px 28px;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            color: #203963;
+            transition: .2s ease;
+        }
+
+        .tab:hover {
+            transform: translateY(-1px);
+            background: #f4f8ff;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, #5f99ff, #4a86f7);
+            color: white;
+            border-color: transparent;
+        }
+
+        .leaderboard-table {
+            overflow-x: auto;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 90px 1fr 140px 140px;
+            gap: 14px;
+            align-items: center;
+            padding: 18px 20px;
+            border-bottom: 1px solid #ecf1fb;
+            min-width: 620px;
+        }
+
+        .row.header-row {
+            font-weight: 800;
+            color: #8ca0c2;
+        }
+
+        .row.me {
+            background: #edf4ff;
+            border-radius: 18px;
+            border-bottom: none;
+            margin-top: 10px;
+        }
+
+        .place {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #f1f5fd;
+            display: grid;
+            place-items: center;
+            font-weight: 800;
+            color: #2e67da;
+        }
+
+        .row:nth-child(1) .place {
+            background: #fff3cf;
+            color: #d89b1d;
+        }
+
+        .user {
+            font-size: 18px;
+            font-weight: 800;
+            color: #23395d;
+        }
+
+        .xp-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #f4f8ff;
+            color: #2e67da;
+            font-weight: 800;
+        }
+
+        .accuracy-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: fit-content;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: #e8f8ef;
+            color: #1fa65c;
+            font-weight: 800;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .summary-card {
+            border-radius: 20px;
+            padding: 18px;
+            background: #f8fbff;
+            border: 1px solid #e6eefc;
+        }
+
+        .summary-card strong {
+            display: block;
+            color: #203963;
+            font-size: 18px;
+            margin-bottom: 8px;
+        }
+
+        .summary-card span {
+            color: var(--text-soft);
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 700;
+        }
+
+        /* ================= DARK MODE FROM SETTINGS ================= */
+        body.theme-dark {
+            --text-main: #e5eefc;
+            --text-soft: #9fb0cc;
+            --blue-soft: #17345f;
+            --shadow: 0 20px 50px rgba(0,0,0,.32);
+        }
+
+        body.theme-dark {
+            background: linear-gradient(180deg, #0f172a 0%, #111827 55%, #172033 100%) !important;
+        }
+
+        body.theme-dark .site-header {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-bottom-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .card,
+        body.theme-dark .sidebar-card,
+        body.theme-dark .hero-box,
+        body.theme-dark .summary-card,
+        body.theme-dark .row.me {
+            background: rgba(17, 24, 39, 0.92) !important;
+            border-color: #2d3b55 !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,.24) !important;
+        }
+
+        body.theme-dark .brand-title,
+        body.theme-dark .title,
+        body.theme-dark .hero-box h1,
+        body.theme-dark .user,
+        body.theme-dark .summary-card strong {
+            color: #f3f7ff !important;
+        }
+
+        body.theme-dark .brand-subtitle,
+        body.theme-dark .main-nav a,
+        body.theme-dark .sidebar-title,
+        body.theme-dark .sidebar-link,
+        body.theme-dark .hero-box p,
+        body.theme-dark .row.header-row,
+        body.theme-dark .summary-card span {
+            color: #9fb0cc !important;
+        }
+
+        body.theme-dark .tab {
+            background: #111827 !important;
+            border-color: #2d3b55 !important;
+            color: #dbe7ff !important;
+        }
+
+        body.theme-dark .tab.active {
+            background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
+            color: white !important;
+            border-color: transparent !important;
+        }
+
+        body.theme-dark .tab:hover,
+        body.theme-dark .sidebar-link:hover,
+        body.theme-dark .nav-btn-light {
+            background: #1b2a44 !important;
+            color: #dbe7ff !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .row {
+            border-bottom-color: #2d3b55 !important;
+            color: #dbe7ff !important;
+        }
+
+        body.theme-dark .place,
+        body.theme-dark .xp-pill {
+            background: #17345f !important;
+            color: #dbe7ff !important;
+        }
+
+        body.theme-dark .accuracy-pill {
+            background: rgba(6, 78, 59, 0.35) !important;
+            color: #86efac !important;
+        }
+
+        body.theme-dark .nav-avatar,
+        body.theme-dark .nav-avatar-fallback {
+            border-color: #2d3b55 !important;
+        }
+
+        @media (max-width: 1080px) {
+            .layout { grid-template-columns: 1fr; }
+            .main-nav { display: none; }
+            .sidebar { position: static; }
+            .row { grid-template-columns: 70px 1fr 100px 100px; }
+            .leader-hero { grid-template-columns: 1fr; }
+            .summary-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 720px) {
+            .container { width: min(100% - 22px, 100%); }
+            .nav-wrap { flex-wrap: wrap; padding: 14px 0; }
+            .hero-box h1 { font-size: 30px; }
+            .card { padding: 18px; }
+            .tab { width: 100%; }
+        }
+    </style>
+</head>
+<body class="{% if dark_mode %}theme-dark{% endif %}">
+
+<header class="site-header">
+    <div class="container nav-wrap">
+        <a href="{% url 'home' %}" class="brand">
+            <div class="brand-logo">EM</div>
+            <div>
+                <div class="brand-title">EduMentor AI</div>
+                <div class="brand-subtitle">Ақылды оқу платформасы</div>
+            </div>
+        </a>
+
+        <nav class="main-nav">
+            <a href="{% url 'home' %}">Басты бет</a>
+            <a href="{% url 'courses' %}">Курстар</a>
+            <a href="{% url 'guide' %}">Нұсқаулық</a>
+            <a href="{% url 'contact' %}">Байланыс</a>
+            <a href="{% url 'quiz' %}">Quiz</a>
+        </nav>
+
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
+                    {% if user.profile_image %}
+                        <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="nav-avatar">
+                    {% else %}
+                        <div class="nav-avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                </a>
+                <a href="{% url 'logout' %}" class="nav-btn">Шығу</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-btn-light">Кіру</a>
+                <a href="{% url 'register' %}" class="nav-btn">Тіркелу</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    <div class="container layout">
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-title">Профиль менюсы</div>
+                <a class="sidebar-link" href="{% url 'profile' %}">Профиль</a>
+                <a class="sidebar-link" href="{% url 'profile_progress' %}">Прогресс</a>
+                <a class="sidebar-link" href="{% url 'profile_grants' %}">Грант калькуляторы</a>
+                <a class="sidebar-link active" href="{% url 'profile_leaderboard' %}">Лидерборд</a>
+                <a class="sidebar-link" href="{% url 'profile_settings' %}">Настройкалар</a>
+            </div>
+        </aside>
+
+        <section class="card">
+            <div class="leader-hero">
+                <div class="hero-box">
+                    <h1>Лидерборд</h1>
+                    <p>Оқушылардың XP, дәлдік және белсенділік бойынша рейтингі. Апталық, айлық және жылдық нәтижені ауыстырып көре аласыз.</p>
+                </div>
+
+                <div class="my-rank-card" id="myRankCard">
+                    <span>Менің орным</span>
+                    <strong id="myRankText">#23</strong>
+                    <small id="myRankSmall">Апталық рейтинг бойынша</small>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-period="weekly">Апталық</button>
+                <button class="tab" data-period="monthly">Айлық</button>
+                <button class="tab" data-period="yearly">Жылдық</button>
+            </div>
+
+            <div class="leaderboard-table">
+                <div class="row header-row">
+                    <div>#</div>
+                    <div>Пайдаланушы</div>
+                    <div>Дәлдік</div>
+                    <div>XP</div>
+                </div>
+
+                <div id="leaderboardBody"></div>
+            </div>
+
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <strong>🔥 Белсенділік</strong>
+                    <span>Күн сайын quiz тапсырсаңыз, рейтингтегі орныңыз тез көтеріледі.</span>
+                </div>
+                <div class="summary-card">
+                    <strong>⭐ XP жинау</strong>
+                    <span>Әр дұрыс жауап, курс және AI Chat қолдану XP қосады.</span>
+                </div>
+                <div class="summary-card">
+                    <strong>🎯 Дәлдік</strong>
+                    <span>Қате сұрақтарды қайталау жалпы дәлдікті көтеруге көмектеседі.</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+
+<script>
+    const currentUsername = "{{ user.username|default:'ainur' }}";
+
+    const leaderboardData = {
+        weekly: [
+            { place: 1, user: '@babab', accuracy: '92%', xp: '1250 XP' },
+            { place: 2, user: '@StudentTop', accuracy: '89%', xp: '1180 XP' },
+            { place: 3, user: 'Карина А.', accuracy: '87%', xp: '1100 XP' },
+            { place: 4, user: '@akudme_a', accuracy: '85%', xp: '1000 XP' },
+            { place: 23, user: currentUsername, accuracy: '71%', xp: '320 XP', me: true }
+        ],
+        monthly: [
+            { place: 1, user: '@babab', accuracy: '94%', xp: '4420 XP' },
+            { place: 2, user: 'Карина А.', accuracy: '91%', xp: '4300 XP' },
+            { place: 3, user: '@StudentTop', accuracy: '90%', xp: '4170 XP' },
+            { place: 4, user: '@akudme_a', accuracy: '86%', xp: '3900 XP' },
+            { place: 15, user: currentUsername, accuracy: '74%', xp: '1460 XP', me: true }
+        ],
+        yearly: [
+            { place: 1, user: '@babab', accuracy: '96%', xp: '15200 XP' },
+            { place: 2, user: '@StudentTop', accuracy: '93%', xp: '14900 XP' },
+            { place: 3, user: 'Карина А.', accuracy: '92%', xp: '14450 XP' },
+            { place: 4, user: '@akudme_a', accuracy: '89%', xp: '13800 XP' },
+            { place: 9, user: currentUsername, accuracy: '79%', xp: '6200 XP', me: true }
+        ]
+    };
+
+    const tabs = document.querySelectorAll('.tab');
+    const leaderboardBody = document.getElementById('leaderboardBody');
+    const myRankText = document.getElementById('myRankText');
+    const myRankSmall = document.getElementById('myRankSmall');
+
+    function periodLabel(period) {
+        if (period === 'monthly') return 'Айлық рейтинг бойынша';
+        if (period === 'yearly') return 'Жылдық рейтинг бойынша';
+        return 'Апталық рейтинг бойынша';
+    }
+
+    function renderLeaderboard(period) {
+        leaderboardBody.innerHTML = '';
+
+        const data = leaderboardData[period] || leaderboardData.weekly;
+        const me = data.find(item => item.me);
+
+        if (me) {
+            myRankText.textContent = '#' + me.place;
+            myRankSmall.textContent = periodLabel(period);
+        }
+
+        data.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'row' + (item.me ? ' me' : '');
+            row.innerHTML = `
+                <div><div class="place">${item.place}</div></div>
+                <div class="user">${item.me ? item.user + ' · сіз' : item.user}</div>
+                <div><span class="accuracy-pill">${item.accuracy}</span></div>
+                <div><span class="xp-pill">${item.xp}</span></div>
+            `;
+            leaderboardBody.appendChild(row);
+        });
+    }
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            renderLeaderboard(tab.dataset.period);
+        });
+    });
+
+    renderLeaderboard('weekly');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,811 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMentor AI — Прогресс</title>
+    <style>
+        :root {
+            --bg-main: #f4f8ff;
+            --card-bg: #ffffff;
+            --text-main: #23395d;
+            --text-soft: #7e91b4;
+            --blue: #4a86f7;
+            --blue-dark: #2f5fb8;
+            --blue-soft: #edf4ff;
+            --line: #dbe7fb;
+            --shadow: 0 12px 35px rgba(67, 115, 208, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at left bottom, rgba(108, 209, 180, 0.12), transparent 18%),
+                linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: min(1380px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #edf2fc;
+        }
+
+        .nav-wrap {
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            min-width: 240px;
+        }
+
+        .brand-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            font-size: 14px;
+            color: var(--text-soft);
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: #4d6793;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 10px 4px;
+            transition: .2s ease;
+        }
+
+        .main-nav a:hover {
+            color: var(--blue-dark);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 16px;
+            font-weight: 800;
+            color: white;
+            background: var(--blue);
+            transition: .2s ease;
+        }
+
+        .nav-btn-light {
+            text-decoration: none;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--blue-dark);
+            background: var(--blue-soft);
+            border: 1px solid #d9e6fd;
+            transition: .2s ease;
+        }
+
+        .nav-btn:hover,
+        .nav-btn-light:hover {
+            transform: translateY(-1px);
+        }
+
+        .nav-avatar,
+        .nav-avatar-fallback {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .nav-avatar-fallback {
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            font-weight: 800;
+        }
+
+        .page {
+            padding: 28px 0 60px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 112px;
+        }
+
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid #e7eefc;
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #95a6c8;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .sidebar-link {
+            display: block;
+            text-decoration: none;
+            color: #4f668f;
+            font-weight: 700;
+            padding: 13px 14px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            transition: .2s ease;
+        }
+
+        .sidebar-link:hover {
+            background: #f4f8ff;
+            color: var(--blue-dark);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, #5f99ff, #4a86f7);
+            color: white;
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #e8effc;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero {
+            padding: 26px;
+            background: linear-gradient(135deg, #4f89f8, #3068df);
+            color: white;
+            margin-bottom: 22px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            right: -70px;
+            top: -70px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .hero h1 {
+            margin: 0 0 18px;
+            font-size: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 22px;
+            border-radius: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-avatar {
+            width: 88px;
+            height: 88px;
+            border-radius: 50%;
+            background: white;
+            color: #3068df;
+            display: grid;
+            place-items: center;
+            font-size: 42px;
+            font-weight: 800;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.14);
+            padding: 10px 18px;
+            border-radius: 999px;
+            font-weight: 800;
+        }
+
+        .hero-mini-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-mini {
+            background: rgba(255, 255, 255, 0.13);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 18px;
+            padding: 14px;
+        }
+
+        .hero-mini strong {
+            display: block;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .hero-mini span {
+            font-size: 13px;
+            opacity: .9;
+            font-weight: 700;
+        }
+
+        .section {
+            padding: 26px;
+            margin-bottom: 22px;
+        }
+
+        .title {
+            margin: 0 0 20px;
+            font-size: 28px;
+            color: #203963;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #38527a;
+        }
+
+        .bar {
+            height: 14px;
+            background: #e3ebfb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5e98ff, #2e67da);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .stat {
+            padding: 22px;
+            text-align: center;
+        }
+
+        .stat-num {
+            font-size: 36px;
+            font-weight: 800;
+            color: #2e67da;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 15px;
+            color: var(--text-soft);
+            font-weight: 700;
+        }
+
+        .new-grid {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 22px;
+            margin-bottom: 22px;
+        }
+
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .achievement {
+            background: #f8fbff;
+            border: 1px solid #e6eefc;
+            border-radius: 20px;
+            padding: 18px;
+        }
+
+        .achievement-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            display: grid;
+            place-items: center;
+            background: #edf4ff;
+            font-size: 24px;
+            margin-bottom: 12px;
+        }
+
+        .achievement-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: #203963;
+            margin-bottom: 6px;
+        }
+
+        .achievement-text {
+            color: var(--text-soft);
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 700;
+        }
+
+        .ai-insight {
+            background: linear-gradient(135deg, #edf4ff, #f8fbff);
+            border: 1px solid #dce7fb;
+            border-radius: 22px;
+            padding: 20px;
+        }
+
+        .ai-insight-top {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .ai-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #5f99ff, #4a86f7);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-weight: 900;
+        }
+
+        .ai-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #203963;
+        }
+
+        .ai-insight p {
+            margin: 0;
+            color: #4d6793;
+            line-height: 1.7;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .day-card {
+            min-height: 84px;
+            border-radius: 18px;
+            background: #f8fbff;
+            border: 1px solid #e6eefc;
+            display: grid;
+            place-items: center;
+            text-align: center;
+            padding: 10px;
+        }
+
+        .day-card.done {
+            background: linear-gradient(135deg, #ecfdf5, #dcfce7);
+            border-color: #bbf7d0;
+        }
+
+        .day-card.today {
+            background: linear-gradient(135deg, #edf4ff, #dbeafe);
+            border-color: #bfdbfe;
+        }
+
+        .day-card strong {
+            display: block;
+            color: #203963;
+            font-size: 14px;
+            margin-bottom: 6px;
+        }
+
+        .day-card span {
+            color: var(--text-soft);
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .topic-box {
+            background: #fffdf5;
+            border: 1px solid #f1dfae;
+            padding: 16px 18px;
+            border-radius: 18px;
+            margin-bottom: 14px;
+            color: #4d6793;
+            font-weight: 700;
+        }
+
+        .step-box {
+            background: #f8fbff;
+            border: 1px solid #e6eefc;
+            padding: 18px;
+            border-radius: 18px;
+            margin-bottom: 14px;
+            color: #466284;
+            font-weight: 700;
+        }
+
+        .subject {
+            margin-bottom: 18px;
+        }
+
+        .small-bar {
+            height: 10px;
+            background: #e3ebfb;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        body.theme-dark {
+            --bg-main: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #e5eefc;
+            --text-soft: #9fb0cc;
+            --line: #2d3b55;
+        }
+
+        body.theme-dark {
+            background: linear-gradient(180deg, #0f172a, #111827, #172033) !important;
+        }
+
+        body.theme-dark .site-header {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-bottom-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .card,
+        body.theme-dark .sidebar-card,
+        body.theme-dark .section,
+        body.theme-dark .achievement,
+        body.theme-dark .day-card,
+        body.theme-dark .topic-box,
+        body.theme-dark .step-box {
+            background: rgba(17, 24, 39, 0.92) !important;
+            border-color: #2d3b55 !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,.24) !important;
+        }
+
+        body.theme-dark .hero {
+            background: linear-gradient(135deg, #17345f, #1d4ed8) !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .ai-insight {
+            background: linear-gradient(135deg, #111827, #1b2a44) !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .brand-title,
+        body.theme-dark .title,
+        body.theme-dark .achievement-title,
+        body.theme-dark .ai-title,
+        body.theme-dark .day-card strong,
+        body.theme-dark .progress-top {
+            color: #f3f7ff !important;
+        }
+
+        body.theme-dark .brand-subtitle,
+        body.theme-dark .main-nav a,
+        body.theme-dark .sidebar-title,
+        body.theme-dark .sidebar-link,
+        body.theme-dark .stat-label,
+        body.theme-dark .achievement-text,
+        body.theme-dark .ai-insight p,
+        body.theme-dark .day-card span,
+        body.theme-dark .topic-box,
+        body.theme-dark .step-box {
+            color: #9fb0cc !important;
+        }
+
+        body.theme-dark .bar,
+        body.theme-dark .small-bar {
+            background: #2d3b55 !important;
+        }
+
+        body.theme-dark .stat-num {
+            color: #60a5fa !important;
+        }
+
+        body.theme-dark .sidebar-link:hover,
+        body.theme-dark .nav-btn-light {
+            background: #1b2a44 !important;
+            color: #dbe7ff !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .nav-avatar,
+        body.theme-dark .nav-avatar-fallback {
+            border-color: #2d3b55 !important;
+        }
+
+        @media (max-width: 1080px) {
+            .layout { grid-template-columns: 1fr; }
+            .main-nav { display: none; }
+            .stats { grid-template-columns: repeat(2, 1fr); }
+            .sidebar { position: static; }
+            .new-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 720px) {
+            .container { width: min(100% - 22px, 100%); }
+            .hero h1 { font-size: 32px; }
+            .hero-user { flex-direction: column; align-items: flex-start; }
+            .stats { grid-template-columns: 1fr; }
+            .achievement-grid { grid-template-columns: 1fr; }
+            .week-days { grid-template-columns: repeat(2, 1fr); }
+            .nav-wrap { flex-wrap: wrap; padding: 14px 0; }
+        }
+    </style>
+</head>
+<body class="{% if dark_mode %}theme-dark{% endif %}">
+
+<header class="site-header">
+    <div class="container nav-wrap">
+        <a href="{% url 'home' %}" class="brand">
+            <div class="brand-logo">EM</div>
+            <div>
+                <div class="brand-title">EduMentor AI</div>
+                <div class="brand-subtitle">Ақылды оқу платформасы</div>
+            </div>
+        </a>
+
+        <nav class="main-nav">
+            <a href="{% url 'home' %}">Басты бет</a>
+            <a href="{% url 'courses' %}">Курстар</a>
+            <a href="{% url 'guide' %}">Нұсқаулық</a>
+            <a href="{% url 'contact' %}">Байланыс</a>
+            <a href="{% url 'quiz' %}">Quiz</a>
+        </nav>
+
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
+                    {% if user.profile_image %}
+                        <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="nav-avatar">
+                    {% else %}
+                        <div class="nav-avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                </a>
+                <a href="{% url 'logout' %}" class="nav-btn">Шығу</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-btn-light">Кіру</a>
+                <a href="{% url 'register' %}" class="nav-btn">Тіркелу</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    <div class="container layout">
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-title">Профиль менюсы</div>
+                <a class="sidebar-link" href="{% url 'profile' %}">Профиль</a>
+                <a class="sidebar-link active" href="{% url 'profile_progress' %}">Прогресс</a>
+                <a class="sidebar-link" href="{% url 'profile_grants' %}">Грант калькуляторы</a>
+                <a class="sidebar-link" href="{% url 'profile_leaderboard' %}">Лидерборд</a>
+                <a class="sidebar-link" href="{% url 'profile_settings' %}">Настройкалар</a>
+            </div>
+        </aside>
+
+        <section>
+            <div class="card hero">
+                <h1>Профиль және прогресс</h1>
+                <div class="hero-user">
+                    <div class="hero-avatar">{{ user.username|default:"A"|slice:":1"|upper }}</div>
+                    <div>
+                        <div style="font-size:22px;font-weight:800;margin-bottom:10px;">{{ user.username|default:"ainur" }}</div>
+                        <span class="badge">Орта деңгей</span>
+                    </div>
+                </div>
+
+                <div class="hero-mini-grid">
+                    <div class="hero-mini">
+                        <strong>Level 4</strong>
+                        <span>320 XP жинадың</span>
+                    </div>
+                    <div class="hero-mini">
+                        <strong>7 күн</strong>
+                        <span>үздіксіз оқу сериясы</span>
+                    </div>
+                    <div class="hero-mini">
+                        <strong>+12%</strong>
+                        <span>өткен аптамен салыстырғанда</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats">
+                <div class="card stat">
+                    <div class="stat-num">24/50</div>
+                    <div class="stat-label">Тақырыптар</div>
+                </div>
+                <div class="card stat">
+                    <div class="stat-num">71%</div>
+                    <div class="stat-label">Дәлдік</div>
+                </div>
+                <div class="card stat">
+                    <div class="stat-num">7</div>
+                    <div class="stat-label">Белсенді күн</div>
+                </div>
+                <div class="card stat">
+                    <div class="stat-num">120</div>
+                    <div class="stat-label">Тест</div>
+                </div>
+            </div>
+
+            <div class="new-grid">
+                <div class="card section">
+                    <h2 class="title">Жетістіктер</h2>
+                    <div class="achievement-grid">
+                        <div class="achievement">
+                            <div class="achievement-icon">🏆</div>
+                            <div class="achievement-title">Quiz Master</div>
+                            <div class="achievement-text">120 тест орындадың</div>
+                        </div>
+                        <div class="achievement">
+                            <div class="achievement-icon">🔥</div>
+                            <div class="achievement-title">7 күн streak</div>
+                            <div class="achievement-text">Оқуды үзбей жалғастырдың</div>
+                        </div>
+                        <div class="achievement">
+                            <div class="achievement-icon">⭐</div>
+                            <div class="achievement-title">Жақсы нәтиже</div>
+                            <div class="achievement-text">Дәлдік 71%-ға жетті</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card section">
+                    <h2 class="title">AI ұсынысы</h2>
+                    <div class="ai-insight">
+                        <div class="ai-insight-top">
+                            <div class="ai-icon">AI</div>
+                            <div class="ai-title">Бүгінгі фокус</div>
+                        </div>
+                        <p>
+                            Бүгін математикадан логарифм тақырыбына 20 минут бөліп,
+                            кейін 10 сұрақтық quiz тапсыру ұсынылады. Бұл апталық прогресті тез көтереді.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card section">
+                <h2 class="title">Апталық оқу күнтізбесі</h2>
+                <div class="week-days">
+                    <div class="day-card done"><strong>Дүйсенбі</strong><span>✓ Орындалды</span></div>
+                    <div class="day-card done"><strong>Сейсенбі</strong><span>✓ Орындалды</span></div>
+                    <div class="day-card done"><strong>Сәрсенбі</strong><span>✓ Орындалды</span></div>
+                    <div class="day-card today"><strong>Бүгін</strong><span>Quiz + курс</span></div>
+                    <div class="day-card"><strong>Жұма</strong><span>Қайталау</span></div>
+                    <div class="day-card"><strong>Сенбі</strong><span>Тест</span></div>
+                    <div class="day-card"><strong>Жексенбі</strong><span>Демалыс</span></div>
+                </div>
+            </div>
+
+            <div class="card section">
+                <h2 class="title">Апталық прогресс</h2>
+                <div class="progress-top"><span>Осы апта</span><strong>68%</strong></div>
+                <div class="bar"><div class="fill" style="width:68%"></div></div>
+            </div>
+
+            <div class="card section">
+                <h2 class="title">Қайталау керек тақырыптар</h2>
+                <div class="topic-box">Қазақстан тарихы — даталар</div>
+                <div class="topic-box">Математика — логарифм</div>
+                <div class="topic-box">Биология — жасуша құрылысы</div>
+            </div>
+
+            <div class="card section">
+                <h2 class="title">Ұсынылған келесі қадамдар</h2>
+                <div class="step-box">Апталық әлсіз тақырыптарға 20 минут бөлу</div>
+                <div class="step-box">Математикадан тағы 1 тест тапсыру</div>
+                <div class="step-box">Курстар бөлімінен жаңа материал ашу</div>
+            </div>
+
+            <div class="card section">
+                <h2 class="title">Пәндер бойынша прогресс</h2>
+
+                <div class="subject">
+                    <div class="progress-top"><span>Математика</span><strong>68%</strong></div>
+                    <div class="small-bar"><div class="fill" style="width:68%"></div></div>
+                </div>
+
+                <div class="subject">
+                    <div class="progress-top"><span>Қазақстан тарихы</span><strong>54%</strong></div>
+                    <div class="small-bar"><div class="fill" style="width:54%"></div></div>
+                </div>
+
+                <div class="subject" style="margin-bottom:0;">
+                    <div class="progress-top"><span>Биология</span><strong>72%</strong></div>
+                    <div class="small-bar"><div class="fill" style="width:72%"></div></div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</main>
+</body>
+</html>
