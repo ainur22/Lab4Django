@@ -8,7 +8,6 @@ def user_avatar_path(instance, filename):
     filename = f"avatar.{ext}"
     return os.path.join("users", instance.username, filename)
 
-
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True)
     bio = models.TextField(blank=True, null=True)
@@ -18,9 +17,15 @@ class CustomUser(AbstractUser):
         null=True
     )
 
+    dark_mode = models.BooleanField(default=False)
+    notifications = models.BooleanField(default=True)
+    show_timer = models.BooleanField(default=True)
+    shuffle_questions = models.BooleanField(default=False)
+    ai_explanation = models.BooleanField(default=True)
+    site_language = models.CharField(max_length=10, default="kk")
+
     def __str__(self):
         return self.username
-
 
 class ContactRequest(models.Model):
     name = models.CharField(max_length=120, verbose_name="Аты")
