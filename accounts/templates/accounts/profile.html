@@ -310,6 +310,9 @@ a{text-decoration:none;color:inherit}
   background:linear-gradient(90deg,#5e98ff,#2e67da);
 }
 
+.w-53{width:53%}
+.w-68{width:68%}
+
 .streak-box{
   display:flex;
   flex-direction:column;
@@ -689,7 +692,7 @@ body.theme-dark .btn-secondary{
     <div class="level-box">
       <div class="level-title">⚡ Level 4</div>
       <div class="level-sub">{{ xp|default:320 }} XP</div>
-      <div class="bar"><div class="fill" style="width:{{ xp_percent|default:53 }}%;"></div></div>
+      <div class="bar"><div class="fill w-53"></div></div>
       <div class="level-bottom">{{ xp|default:320 }} / 600 XP</div>
     </div>
 
@@ -769,7 +772,7 @@ body.theme-dark .btn-secondary{
     <h2 class="section-title">Жалпы прогресс</h2>
     <div class="progress-row">
       <div class="progress-top"><span>Апталық прогресс</span><strong>{{ weekly_progress|default:68 }}%</strong></div>
-      <div class="bar"><div class="fill" style="width:{{ weekly_progress|default:68 }}%;"></div></div>
+      <div class="bar"><div class="fill w-68"></div></div>
     </div>
   </div>
 
