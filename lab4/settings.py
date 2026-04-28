@@ -15,7 +15,7 @@ SECRET_KEY = os.getenv(
     "django-insecure-p(v!ek*@co7p++!suvpv3&6f3*1f6)j_-9ro&j)g53e@iihbd4"
 )
 
-DEBUG = os.getenv("DEBUG", "False") == "True"
+DEBUG = True
 
 ALLOWED_HOSTS = [
     "lab4django.onrender.com",
