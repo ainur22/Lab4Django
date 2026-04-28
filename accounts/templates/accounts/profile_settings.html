@@ -1,0 +1,740 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMentor AI — Баптаулар</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-1: #eef4ff;
+            --bg-2: #f8fbff;
+            --bg-3: #eefbf5;
+            --white: #ffffff;
+            --text-main: #23395d;
+            --text-soft: #7e91b4;
+            --line: #e5eefc;
+            --blue: #4a86f7;
+            --blue-dark: #2f5fb8;
+            --blue-soft: #edf4ff;
+            --blue-soft-2: #dbeafe;
+            --green-soft: #ecfdf5;
+            --green-text: #15803d;
+            --red-soft: #fef2f2;
+            --red-text: #b91c1c;
+            --shadow: 0 12px 35px rgba(67, 115, 208, 0.08);
+            --radius-xl: 28px;
+            --radius-lg: 22px;
+            --radius-md: 18px;
+            --radius-sm: 14px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at left bottom, rgba(108, 209, 180, 0.12), transparent 18%),
+                linear-gradient(180deg, var(--bg-2) 0%, var(--bg-1) 50%, var(--bg-3) 100%);
+        }
+
+        body {
+            min-height: 100vh;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: min(1380px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.94);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #edf2fc;
+        }
+
+        .nav-wrap {
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            min-width: 240px;
+        }
+
+        .brand-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 30px;
+            font-weight: 800;
+            box-shadow: 0 10px 22px rgba(74, 134, 247, 0.18);
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            font-size: 14px;
+            color: var(--text-soft);
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .main-nav a {
+            color: #4d6793;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 10px 4px;
+            transition: .2s ease;
+        }
+
+        .main-nav a:hover {
+            color: var(--blue-dark);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn,
+        .nav-btn-light {
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 16px;
+            font-weight: 800;
+            transition: .2s ease;
+        }
+
+        .nav-btn {
+            color: white;
+            background: linear-gradient(135deg, #5c95ff, #4a86f7);
+            box-shadow: 0 10px 22px rgba(74, 134, 247, 0.18);
+        }
+
+        .nav-btn-light {
+            color: var(--blue-dark);
+            background: var(--blue-soft);
+            border: 1px solid #d9e6fd;
+        }
+
+        .nav-btn:hover,
+        .nav-btn-light:hover {
+            transform: translateY(-1px);
+        }
+
+        .nav-avatar,
+        .nav-avatar-fallback {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .nav-avatar-fallback {
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            font-weight: 800;
+        }
+
+        .page {
+            padding: 28px 0 60px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 112px;
+        }
+
+        .sidebar-card,
+        .content-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-card {
+            border-radius: 26px;
+            padding: 18px;
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #95a6c8;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .sidebar-link {
+            display: block;
+            color: #4f668f;
+            font-weight: 700;
+            padding: 13px 14px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            transition: .2s ease;
+        }
+
+        .sidebar-link:hover {
+            background: #f4f8ff;
+            color: var(--blue-dark);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, #5f99ff, #4a86f7);
+            color: white;
+        }
+
+        .content-card {
+            border-radius: var(--radius-xl);
+            padding: 28px;
+        }
+
+        .eyebrow {
+            width: fit-content;
+            min-height: 36px;
+            padding: 0 14px;
+            border-radius: 999px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #edf4ff 0%, #dceaff 100%);
+            color: var(--blue-dark);
+            border: 1px solid #d5e3fb;
+            font-size: 13px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 36px;
+            line-height: 1.1;
+            color: #203963;
+        }
+
+        .subtitle {
+            margin: 12px 0 0;
+            color: var(--text-soft);
+            font-size: 15px;
+            line-height: 1.75;
+            max-width: 720px;
+        }
+
+        .messages {
+            display: grid;
+            gap: 10px;
+            margin-top: 18px;
+            margin-bottom: 8px;
+        }
+
+        .message {
+            border-radius: 16px;
+            padding: 14px 16px;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.6;
+            border: 1px solid transparent;
+        }
+
+        .message.success {
+            background: var(--green-soft);
+            color: var(--green-text);
+            border-color: #bbf7d0;
+        }
+
+        .message.error {
+            background: var(--red-soft);
+            color: var(--red-text);
+            border-color: #fecaca;
+        }
+
+        .message.info,
+        .message.warning {
+            background: var(--blue-soft);
+            color: var(--blue-dark);
+            border-color: #d5e3fb;
+        }
+
+        .settings-form {
+            margin-top: 22px;
+        }
+
+        .settings-group + .settings-group {
+            margin-top: 28px;
+        }
+
+        .group-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #203963;
+            margin-bottom: 14px;
+        }
+
+        .setting-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid #e8effc;
+            border-radius: 18px;
+            background: #f8fbff;
+            margin-bottom: 14px;
+        }
+
+        .setting-copy {
+            min-width: 0;
+        }
+
+        .setting-title {
+            font-size: 17px;
+            font-weight: 800;
+            color: #23395d;
+            margin-bottom: 6px;
+        }
+
+        .setting-text {
+            font-size: 15px;
+            color: #7e91b4;
+            line-height: 1.6;
+        }
+
+        .switch {
+            position: relative;
+            width: 58px;
+            height: 32px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            display: none;
+        }
+
+        .slider {
+            position: absolute;
+            inset: 0;
+            background: #dce5f6;
+            border-radius: 999px;
+            transition: .2s;
+            cursor: pointer;
+        }
+
+        .slider::before {
+            content: "";
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            left: 4px;
+            top: 4px;
+            background: white;
+            border-radius: 50%;
+            transition: .2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,.08);
+        }
+
+        .switch input:checked + .slider {
+            background: #4a86f7;
+        }
+
+        .switch input:checked + .slider::before {
+            transform: translateX(26px);
+        }
+
+        .select-wrap select {
+            padding: 14px 16px;
+            border: 1px solid #d9e6fb;
+            border-radius: 16px;
+            font-size: 16px;
+            min-width: 180px;
+            font-family: inherit;
+            color: var(--text-main);
+            background: white;
+            outline: none;
+        }
+
+        .form-actions {
+            margin-top: 8px;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .save-btn {
+            border: none;
+            border-radius: 18px;
+            padding: 15px 26px;
+            background: linear-gradient(135deg, #5c95ff, #4a86f7);
+            color: white;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            font-family: inherit;
+            box-shadow: 0 10px 22px rgba(74, 134, 247, 0.18);
+            transition: .2s ease;
+        }
+
+        .save-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        /* ================= DARK MODE FROM SETTINGS ================= */
+
+        body.theme-dark {
+            --bg-1: #0f172a;
+            --bg-2: #111827;
+            --bg-3: #172033;
+            --white: #111827;
+            --text-main: #e5eefc;
+            --text-soft: #9fb0cc;
+            --line: #2d3b55;
+            --blue-soft: #17345f;
+            --blue-soft-2: #1e3a5f;
+            --shadow: 0 20px 50px rgba(0,0,0,.32);
+        }
+
+        body.theme-dark {
+            background:
+                radial-gradient(circle at left bottom, rgba(59,130,246,.10), transparent 18%),
+                linear-gradient(180deg, #0f172a 0%, #111827 55%, #172033 100%) !important;
+        }
+
+        body.theme-dark .site-header {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-bottom-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .sidebar-card,
+        body.theme-dark .content-card,
+        body.theme-dark .setting-row {
+            background: rgba(17,24,39,.92) !important;
+            border-color: #2d3b55 !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,.24) !important;
+        }
+
+        body.theme-dark .brand-title,
+        body.theme-dark .title,
+        body.theme-dark .group-title,
+        body.theme-dark .setting-title {
+            color: #f3f7ff !important;
+        }
+
+        body.theme-dark .brand-subtitle,
+        body.theme-dark .main-nav a,
+        body.theme-dark .sidebar-title,
+        body.theme-dark .sidebar-link,
+        body.theme-dark .subtitle,
+        body.theme-dark .setting-text {
+            color: #9fb0cc !important;
+        }
+
+        body.theme-dark .main-nav a:hover,
+        body.theme-dark .sidebar-link:hover,
+        body.theme-dark .nav-btn-light {
+            background: #1b2a44 !important;
+            color: #dbe7ff !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .sidebar-link.active {
+            background: linear-gradient(135deg, #2563eb, #60a5fa) !important;
+            color: white !important;
+        }
+
+        body.theme-dark .eyebrow,
+        body.theme-dark .message.info,
+        body.theme-dark .message.warning {
+            background: #17345f !important;
+            color: #dbe7ff !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .message.success {
+            background: rgba(6, 78, 59, 0.35) !important;
+            border-color: rgba(16, 185, 129, 0.45) !important;
+            color: #86efac !important;
+        }
+
+        body.theme-dark .message.error {
+            background: rgba(127, 29, 29, 0.28) !important;
+            border-color: rgba(239, 68, 68, 0.38) !important;
+            color: #fca5a5 !important;
+        }
+
+        body.theme-dark .select-wrap select {
+            background: #111827 !important;
+            color: #f3f7ff !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .slider {
+            background: #2d3b55 !important;
+        }
+
+        body.theme-dark .switch input:checked + .slider {
+            background: #4a86f7 !important;
+        }
+
+        body.theme-dark .nav-avatar,
+        body.theme-dark .nav-avatar-fallback {
+            border-color: #2d3b55 !important;
+        }
+
+        @media (max-width: 1080px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+
+            .main-nav {
+                display: none;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .setting-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .select-wrap select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                width: min(100% - 16px, 1000px);
+            }
+
+            .content-card {
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 30px;
+            }
+
+            .nav-wrap {
+                min-height: auto;
+                padding: 14px 0;
+                flex-wrap: wrap;
+            }
+
+            .brand-logo {
+                width: 56px;
+                height: 56px;
+                font-size: 26px;
+            }
+        }
+    </style>
+</head>
+<body class="{% if dark_mode %}theme-dark{% endif %}">
+
+<header class="site-header">
+    <div class="container nav-wrap">
+        <a href="{% url 'home' %}" class="brand">
+            <div class="brand-logo">EM</div>
+            <div>
+                <div class="brand-title">EduMentor AI</div>
+                <div class="brand-subtitle">Ақылды оқу платформасы</div>
+            </div>
+        </a>
+
+        <nav class="main-nav">
+            <a href="{% url 'home' %}">Басты бет</a>
+            <a href="{% url 'courses' %}">Курстар</a>
+            <a href="{% url 'guide' %}">Нұсқаулық</a>
+            <a href="{% url 'contact' %}">Байланыс</a>
+            <a href="{% url 'quiz' %}">Quiz</a>
+        </nav>
+
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
+                    {% if user.profile_image %}
+                        <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="nav-avatar">
+                    {% else %}
+                        <div class="nav-avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                </a>
+                <a href="{% url 'logout' %}" class="nav-btn">Шығу</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-btn-light">Кіру</a>
+                <a href="{% url 'register' %}" class="nav-btn">Тіркелу</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    <div class="container layout">
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-title">Профиль бөлімі</div>
+                <a class="sidebar-link" href="{% url 'profile' %}">Профиль</a>
+                <a class="sidebar-link" href="{% url 'profile_progress' %}">Прогресс</a>
+                <a class="sidebar-link" href="{% url 'profile_grants' %}">Грант калькуляторы</a>
+                <a class="sidebar-link" href="{% url 'profile_leaderboard' %}">Лидерборд</a>
+                <a class="sidebar-link active" href="{% url 'profile_settings' %}">Баптаулар</a>
+            </div>
+        </aside>
+
+        <section class="content-card">
+            <div class="eyebrow">Профиль баптаулары</div>
+            <h1 class="title">Баптаулар</h1>
+            <p class="subtitle">Интерфейс, тест және тіл параметрлерін осы жерден басқарыңыз.</p>
+
+            {% if messages %}
+              <div class="messages">
+                {% for message in messages %}
+                  <div class="message {{ message.tags|default:'info' }}">{{ message }}</div>
+                {% endfor %}
+              </div>
+            {% endif %}
+
+            <form method="post" class="settings-form">
+                {% csrf_token %}
+
+                <div class="settings-group">
+                    <div class="group-title">Жалпы</div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <div class="setting-title">Қараңғы режим</div>
+                            <div class="setting-text">Сайттың түс схемасын ауыстыру.</div>
+                        </div>
+                        <label class="switch" for="id_dark_mode">
+                            <input id="id_dark_mode" type="checkbox" name="dark_mode" {% if dark_mode %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <div class="setting-title">Хабарландырулар</div>
+                            <div class="setting-text">Маңызды ескертулер мен жүйелік хабарламаларды көрсету.</div>
+                        </div>
+                        <label class="switch" for="id_notifications">
+                            <input id="id_notifications" type="checkbox" name="notifications" {% if notifications %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="group-title">Тест параметрлері</div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <div class="setting-title">Таймерді көрсету</div>
+                            <div class="setting-text">Тест кезінде қалған уақытты экранда шығару.</div>
+                        </div>
+                        <label class="switch" for="id_show_timer">
+                            <input id="id_show_timer" type="checkbox" name="show_timer" {% if show_timer %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <div class="setting-title">Сұрақтарды араластыру</div>
+                            <div class="setting-text">Тест сұрақтарын кездейсоқ ретпен көрсету.</div>
+                        </div>
+                        <label class="switch" for="id_shuffle_questions">
+                            <input id="id_shuffle_questions" type="checkbox" name="shuffle_questions" {% if shuffle_questions %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <div class="setting-title">AI түсіндіруді қосу</div>
+                            <div class="setting-text">Нәтижеден кейін AI арқылы қысқа түсіндірме ұсыну.</div>
+                        </div>
+                        <label class="switch" for="id_ai_explanation">
+                            <input id="id_ai_explanation" type="checkbox" name="ai_explanation" {% if ai_explanation %}checked{% endif %}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="settings-group">
+                    <div class="group-title">Тіл</div>
+
+                    <div class="setting-row">
+                        <div class="setting-copy">
+                            <div class="setting-title">Интерфейс тілі</div>
+                            <div class="setting-text">Сайттың негізгі тілін таңдаңыз.</div>
+                        </div>
+                        <div class="select-wrap">
+                            <select name="site_language">
+                                <option value="kk" {% if site_language == "kk" or site_language == "Қазақша" %}selected{% endif %}>Қазақша</option>
+                                <option value="ru" {% if site_language == "ru" or site_language == "Русский" %}selected{% endif %}>Русский</option>
+                                <option value="en" {% if site_language == "en" or site_language == "English" %}selected{% endif %}>English</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="save-btn">Сақтау</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</main>
+
+</body>
+</html>
