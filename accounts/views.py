@@ -87,57 +87,9 @@ def ai_chat_view(request):
 
 
 def get_demo_reply(user_message):
-    text = user_message.strip().lower()
-
-    if not text:
-        return "Сұрағыңды нақтырақ жазып жібер."
-
-    if "сәлем" in text or "привет" in text:
-        return "Сәлем! Мен EduMentor AI көмекшісімін. Саған пәндер бойынша түсіндіріп, оқу жоспарын ұсына аламын."
-
-    if "математика" in text:
-        return (
-            "Математикадан жақсы нәтиже үшін 3 нәрсе маңызды:\n"
-            "1) формулаларды түсіну\n"
-            "2) күн сайын есеп шығару\n"
-            "3) қате кеткен тақырыптарды қайта қарау\n\n"
-            "Қай тақырып қиын екенін жазсаң, соны түсіндіремін."
-        )
-
-    if "тарих" in text:
-        return (
-            "Қазақстан тарихын оқығанда кезеңдерге бөліп оқу тиімді:\n"
-            "1) Ежелгі дәуір\n"
-            "2) Орта ғасырлар\n"
-            "3) Қазақ хандығы\n"
-            "4) Кеңестік кезең\n"
-            "5) Тәуелсіз Қазақстан"
-        )
-
-    if "биология" in text:
-        return "Биологияда терминдерді ғана жаттамай, процестердің байланысын түсіну маңызды."
-
-    if "физика" in text:
-        return "Физикада алдымен формуланың мағынасын түсініп, кейін есеп шығару керек."
-
-    if "химия" in text:
-        return "Химияда периодтық жүйе, валенттілік, реакциялар және есептерге назар аудар."
-
-    if "ұбт" in text or "жоспар" in text or "оқу жоспары" in text:
-        return (
-            "Қарапайым оқу жоспары:\n"
-            "Дүйсенбі — математика\n"
-            "Сейсенбі — тарих\n"
-            "Сәрсенбі — оқу сауаттылығы\n"
-            "Бейсенбі — биология/химия\n"
-            "Жұма — тест талдау\n"
-            "Сенбі — қайталау\n"
-            "Жексенбі — демалыс"
-        )
-
     return (
-        "Мен қазір demo режимде жауап беріп тұрмын. "
-        "Мысалы: математика, тарих, биология, химия, ҰБТ, оқу жоспары деп жазып көр."
+        "AI уақытша жауап бере алмады. "
+        "GEMINI_API_KEY дұрыс қойылғанын тексеріңіз немесе кейін қайта сұрап көріңіз."
     )
 
 
@@ -150,14 +102,17 @@ def ai_web_chat_api(request):
         if not user_message:
             return JsonResponse({"ok": False, "error": "Сұрақ бос."}, status=400)
 
-        api_key = getattr(settings, "GEMINI_API_KEY", "")
+        api_key = getattr(settings, "GEMINI_API_KEY", "").strip()
 
         if not api_key:
-            return JsonResponse({"ok": True, "answer": get_demo_reply(user_message)})
+            return JsonResponse({
+                "ok": True,
+                "answer": "GEMINI_API_KEY орнатылмаған. Render Environment ішіне GEMINI_API_KEY қосыңыз."
+            })
 
         url = (
             "https://generativelanguage.googleapis.com/v1beta/"
-            f"models/gemini-2.5-flash:generateContent?key={api_key}"
+            f"models/gemini-1.5-flash:generateContent?key={api_key}"
         )
 
         payload = {
@@ -167,8 +122,8 @@ def ai_web_chat_api(request):
                         {
                             "text": (
                                 "Сен EduMentor AI атты оқу көмекшісісің. "
-                                "Жауапты қазақша немесе қолданушы қай тілде жазса, сол тілде бер. "
-                                "Қысқа, түсінікті, оқушыға оңай тілмен жауап бер.\n\n"
+                                "Қолданушыға қазақша немесе өзі жазған тілде жауап бер. "
+                                "Жауап қысқа, түсінікті, оқушыға пайдалы болсын.\n\n"
                                 f"Сұрақ: {user_message}"
                             )
                         }
@@ -177,41 +132,31 @@ def ai_web_chat_api(request):
             ]
         }
 
-        response = None
-        result = None
+        response = requests.post(url, json=payload, timeout=30)
+        result = response.json()
 
-        for attempt in range(3):
-            response = requests.post(url, json=payload, timeout=30)
-            result = response.json()
-
-            if response.status_code == 200:
-                break
-
-            error_text = result.get("error", {}).get("message", "").lower()
-
-            if (
-                "high demand" in error_text
-                or "overloaded" in error_text
-                or "temporarily" in error_text
-                or "try again later" in error_text
-            ):
-                time.sleep(2)
-                continue
-
-            break
-
-        if response is None or response.status_code != 200:
-            return JsonResponse({"ok": True, "answer": get_demo_reply(user_message)})
+        if response.status_code != 200:
+            error_message = result.get("error", {}).get("message", "Gemini API қатесі шықты.")
+            return JsonResponse({
+                "ok": True,
+                "answer": f"AI қатесі: {error_message}"
+            })
 
         try:
             answer_text = result["candidates"][0]["content"]["parts"][0]["text"]
         except Exception:
             answer_text = get_demo_reply(user_message)
 
-        return JsonResponse({"ok": True, "answer": answer_text})
+        return JsonResponse({
+            "ok": True,
+            "answer": answer_text
+        })
 
-    except Exception:
-        return JsonResponse({"ok": True, "answer": get_demo_reply(user_message)})
+    except Exception as e:
+        return JsonResponse({
+            "ok": True,
+            "answer": f"AI қатесі: {str(e)}"
+        })
 
 
 def contact_view(request):
@@ -349,18 +294,10 @@ def profile_settings_view(request):
             "site_language",
         ])
 
-        request.session["site_language"] = request.user.site_language
-        request.session["dark_mode"] = request.user.dark_mode
-        request.session["notifications"] = request.user.notifications
-        request.session["show_timer"] = request.user.show_timer
-        request.session["shuffle_questions"] = request.user.shuffle_questions
-        request.session["ai_explanation"] = request.user.ai_explanation
-
         messages.success(request, "Баптаулар сәтті сақталды.")
         return redirect("profile_settings")
 
-    context = build_page_context(request)
-    return render(request, "accounts/profile_settings.html", context)
+    return render(request, "accounts/profile_settings.html", build_page_context(request))
 
 
 def progress_view(request):
