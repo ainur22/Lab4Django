@@ -8,321 +8,169 @@
 
 <style>
 *{box-sizing:border-box}
-
-:root{
-  --bg1:#eef4ff;
-  --bg2:#f8fbff;
-  --text:#23395d;
-  --muted:#7e91b4;
-  --blue:#4a86f7;
-  --blue2:#60a5fa;
-  --green:#10b981;
-  --line:#dbe7fb;
-  --shadow:0 18px 45px rgba(67,115,208,.12);
-}
-
 body{
   margin:0;
   font-family:"Inter","Segoe UI",Arial,sans-serif;
   min-height:100vh;
-  background:
-    radial-gradient(circle at right bottom,rgba(74,134,247,.14),transparent 22%),
-    linear-gradient(180deg,var(--bg2),var(--bg1));
-  color:var(--text);
+  background:linear-gradient(180deg,#f8fbff,#eef4ff);
+  color:#23395d;
 }
-
-a{text-decoration:none;color:inherit}
-
 .auth-page{
   min-height:100vh;
   display:grid;
   grid-template-columns:1fr 1fr;
 }
-
-.auth-left{
+.left{
   background:linear-gradient(135deg,#4a86f7,#60a5fa);
+  color:white;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:40px;
-  position:relative;
-  overflow:hidden;
+  padding:50px;
 }
-
-.auth-left::before{
-  content:"";
-  position:absolute;
-  width:350px;
-  height:350px;
-  border-radius:50%;
-  background:rgba(255,255,255,.15);
-  left:-100px;
-  bottom:-100px;
-}
-
-.info-box{
-  position:relative;
-  z-index:1;
-  max-width:520px;
-  color:white;
-}
-
-.logo-mini{
-  width:70px;
-  height:70px;
-  border-radius:22px;
-  background:rgba(255,255,255,.18);
-  display:grid;
-  place-items:center;
-  font-size:30px;
-  font-weight:900;
-  margin-bottom:28px;
-}
-
-.info-box h2{
-  font-size:44px;
-  line-height:1.12;
-  margin:0 0 18px;
-}
-
-.info-box p{
-  font-size:17px;
-  line-height:1.8;
-  opacity:.95;
-}
-
-.steps{
-  display:grid;
-  gap:14px;
-  margin-top:28px;
-}
-
+.left-box{max-width:520px}
+.left h1{font-size:46px;margin:0 0 18px}
+.left p{font-size:17px;line-height:1.8}
 .step{
-  background:rgba(255,255,255,.15);
-  border:1px solid rgba(255,255,255,.2);
-  border-radius:22px;
+  margin-top:14px;
   padding:18px;
-  font-weight:800;
+  border-radius:20px;
+  background:rgba(255,255,255,.16);
 }
-
-.auth-right{
-  padding:36px 70px;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.brand{
+.right{
   display:flex;
   align-items:center;
-  gap:14px;
-  margin-bottom:34px;
+  justify-content:center;
+  padding:35px;
 }
-
-.logo{
-  width:58px;
-  height:58px;
-  border-radius:19px;
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
-  color:white;
-  display:grid;
-  place-items:center;
-  font-size:26px;
-  font-weight:900;
-  box-shadow:0 12px 26px rgba(74,134,247,.25);
-}
-
-.brand-title{
-  font-size:20px;
-  font-weight:900;
-}
-
-.brand-sub{
-  color:var(--muted);
-  font-size:14px;
-  margin-top:4px;
-}
-
-.auth-card{
+.card{
   width:100%;
   max-width:520px;
-  background:rgba(255,255,255,.9);
-  border:1px solid var(--line);
+  background:white;
+  border:1px solid #dbe7fb;
   border-radius:30px;
   padding:32px;
-  box-shadow:var(--shadow);
-  backdrop-filter:blur(12px);
+  box-shadow:0 18px 45px rgba(67,115,208,.12);
 }
-
+.logo{
+  width:60px;height:60px;border-radius:20px;
+  background:linear-gradient(135deg,#4a86f7,#60a5fa);
+  color:white;display:grid;place-items:center;
+  font-size:26px;font-weight:900;margin-bottom:20px;
+}
 .badge{
-  width:fit-content;
-  padding:9px 16px;
-  border-radius:999px;
+  display:inline-block;
   background:#edf4ff;
   color:#2f5fb8;
+  padding:9px 16px;
+  border-radius:999px;
+  font-weight:800;
   font-size:13px;
-  font-weight:800;
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
-
-h1{
-  margin:0 0 10px;
-  font-size:38px;
-  letter-spacing:-.03em;
-}
-
-.desc{
-  color:var(--muted);
-  line-height:1.7;
-  margin:0 0 24px;
-  font-weight:600;
-}
-
-.messages{
-  display:grid;
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.message{
-  padding:13px 15px;
-  border-radius:16px;
-  background:#fff4f4;
-  border:1px solid #ffd2d2;
-  color:#b91c1c;
-  font-size:14px;
-  font-weight:700;
-}
-
-.form-grid{
-  display:grid;
-  grid-template-columns:1fr;
-  gap:16px;
-}
-
-.form-group label{
-  display:block;
-  margin-bottom:9px;
-  font-size:15px;
-  font-weight:800;
-  color:#29406a;
-}
-
+h2{font-size:36px;margin:0 0 10px}
+.desc{color:#7e91b4;line-height:1.7;margin-bottom:22px}
+.field{margin-bottom:16px}
+label{display:block;font-weight:800;margin-bottom:8px;color:#29406a}
 input{
   width:100%;
   height:54px;
-  border-radius:18px;
   border:1px solid #d9e6fb;
-  background:white;
-  padding:0 17px;
+  border-radius:18px;
+  padding:0 16px;
   font-size:15px;
-  color:#23395d;
   outline:none;
-  transition:.2s;
 }
-
 input:focus{
   border-color:#8db6ff;
   box-shadow:0 0 0 4px rgba(74,134,247,.12);
 }
-
-.help-text{
-  margin-top:7px;
-  color:var(--muted);
-  font-size:13px;
-  font-weight:600;
-  line-height:1.5;
-}
-
 .errorlist{
-  margin:8px 0 0;
-  padding:0;
   list-style:none;
-}
-
-.errorlist li{
+  padding:0;
+  margin:8px 0 0;
   color:#b91c1c;
   font-size:13px;
   font-weight:700;
 }
-
-.auth-btn{
+.strength{
+  margin-top:10px;
+}
+.strength-bar{
+  height:9px;
+  border-radius:999px;
+  background:#e5eaf5;
+  overflow:hidden;
+}
+.strength-fill{
+  height:100%;
+  width:0%;
+  border-radius:999px;
+  transition:.25s;
+}
+.strength-text{
+  margin-top:7px;
+  font-size:13px;
+  font-weight:800;
+  color:#7e91b4;
+}
+.btn{
   width:100%;
   height:56px;
   border:0;
   border-radius:18px;
-  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  background:linear-gradient(135deg,#4a86f7,#60a5fa);
   color:white;
-  font-size:16px;
   font-weight:900;
+  font-size:16px;
   cursor:pointer;
-  box-shadow:0 14px 28px rgba(74,134,247,.25);
-  transition:.2s;
   margin-top:10px;
 }
-
-.auth-btn:hover{
-  transform:translateY(-1px);
-}
-
-.auth-bottom{
+.bottom{
   text-align:center;
   margin-top:20px;
-  color:var(--muted);
+  color:#7e91b4;
   font-weight:700;
 }
-
-.auth-bottom a{
-  color:#2f5fb8;
-  font-weight:900;
+.bottom a{color:#2f5fb8;font-weight:900;text-decoration:none}
+.messages{margin-bottom:16px}
+.message{
+  padding:12px 14px;
+  border-radius:14px;
+  background:#fff4f4;
+  border:1px solid #ffd2d2;
+  color:#b91c1c;
+  font-weight:700;
 }
-
-.back-link{
-  display:inline-flex;
-  margin-top:22px;
-  color:#4d6793;
-  font-weight:800;
-}
-
 @media(max-width:900px){
   .auth-page{grid-template-columns:1fr}
-  .auth-left{display:none}
-  .auth-right{padding:28px 18px}
-  .auth-card{max-width:100%;padding:25px}
+  .left{display:none}
+  .right{padding:20px}
 }
 </style>
 </head>
 
 <body>
 <div class="auth-page">
-
-  <section class="auth-left">
-    <div class="info-box">
-      <div class="logo-mini">EM</div>
-      <h2>EduMentor AI-ға қосыл</h2>
-      <p>Жеке кабинет ашып, оқу прогресіңді бақыла. Курстар, quiz және AI Chat бір платформада.</p>
-
-      <div class="steps">
-        <div class="step">1. Аккаунт құр</div>
-        <div class="step">2. Курсты таңда</div>
-        <div class="step">3. Quiz тапсырып, прогресті бақыла</div>
-      </div>
+  <section class="left">
+    <div class="left-box">
+      <h1>EduMentor AI-ға қош келдің</h1>
+      <p>Аккаунт ашып, курстарды өтіп, Quiz тапсырып, AI Chat арқылы оқу процесін жеңілдет.</p>
+      <div class="step">1. Тіркел</div>
+      <div class="step">2. Курсты таңда</div>
+      <div class="step">3. Прогресті бақыла</div>
     </div>
   </section>
 
-  <section class="auth-right">
-    <a href="{% url 'home' %}" class="brand">
-      <div class="logo">EM</div>
-      <div>
-        <div class="brand-title">EduMentor AI</div>
-        <div class="brand-sub">Ақылды оқу платформасы</div>
-      </div>
-    </a>
+  <section class="right">
+    <div class="card">
+      <a href="{% url 'home' %}" style="text-decoration:none;color:inherit;">
+        <div class="logo">EM</div>
+      </a>
 
-    <div class="auth-card">
       <div class="badge">Жаңа аккаунт</div>
-      <h1>Тіркелу</h1>
-      <p class="desc">Аккаунт құрып, барлық оқу мүмкіндіктеріне қол жеткізіңіз.</p>
+      <h2>Тіркелу</h2>
+      <p class="desc">Барлық оқу мүмкіндіктерін қолдану үшін аккаунт құрыңыз.</p>
 
       {% if messages %}
       <div class="messages">
@@ -335,63 +183,93 @@ input:focus{
       <form method="post">
         {% csrf_token %}
 
-        <div class="form-grid">
-
-          <div class="form-group">
-            <label for="id_username">Пайдаланушы аты</label>
-            {{ form.username }}
-            <div class="help-text">Мысалы: ainura2025</div>
-            {{ form.username.errors }}
-          </div>
-
-          <div class="form-group">
-            <label for="id_email">Email</label>
-            {{ form.email }}
-            <div class="help-text">Қалпына келтіру үшін дұрыс email жазыңыз</div>
-            {{ form.email.errors }}
-          </div>
-
-          <div class="form-group">
-            <label for="id_password1">Құпия сөз</label>
-            {{ form.password1 }}
-            <div class="help-text">Кемінде 8 таңба болғаны дұрыс</div>
-            {{ form.password1.errors }}
-          </div>
-
-          <div class="form-group">
-            <label for="id_password2">Құпия сөзді қайталау</label>
-            {{ form.password2 }}
-            <div class="help-text">Құпия сөзді қайта енгізіңіз</div>
-            {{ form.password2.errors }}
-          </div>
-
+        <div class="field">
+          <label for="id_username">Пайдаланушы аты</label>
+          {{ form.username }}
+          {{ form.username.errors }}
         </div>
 
-        <button type="submit" class="auth-btn">Тіркелу</button>
+        <div class="field">
+          <label for="id_email">Email</label>
+          {{ form.email }}
+          {{ form.email.errors }}
+        </div>
+
+        <div class="field">
+          <label for="id_password1">Құпия сөз</label>
+          {{ form.password1 }}
+          <div class="strength">
+            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+            <div class="strength-text" id="strengthText">Құпия сөз күшін көрсетеді</div>
+          </div>
+          {{ form.password1.errors }}
+        </div>
+
+        <div class="field">
+          <label for="id_password2">Құпия сөзді қайталау</label>
+          {{ form.password2 }}
+          {{ form.password2.errors }}
+        </div>
+
+        <button class="btn" type="submit">Тіркелу</button>
       </form>
 
-      <div class="auth-bottom">
+      <div class="bottom">
         Аккаунтыңыз бар ма? <a href="{% url 'login' %}">Кіру</a>
       </div>
     </div>
-
-    <a href="{% url 'home' %}" class="back-link">← Басты бетке қайту</a>
   </section>
-
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
+const p1 = document.getElementById("id_password1");
+const fill = document.getElementById("strengthFill");
+const text = document.getElementById("strengthText");
+
+document.addEventListener("DOMContentLoaded", () => {
   const username = document.getElementById("id_username");
   const email = document.getElementById("id_email");
-  const p1 = document.getElementById("id_password1");
   const p2 = document.getElementById("id_password2");
 
-  if(username) username.placeholder = "Username енгізіңіз";
+  if(username) username.placeholder = "Мысалы: ainur2025";
   if(email) email.placeholder = "Email енгізіңіз";
   if(p1) p1.placeholder = "Құпия сөз";
   if(p2) p2.placeholder = "Құпия сөзді қайталау";
 });
+
+if(p1){
+  p1.addEventListener("input", () => {
+    const v = p1.value;
+    let score = 0;
+
+    if(v.length >= 8) score++;
+    if(/[A-ZА-Я]/.test(v)) score++;
+    if(/[0-9]/.test(v)) score++;
+    if(/[^A-Za-zА-Яа-я0-9]/.test(v)) score++;
+
+    if(v.length === 0){
+      fill.style.width = "0%";
+      fill.style.background = "#e5eaf5";
+      text.textContent = "Құпия сөз күшін көрсетеді";
+      text.style.color = "#7e91b4";
+    } else if(score <= 1){
+      fill.style.width = "33%";
+      fill.style.background = "#ef4444";
+      text.textContent = "Қауіпсіздік төмен";
+      text.style.color = "#ef4444";
+    } else if(score <= 3){
+      fill.style.width = "66%";
+      fill.style.background = "#f59e0b";
+      text.textContent = "Қауіпсіздік орташа";
+      text.style.color = "#f59e0b";
+    } else {
+      fill.style.width = "100%";
+      fill.style.background = "#10b981";
+      text.textContent = "Қауіпсіздік жоғары";
+      text.style.color = "#10b981";
+    }
+  });
+}
 </script>
 </body>
 </html>
