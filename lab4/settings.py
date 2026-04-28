@@ -8,6 +8,13 @@ Django settings for lab4 project.
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=os.getenv("DATABASE_URL")
+    )
+}
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
