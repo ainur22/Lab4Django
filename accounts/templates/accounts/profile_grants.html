@@ -1,0 +1,793 @@
+{% load static %}
+<!doctype html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduMentor AI — Грант калькуляторы</title>
+    <style>
+        :root {
+            --text-main: #23395d;
+            --text-soft: #7e91b4;
+            --blue: #4a86f7;
+            --blue-dark: #2f5fb8;
+            --blue-soft: #edf4ff;
+            --green: #20c36b;
+            --yellow: #d89b1d;
+            --red: #e46f4d;
+            --shadow: 0 12px 35px rgba(67, 115, 208, 0.08);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            color: var(--text-main);
+            background:
+                radial-gradient(circle at left bottom, rgba(108, 209, 180, 0.12), transparent 18%),
+                linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: min(1380px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #edf2fc;
+        }
+
+        .nav-wrap {
+            min-height: 92px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            min-width: 240px;
+        }
+
+        .brand-logo {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            display: grid;
+            place-items: center;
+            font-size: 30px;
+            font-weight: 800;
+        }
+
+        .brand-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            font-size: 14px;
+            color: var(--text-soft);
+        }
+
+        .main-nav {
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            flex-wrap: wrap;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: #4d6793;
+            font-size: 16px;
+            font-weight: 700;
+            padding: 10px 4px;
+            transition: .2s ease;
+        }
+
+        .main-nav a:hover {
+            color: var(--blue-dark);
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 16px;
+            font-weight: 800;
+            color: white;
+            background: var(--blue);
+            transition: .2s ease;
+        }
+
+        .nav-btn-light {
+            text-decoration: none;
+            border-radius: 18px;
+            padding: 14px 22px;
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--blue-dark);
+            background: var(--blue-soft);
+            border: 1px solid #d9e6fd;
+            transition: .2s ease;
+        }
+
+        .nav-btn:hover,
+        .nav-btn-light:hover {
+            transform: translateY(-1px);
+        }
+
+        .nav-avatar,
+        .nav-avatar-fallback {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+        }
+
+        .nav-avatar-fallback {
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #5d97ff, #4a86f7);
+            color: white;
+            font-weight: 800;
+        }
+
+        .page {
+            padding: 28px 0 60px;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 112px;
+        }
+
+        .sidebar-card {
+            background: rgba(255, 255, 255, 0.88);
+            border: 1px solid #e7eefc;
+            border-radius: 26px;
+            padding: 18px;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #95a6c8;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+        }
+
+        .sidebar-link {
+            display: block;
+            text-decoration: none;
+            color: #4f668f;
+            font-weight: 700;
+            padding: 13px 14px;
+            border-radius: 16px;
+            margin-bottom: 8px;
+            transition: .2s ease;
+        }
+
+        .sidebar-link:hover {
+            background: #f4f8ff;
+            color: var(--blue-dark);
+        }
+
+        .sidebar-link.active {
+            background: linear-gradient(135deg, #5f99ff, #4a86f7);
+            color: white;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e8effc;
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+            padding: 26px;
+        }
+
+        .title {
+            margin: 0 0 10px;
+            font-size: 34px;
+            color: #203963;
+        }
+
+        .subtitle {
+            margin: 0 0 22px;
+            color: var(--text-soft);
+            font-size: 15px;
+            line-height: 1.7;
+            font-weight: 700;
+        }
+
+        .calc-top {
+            display: grid;
+            grid-template-columns: 1fr 280px;
+            gap: 22px;
+            align-items: stretch;
+        }
+
+        .score-label {
+            font-size: 16px;
+            color: var(--text-soft);
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .score-box {
+            font-size: 58px;
+            font-weight: 800;
+            color: var(--blue-dark);
+            margin-bottom: 16px;
+        }
+
+        .score-max {
+            font-size: 28px;
+            color: #91a3c4;
+        }
+
+        .score-range {
+            width: 100%;
+            margin-bottom: 18px;
+            accent-color: var(--blue);
+            cursor: pointer;
+        }
+
+        .bar {
+            height: 12px;
+            background: #e7eefc;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #5e98ff, #2e67da);
+            transition: .2s ease;
+        }
+
+        .chance-card {
+            border-radius: 24px;
+            padding: 22px;
+            background: linear-gradient(135deg, #edf4ff, #f8fbff);
+            border: 1px solid #dbe7fb;
+        }
+
+        .chance-title {
+            color: var(--text-soft);
+            font-size: 14px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .chance-result {
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--blue-dark);
+            margin-bottom: 10px;
+        }
+
+        .chance-text {
+            color: #4d6793;
+            line-height: 1.6;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 24px 0;
+        }
+
+        select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid #d9e6fb;
+            border-radius: 16px;
+            font-size: 16px;
+            font-family: inherit;
+            color: var(--text-main);
+            background: white;
+            outline: none;
+        }
+
+        .sub-title {
+            margin: 0 0 16px;
+            font-size: 22px;
+            color: #203963;
+        }
+
+        .uni-list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .uni {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 20px;
+            border: 1px solid #e6eefc;
+            border-radius: 18px;
+            background: #f8fbff;
+            transition: .2s ease;
+        }
+
+        .uni:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px rgba(67, 115, 208, 0.08);
+        }
+
+        .uni-name {
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 6px;
+            color: #203963;
+        }
+
+        .uni-text {
+            color: var(--text-soft);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 800;
+            white-space: nowrap;
+        }
+
+        .green { background: #e8f8ef; color: #1fa65c; }
+        .yellow { background: #fff6df; color: #d89b1d; }
+        .red { background: #ffe9e4; color: #e46f4d; }
+
+        .limit {
+            margin-top: 12px;
+            font-weight: 700;
+            color: #5b6f93;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .empty-state {
+            padding: 20px;
+            border-radius: 18px;
+            background: #fff8e9;
+            border: 1px solid #f4deb0;
+            color: #9a6a14;
+            font-weight: 800;
+            display: none;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-top: 22px;
+        }
+
+        .tip {
+            border-radius: 20px;
+            padding: 18px;
+            background: #f8fbff;
+            border: 1px solid #e6eefc;
+        }
+
+        .tip strong {
+            display: block;
+            color: #203963;
+            font-size: 16px;
+            margin-bottom: 8px;
+        }
+
+        .tip span {
+            color: var(--text-soft);
+            font-size: 14px;
+            line-height: 1.5;
+            font-weight: 700;
+        }
+
+        /* ================= DARK MODE FROM SETTINGS ================= */
+        body.theme-dark {
+            --text-main: #e5eefc;
+            --text-soft: #9fb0cc;
+            --blue-soft: #17345f;
+            --shadow: 0 20px 50px rgba(0,0,0,.32);
+        }
+
+        body.theme-dark {
+            background: linear-gradient(180deg, #0f172a 0%, #111827 55%, #172033 100%) !important;
+        }
+
+        body.theme-dark .site-header {
+            background: rgba(15, 23, 42, 0.9) !important;
+            border-bottom-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .card,
+        body.theme-dark .sidebar-card,
+        body.theme-dark .uni,
+        body.theme-dark .tip,
+        body.theme-dark .chance-card {
+            background: rgba(17, 24, 39, 0.92) !important;
+            border-color: #2d3b55 !important;
+            box-shadow: 0 20px 50px rgba(0,0,0,.24) !important;
+        }
+
+        body.theme-dark .brand-title,
+        body.theme-dark .title,
+        body.theme-dark .sub-title,
+        body.theme-dark .uni-name,
+        body.theme-dark .tip strong,
+        body.theme-dark .chance-result {
+            color: #f3f7ff !important;
+        }
+
+        body.theme-dark .brand-subtitle,
+        body.theme-dark .main-nav a,
+        body.theme-dark .sidebar-title,
+        body.theme-dark .sidebar-link,
+        body.theme-dark .subtitle,
+        body.theme-dark .score-label,
+        body.theme-dark .uni-text,
+        body.theme-dark .limit,
+        body.theme-dark .tip span,
+        body.theme-dark .chance-title,
+        body.theme-dark .chance-text {
+            color: #9fb0cc !important;
+        }
+
+        body.theme-dark .sidebar-link:hover,
+        body.theme-dark .nav-btn-light {
+            background: #1b2a44 !important;
+            color: #dbe7ff !important;
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark select {
+            background: #111827 !important;
+            border-color: #2d3b55 !important;
+            color: #f3f7ff !important;
+        }
+
+        body.theme-dark .bar {
+            background: #2d3b55 !important;
+        }
+
+        body.theme-dark .nav-avatar,
+        body.theme-dark .nav-avatar-fallback {
+            border-color: #2d3b55 !important;
+        }
+
+        body.theme-dark .empty-state {
+            background: rgba(127, 29, 29, 0.28) !important;
+            border-color: rgba(239, 68, 68, 0.38) !important;
+            color: #fca5a5 !important;
+        }
+
+        @media (max-width: 1080px) {
+            .layout { grid-template-columns: 1fr; }
+            .main-nav { display: none; }
+            .filters { grid-template-columns: 1fr; }
+            .sidebar { position: static; }
+            .calc-top { grid-template-columns: 1fr; }
+            .tips-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 720px) {
+            .container { width: min(100% - 22px, 100%); }
+            .nav-wrap { flex-wrap: wrap; padding: 14px 0; }
+            .score-box { font-size: 46px; }
+            .uni { flex-direction: column; }
+            .uni > div:last-child { text-align: left !important; }
+        }
+    </style>
+</head>
+<body class="{% if dark_mode %}theme-dark{% endif %}">
+
+<header class="site-header">
+    <div class="container nav-wrap">
+        <a href="{% url 'home' %}" class="brand">
+            <div class="brand-logo">EM</div>
+            <div>
+                <div class="brand-title">EduMentor AI</div>
+                <div class="brand-subtitle">Ақылды оқу платформасы</div>
+            </div>
+        </a>
+
+        <nav class="main-nav">
+            <a href="{% url 'home' %}">Басты бет</a>
+            <a href="{% url 'courses' %}">Курстар</a>
+            <a href="{% url 'guide' %}">Нұсқаулық</a>
+            <a href="{% url 'contact' %}">Байланыс</a>
+            <a href="{% url 'quiz' %}">Quiz</a>
+        </nav>
+
+        <div class="nav-actions">
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}">
+                    {% if user.profile_image %}
+                        <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="nav-avatar">
+                    {% else %}
+                        <div class="nav-avatar-fallback">{{ user.username|slice:":1"|upper }}</div>
+                    {% endif %}
+                </a>
+                <a href="{% url 'logout' %}" class="nav-btn">Шығу</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="nav-btn-light">Кіру</a>
+                <a href="{% url 'register' %}" class="nav-btn">Тіркелу</a>
+            {% endif %}
+        </div>
+    </div>
+</header>
+
+<main class="page">
+    <div class="container layout">
+
+        <aside class="sidebar">
+            <div class="sidebar-card">
+                <div class="sidebar-title">Профиль менюсы</div>
+                <a class="sidebar-link" href="{% url 'profile' %}">Профиль</a>
+                <a class="sidebar-link" href="{% url 'profile_progress' %}">Прогресс</a>
+                <a class="sidebar-link active" href="{% url 'profile_grants' %}">Грант калькуляторы</a>
+                <a class="sidebar-link" href="{% url 'profile_leaderboard' %}">Лидерборд</a>
+                <a class="sidebar-link" href="{% url 'profile_settings' %}">Настройкалар</a>
+            </div>
+        </aside>
+
+        <section class="card">
+            <h1 class="title">Грант калькуляторы</h1>
+            <p class="subtitle">Балыңызды, аймақты, университет түрін және мамандықты таңдаңыз. Калькулятор сәйкес университеттерді автоматты түрде көрсетеді.</p>
+
+            <div class="calc-top">
+                <div>
+                    <div class="score-label">Ең жоғары балыңыз</div>
+                    <div class="score-box">
+                        <span id="scoreValue">80</span>
+                        <span class="score-max">/ 140</span>
+                    </div>
+
+                    <input type="range" id="scoreRange" min="0" max="140" value="80" class="score-range">
+
+                    <div class="bar">
+                        <div class="fill" id="scoreFill" style="width:57%"></div>
+                    </div>
+                </div>
+
+                <div class="chance-card">
+                    <div class="chance-title">Жалпы нәтиже</div>
+                    <div class="chance-result" id="chanceResult">Орташа шанс</div>
+                    <div class="chance-text" id="chanceText">Балыңыз жақсы, бірақ таңдаған мамандыққа қарай грант шегі өзгеруі мүмкін.</div>
+                </div>
+            </div>
+
+            <div class="filters">
+                <select id="regionFilter">
+                    <option value="all">Аймақ</option>
+                    <option value="almaty">Алматы</option>
+                    <option value="astana">Астана</option>
+                    <option value="shymkent">Шымкент</option>
+                </select>
+
+                <select id="typeFilter">
+                    <option value="all">Университет түрі</option>
+                    <option value="state">Мемлекеттік</option>
+                    <option value="private">Жеке</option>
+                </select>
+
+                <select id="majorFilter">
+                    <option value="all">Мамандық</option>
+                    <option value="it">IT</option>
+                    <option value="pedagogy">Педагогика</option>
+                    <option value="law">Құқық</option>
+                    <option value="economy">Экономика</option>
+                </select>
+            </div>
+
+            <h3 class="sub-title">Сәйкес келетін университеттер</h3>
+
+            <div class="uni-list" id="uniList">
+                <div class="uni" data-region="almaty" data-type="private" data-majors="it pedagogy" data-limit="70">
+                    <div>
+                        <div class="uni-name">SDU University</div>
+                        <div class="uni-text">Информатика, педагогика, математика</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="tag green">Жоғары шанс</span>
+                        <div class="limit">Шекті балл: 70</div>
+                    </div>
+                </div>
+
+                <div class="uni" data-region="astana" data-type="state" data-majors="it" data-limit="85">
+                    <div>
+                        <div class="uni-name">Astana IT University</div>
+                        <div class="uni-text">IT, Data Science, киберқауіпсіздік</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="tag yellow">Орташа шанс</span>
+                        <div class="limit">Шекті балл: 85</div>
+                    </div>
+                </div>
+
+                <div class="uni" data-region="almaty" data-type="state" data-majors="economy it law" data-limit="100">
+                    <div>
+                        <div class="uni-name">КазНУ</div>
+                        <div class="uni-text">Экономика, IT, құқық</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="tag red">Қиындау</span>
+                        <div class="limit">Шекті балл: 100</div>
+                    </div>
+                </div>
+
+                <div class="uni" data-region="shymkent" data-type="state" data-majors="pedagogy law" data-limit="65">
+                    <div>
+                        <div class="uni-name">ОҚМПУ</div>
+                        <div class="uni-text">Педагогика, құқық, гуманитарлық бағыттар</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="tag green">Жоғары шанс</span>
+                        <div class="limit">Шекті балл: 65</div>
+                    </div>
+                </div>
+
+                <div class="uni" data-region="astana" data-type="private" data-majors="law economy" data-limit="75">
+                    <div>
+                        <div class="uni-name">KAZGUU University</div>
+                        <div class="uni-text">Құқық, экономика, халықаралық қатынастар</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span class="tag green">Жоғары шанс</span>
+                        <div class="limit">Шекті балл: 75</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" id="emptyState">Бұл фильтрлер бойынша университет табылмады. Баллды немесе бағытты өзгертіп көріңіз.</div>
+
+            <div class="tips-grid">
+                <div class="tip">
+                    <strong>Кеңес 1</strong>
+                    <span>Грантқа шанс жоғары болу үшін өз балыңыздан 5–10 балл төмен шекті таңдаңыз.</span>
+                </div>
+                <div class="tip">
+                    <strong>Кеңес 2</strong>
+                    <span>Бір ғана қалаға байланбай, басқа аймақтарды да қараңыз.</span>
+                </div>
+                <div class="tip">
+                    <strong>Кеңес 3</strong>
+                    <span>Мамандық таңдағанда өткен жылғы шекті балл мен конкурс санын салыстырыңыз.</span>
+                </div>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+    const scoreRange = document.getElementById('scoreRange');
+    const scoreValue = document.getElementById('scoreValue');
+    const scoreFill = document.getElementById('scoreFill');
+    const chanceResult = document.getElementById('chanceResult');
+    const chanceText = document.getElementById('chanceText');
+    const regionFilter = document.getElementById('regionFilter');
+    const typeFilter = document.getElementById('typeFilter');
+    const majorFilter = document.getElementById('majorFilter');
+    const uniCards = document.querySelectorAll('.uni');
+    const emptyState = document.getElementById('emptyState');
+
+    function getChance(value, limit) {
+        if (value >= limit + 10) {
+            return { text: 'Жоғары шанс', cls: 'green' };
+        }
+        if (value >= limit) {
+            return { text: 'Орташа шанс', cls: 'yellow' };
+        }
+        return { text: 'Қиындау', cls: 'red' };
+    }
+
+    function updateMainChance(value) {
+        if (value >= 100) {
+            chanceResult.textContent = 'Жоғары шанс';
+            chanceText.textContent = 'Балыңыз өте жақсы. Бірнеше университет пен мамандыққа грант мүмкіндігі бар.';
+        } else if (value >= 70) {
+            chanceResult.textContent = 'Орташа шанс';
+            chanceText.textContent = 'Балыңыз жақсы, бірақ таңдаған мамандыққа қарай грант шегі өзгеруі мүмкін.';
+        } else {
+            chanceResult.textContent = 'Қиындау';
+            chanceText.textContent = 'Грантқа түсу қиындау болуы мүмкін. Шекті балы төмен бағыттарды қарастырыңыз.';
+        }
+    }
+
+    function updateScoreUI() {
+        const value = Number(scoreRange.value);
+        scoreValue.textContent = value;
+        scoreFill.style.width = (value / 140) * 100 + '%';
+        updateMainChance(value);
+        filterUniversities();
+    }
+
+    function filterUniversities() {
+        const value = Number(scoreRange.value);
+        const selectedRegion = regionFilter.value;
+        const selectedType = typeFilter.value;
+        const selectedMajor = majorFilter.value;
+        let visibleCount = 0;
+
+        uniCards.forEach(card => {
+            const limit = Number(card.dataset.limit);
+            const region = card.dataset.region;
+            const type = card.dataset.type;
+            const majors = card.dataset.majors;
+
+            const regionOk = selectedRegion === 'all' || region === selectedRegion;
+            const typeOk = selectedType === 'all' || type === selectedType;
+            const majorOk = selectedMajor === 'all' || majors.includes(selectedMajor);
+
+            if (regionOk && typeOk && majorOk) {
+                card.classList.remove('hidden');
+                visibleCount++;
+
+                const chance = getChance(value, limit);
+                const tag = card.querySelector('.tag');
+                tag.textContent = chance.text;
+                tag.className = 'tag ' + chance.cls;
+            } else {
+                card.classList.add('hidden');
+            }
+        });
+
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+
+    scoreRange.addEventListener('input', updateScoreUI);
+    regionFilter.addEventListener('change', filterUniversities);
+    typeFilter.addEventListener('change', filterUniversities);
+    majorFilter.addEventListener('change', filterUniversities);
+
+    updateScoreUI();
+</script>
+
+</body>
+</html>
