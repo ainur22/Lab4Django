@@ -106,6 +106,6 @@ LOGIN_REDIRECT_URL = 'home'
 
 LOGOUT_REDIRECT_URL = 'login'
 
-GEMINI_API_KEY = "AIzaSyC-Fl2o4YmAf3tPIbP_6DyfLpktOJqV4nE"
+GEMINI_API_KEY = "AIzaSyBCedmJ16bBc1ziQukmUb0Q1gZTrbPdQIg"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
