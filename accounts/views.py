@@ -12,11 +12,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-import os
-import json
-import tempfile
-import requests
-import time
 
 from .forms import RegisterForm, LoginForm, ProfileUpdateForm, ContactRequestForm
 
@@ -203,18 +198,12 @@ def ai_web_chat_api(request):
         user_message = data.get("message", "").strip()
 
         if not user_message:
-            return JsonResponse({
-                "ok": False,
-                "error": "Сұрақ бос."
-            }, status=400)
+            return JsonResponse({"ok": False, "error": "Сұрақ бос."}, status=400)
 
         api_key = getattr(settings, "GEMINI_API_KEY", "")
 
         if not api_key:
-            return JsonResponse({
-                "ok": True,
-                "answer": get_demo_reply(user_message)
-            })
+            return JsonResponse({"ok": True, "answer": get_demo_reply(user_message)})
 
         url = (
             "https://generativelanguage.googleapis.com/v1beta/"
@@ -262,35 +251,14 @@ def ai_web_chat_api(request):
             break
 
         if response.status_code != 200:
-            error_message = result.get("error", {}).get("message", "Gemini API қатесі шықты.")
-
-            if (
-                "high demand" in error_message.lower()
-                or "overloaded" in error_message.lower()
-                or "temporarily" in error_message.lower()
-            ):
-                return JsonResponse({
-                    "ok": True,
-                    "answer": get_demo_reply(user_message)
-                })
-
-            return JsonResponse({
-                "ok": False,
-                "error": error_message
-            }, status=500)
+            return JsonResponse({"ok": True, "answer": get_demo_reply(user_message)})
 
         answer_text = result["candidates"][0]["content"]["parts"][0]["text"]
 
-        return JsonResponse({
-            "ok": True,
-            "answer": answer_text
-        })
+        return JsonResponse({"ok": True, "answer": answer_text})
 
     except Exception:
-        return JsonResponse({
-            "ok": True,
-            "answer": get_demo_reply(user_message)
-        })
+        return JsonResponse({"ok": True, "answer": get_demo_reply(user_message)})
 
 
 def contact_view(request):
@@ -298,10 +266,7 @@ def contact_view(request):
         form = ContactRequestForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(
-                request,
-                "Сұранысыңыз қабылданды. Жақын арада сізбен байланысамыз."
-            )
+            messages.success(request, "Сұранысыңыз қабылданды. Жақын арада сізбен байланысамыз.")
             return redirect("contact")
     else:
         form = ContactRequestForm()
@@ -420,9 +385,7 @@ def profile_settings_view(request):
         request.user.show_timer = request.POST.get("show_timer") == "on"
         request.user.shuffle_questions = request.POST.get("shuffle_questions") == "on"
         request.user.ai_explanation = request.POST.get("ai_explanation") == "on"
-        request.user.site_language = normalize_language_code(
-            request.POST.get("site_language", "kk")
-        )
+        request.user.site_language = normalize_language_code(request.POST.get("site_language", "kk"))
 
         request.user.save(update_fields=[
             "dark_mode",
@@ -474,10 +437,7 @@ def transcribe_audio(request):
         })
 
     except Exception as e:
-        return JsonResponse({
-            "ok": False,
-            "error": str(e)
-        }, status=500)
+        return JsonResponse({"ok": False, "error": str(e)}, status=500)
 
     finally:
         if "temp_path" in locals() and os.path.exists(temp_path):
