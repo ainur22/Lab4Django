@@ -28,3 +28,4 @@ gunicorn==23.0.0
 whitenoise==6.8.2
 dj-database-url
 psycopg2-binary
+google-generativeai
