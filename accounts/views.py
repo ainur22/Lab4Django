@@ -1,7 +1,9 @@
 import os
 import json
 import tempfile
+import requests
 
+from django.conf import settings
 from google import genai
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
