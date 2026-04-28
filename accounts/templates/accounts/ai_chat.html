@@ -11,73 +11,120 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --bg-1: #eef4ff;
+      --bg-2: #f8fbff;
+      --bg-3: #eefbf5;
+      --text: #233454;
+      --muted: #7b8ca7;
+      --line: #dfe8f3;
+      --line-strong: #cfd9e8;
+      --card: rgba(255, 255, 255, 0.78);
+      --card-solid: #ffffff;
+      --blue-1: #2563eb;
+      --blue-2: #3b82f6;
+      --blue-3: #dbeafe;
+      --green-1: #10b981;
+      --green-2: #34d399;
+      --danger-1: #ef4444;
+      --danger-2: #fef2f2;
+      --shadow: 0 18px 46px rgba(68, 88, 126, 0.10);
+      --shadow-soft: 0 8px 20px rgba(87, 114, 168, 0.16);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
     html, body {
       margin: 0;
       padding: 0;
       font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+      color: var(--text);
     }
 
     body.ai-page {
       min-height: 100vh;
-      background: linear-gradient(180deg, #eef3f8 0%, #f6f8fb 55%, #edf4f1 100%);
-      color: #24324d;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body.ai-page::before,
+    body.ai-page::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(70px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body.ai-page::before {
+      width: 280px;
+      height: 280px;
+      top: -60px;
+      right: -80px;
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    body.ai-page::after {
+      width: 260px;
+      height: 260px;
+      bottom: -80px;
+      left: -70px;
+      background: rgba(16, 185, 129, 0.12);
     }
 
     a {
       text-decoration: none;
+      color: inherit;
     }
 
     .topbar {
       position: sticky;
       top: 0;
       z-index: 30;
-      height: 72px;
+      height: 76px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 14px;
       padding: 0 18px;
-      background: rgba(255, 255, 255, 0.88);
+      background: rgba(255, 255, 255, 0.82);
       border-bottom: 1px solid rgba(70, 95, 140, 0.08);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(14px);
     }
 
     .brand {
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
     }
 
     .logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
       display: grid;
       place-items: center;
       font-weight: 800;
       color: #fff;
-      background: linear-gradient(135deg, #6f8fc7, #8aa6d6);
-      box-shadow: 0 8px 20px rgba(87, 114, 168, 0.18);
+      background: linear-gradient(135deg, #2563eb, #60a5fa);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
       flex-shrink: 0;
     }
 
-    .logo.big {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-    }
-
-    .brand-title,
-    .drawer-title {
-      color: #233454;
+    .brand-title {
+      color: var(--text);
       font-size: 16px;
       font-weight: 800;
       line-height: 1.2;
     }
 
-    .brand-subtitle,
-    .drawer-sub {
-      color: #7e8da8;
+    .brand-subtitle {
+      color: var(--muted);
       font-size: 13px;
       line-height: 1.2;
       margin-top: 2px;
@@ -90,149 +137,40 @@
     }
 
     .chip {
-      min-height: 40px;
-      padding: 0 14px;
+      min-height: 42px;
+      padding: 0 15px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 12px;
-      background: #f2f5fb;
-      color: #3d5a91;
-      border: 1px solid #dce5f3;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #eff6ff 0%, #e0ecff 100%);
+      color: #2554b8;
+      border: 1px solid #d4e3ff;
       font-size: 14px;
       font-weight: 700;
       transition: 0.2s ease;
     }
 
     .chip:hover {
-      background: #e9eef7;
-    }
-
-    .iconbtn {
-      width: 42px;
-      height: 42px;
-      border: 1px solid #d9e2ef;
-      border-radius: 14px;
-      background: #eef2f8;
-      color: #375284;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: 0.2s ease;
-      flex-shrink: 0;
-    }
-
-    .iconbtn:hover {
-      background: #e4ebf5;
-    }
-
-    .burger {
-      position: relative;
-      width: 18px;
-      height: 14px;
-      display: block;
-    }
-
-    .burger::before,
-    .burger::after,
-    .burger span {
-      content: "";
-      position: absolute;
-      left: 0;
-      width: 18px;
-      height: 2px;
-      border-radius: 999px;
-      background: #35507f;
-    }
-
-    .burger::before {
-      top: 0;
-    }
-
-    .burger span {
-      top: 6px;
-    }
-
-    .burger::after {
-      bottom: 0;
-    }
-
-    .drawer {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 290px;
-      max-width: calc(100vw - 24px);
-      height: 100vh;
-      z-index: 60;
-      background: linear-gradient(180deg, #f9fbfd 0%, #eff4f9 100%);
-      border-right: 1px solid #dde6f2;
-      box-shadow: 18px 0 44px rgba(41, 61, 101, 0.12);
-      padding: 18px;
-      transform: translateX(-110%);
-      transition: transform 0.25s ease;
-    }
-
-    .drawer.open {
-      transform: translateX(0);
-    }
-
-    .drawer-top {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .drawer-top > div:nth-child(2) {
-      flex: 1;
-    }
-
-    .drawer-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .drawer-link {
-      min-height: 46px;
-      padding: 0 14px;
-      border-radius: 14px;
-      background: #ffffff;
-      color: #334b74;
-      border: 1px solid #e4ebf5;
-      display: flex;
-      align-items: center;
-      font-weight: 700;
-      transition: 0.2s ease;
-    }
-
-    .drawer-link:hover {
-      background: #f3f7fb;
-      border-color: #d8e2f0;
-    }
-
-    .backdrop {
-      position: fixed;
-      inset: 0;
-      z-index: 50;
-      background: rgba(54, 72, 110, 0.18);
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #e8f1ff 0%, #d9e8ff 100%);
     }
 
     .ai-wrap {
+      position: relative;
+      z-index: 1;
       width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
       padding: 28px 0 44px;
     }
 
     .ai-chat-shell {
-      background: rgba(255, 255, 255, 0.78);
+      background: var(--card);
       border: 1px solid #e3eaf3;
-      border-radius: 28px;
+      border-radius: var(--radius-xl);
       padding: 18px;
-      box-shadow: 0 18px 46px rgba(68, 88, 126, 0.08);
-      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
     }
 
     .ai-chat-head {
@@ -241,9 +179,9 @@
       justify-content: space-between;
       gap: 14px;
       padding: 16px 18px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
-      border: 1px solid #e3eaf2;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, #fbfdff 0%, #edf4ff 100%);
+      border: 1px solid #e2ebf7;
       margin-bottom: 14px;
     }
 
@@ -251,6 +189,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
     }
 
     .ai-avatar,
@@ -259,57 +198,60 @@
       place-items: center;
       color: #fff;
       font-weight: 800;
-      background: linear-gradient(135deg, #6f8fc7, #8aa6d6);
+      background: linear-gradient(135deg, #2563eb, #60a5fa);
     }
 
     .ai-avatar {
-      width: 46px;
-      height: 46px;
+      width: 48px;
+      height: 48px;
       border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(87, 114, 168, 0.18);
+      box-shadow: var(--shadow-soft);
       flex-shrink: 0;
     }
 
     .ai-chat-title {
       font-size: 17px;
       font-weight: 800;
-      color: #26385d;
+      color: #21375c;
     }
 
     .ai-chat-status {
       margin-top: 4px;
       font-size: 13px;
-      color: #7a8aa5;
+      color: var(--muted);
     }
 
     .ai-head-actions {
       display: flex;
       align-items: center;
       gap: 10px;
+      flex-wrap: wrap;
     }
 
     .ai-icon-btn {
-      width: 44px;
+      min-width: 44px;
       height: 44px;
       border: 1px solid #cfd9ea;
       border-radius: 14px;
-      background: linear-gradient(180deg, #f8fbff 0%, #edf3fb 100%);
+      background: linear-gradient(180deg, #ffffff 0%, #edf4ff 100%);
       color: #4d6da3;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      padding: 0;
+      padding: 0 14px;
       outline: none;
       box-shadow: 0 6px 16px rgba(79, 106, 156, 0.08);
       transition: 0.2s ease;
       appearance: none;
       -webkit-appearance: none;
+      font-weight: 700;
+      gap: 8px;
     }
 
     .ai-icon-btn:hover {
       transform: translateY(-1px);
-      background: linear-gradient(180deg, #f4f8ff 0%, #e7eef9 100%);
+      background: linear-gradient(180deg, #f8fbff 0%, #e7f0ff 100%);
       border-color: #bccbe3;
     }
 
@@ -324,40 +266,99 @@
       stroke: currentColor;
     }
 
+    .ai-summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .ai-summary-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #e4edf8;
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 20px rgba(84, 108, 150, 0.05);
+    }
+
+    .ai-summary-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .ai-summary-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: #28416d;
+    }
+
+    .ai-error-box {
+      display: none;
+      margin-bottom: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--danger-2);
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .ai-subject-row,
     .ai-quick-row {
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
+      flex-wrap: wrap;
       margin: 0 0 14px 0;
     }
 
+    .ai-subject-chip {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid #d7e5ff;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #3460b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .ai-subject-chip:hover {
+      background: #eff6ff;
+      transform: translateY(-1px);
+    }
+
+    .ai-subject-chip.active {
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
+    }
+
     .ai-quick-pill {
-      height: 40px;
+      min-height: 42px;
       padding: 0 16px;
       border: 1px solid #7fa3dc;
-      border-radius: 12px;
-      background: linear-gradient(135deg, #6f95d8 0%, #87a8df 100%);
+      border-radius: 13px;
+      background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
       color: #ffffff;
       font-size: 14px;
       font-weight: 700;
-      line-height: 1;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       box-shadow: 0 8px 18px rgba(90, 125, 191, 0.16);
       transition: 0.2s ease;
-      appearance: none;
-      -webkit-appearance: none;
     }
 
     .ai-quick-pill:hover {
       transform: translateY(-1px);
-      background: linear-gradient(135deg, #668cd0 0%, #7fa1da 100%);
-    }
-
-    .ai-quick-pill:active {
-      transform: scale(0.98);
+      background: linear-gradient(135deg, #2f76f0 0%, #5298fb 100%);
     }
 
     .ai-chat-window {
@@ -366,17 +367,10 @@
       overflow-y: auto;
       padding: 22px 18px;
       border-radius: 24px;
-      background: linear-gradient(180deg, #fcfdff 0%, #f4f7fb 100%);
+      background: linear-gradient(180deg, #fcfdff 0%, #f4f8ff 100%);
       border: 1px solid #e6edf5;
-    }
-
-    .ai-chat-window::-webkit-scrollbar {
-      width: 10px;
-    }
-
-    .ai-chat-window::-webkit-scrollbar-thumb {
-      background: #d4dde8;
-      border-radius: 999px;
+      position: relative;
+      scroll-behavior: smooth;
     }
 
     .ai-chat-day {
@@ -384,10 +378,46 @@
       margin: 0 auto 18px;
       padding: 8px 14px;
       border-radius: 999px;
-      background: #eef3f8;
-      color: #7b8ca7;
+      background: #eef4ff;
+      color: #6f84a7;
       font-size: 12px;
       font-weight: 700;
+    }
+
+    .ai-empty-state {
+      min-height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .ai-empty-card {
+      max-width: 420px;
+      padding: 28px 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid #e5edf9;
+      box-shadow: 0 14px 32px rgba(76, 95, 132, 0.08);
+    }
+
+    .ai-empty-emoji {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .ai-empty-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #29406a;
+      margin-bottom: 8px;
+    }
+
+    .ai-empty-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
     }
 
     .ai-msg {
@@ -407,6 +437,7 @@
       flex-shrink: 0;
       font-size: 12px;
       margin-top: 2px;
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.14);
     }
 
     .ai-msg-body {
@@ -431,14 +462,14 @@
     }
 
     .ai-bubble-bot {
-      background: #edf2f8;
+      background: #edf3ff;
       color: #395072;
-      border: 1px solid #dce5f0;
+      border: 1px solid #dce8fb;
       border-top-left-radius: 8px;
     }
 
     .ai-bubble-user {
-      background: linear-gradient(135deg, #6f95d8 0%, #87a8df 100%);
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.22);
       border-top-right-radius: 8px;
@@ -449,36 +480,43 @@
       color: #8a99b0;
       padding: 0 4px;
       display: flex;
-      align-items: center;
       gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ai-msg-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .ai-mini-btn,
+    .speak-btn {
+      min-height: 28px;
+      padding: 0 10px;
+      border: 1px solid #d8e3f3;
+      border-radius: 10px;
+      background: #fff;
+      color: #5372a6;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
     }
 
     .speak-btn {
       width: 28px;
       height: 28px;
-      border: 1px solid #cfdaeb;
-      border-radius: 10px;
-      background: #ffffff;
-      color: #5c78a7;
+      padding: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      cursor: pointer;
-      padding: 0;
-      box-shadow: 0 4px 10px rgba(84, 111, 160, 0.08);
-      appearance: none;
-      -webkit-appearance: none;
-    }
-
-    .speak-btn:hover {
-      background: #f4f8fd;
-      border-color: #bfd0e8;
     }
 
     .speak-btn svg {
       width: 15px;
       height: 15px;
-      display: block;
       stroke: currentColor;
     }
 
@@ -490,12 +528,13 @@
       align-items: center;
       padding: 14px;
       border-radius: 22px;
-      background: linear-gradient(180deg, #f8fafc 0%, #eef3f8 100%);
+      background: linear-gradient(180deg, #f9fbff 0%, #edf4ff 100%);
       border: 1px solid #e2eaf3;
     }
 
     .ai-input-box {
       position: relative;
+      padding-bottom: 18px;
     }
 
     .ai-input-box input {
@@ -508,76 +547,52 @@
       background: #ffffff;
       color: #2b3e63;
       font-size: 15px;
-      transition: 0.25s ease;
-    }
-
-    .ai-input-box input::placeholder {
-      color: #94a3ba;
-    }
-
-    .ai-input-box input:focus {
-      border-color: #a8b9d1;
-      box-shadow: 0 0 0 5px rgba(135, 156, 189, 0.12);
     }
 
     .ai-input-tip {
       position: absolute;
       right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
+      top: 18px;
       color: #9baabe;
       font-size: 12px;
       pointer-events: none;
+    }
+
+    .ai-char-count {
+      position: absolute;
+      right: 14px;
+      bottom: -2px;
+      font-size: 12px;
+      color: #94a3ba;
     }
 
     .ai-voice-btn {
       width: 56px;
       height: 56px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #37c987 0%, #27be78 100%);
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
       color: #fff;
-      box-shadow: 0 12px 24px rgba(88, 141, 116, 0.18);
+      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.20);
       border: 0;
       cursor: pointer;
       transition: 0.25s ease;
-    }
-
-    .ai-voice-btn:hover {
-      transform: translateY(-2px) scale(1.02);
+      font-size: 20px;
     }
 
     .ai-voice-btn.is-listening {
-      background: linear-gradient(135deg, #d97b86 0%, #c96b8d 100%);
-      box-shadow: 0 0 0 7px rgba(201, 107, 141, 0.12), 0 14px 26px rgba(171, 96, 122, 0.18);
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
       animation: aiPulse 1s infinite;
-    }
-
-    .voice-icon {
-      font-size: 20px;
     }
 
     .ai-send-btn {
       height: 56px;
       padding: 0 22px;
       border-radius: 18px;
-      background: linear-gradient(135deg, #6f95d8 0%, #87a8df 100%);
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
       color: #fff;
       font-weight: 800;
-      box-shadow: 0 12px 24px rgba(84, 108, 150, 0.16);
       border: 0;
       cursor: pointer;
-      transition: 0.25s ease;
-    }
-
-    .ai-send-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    .ai-send-btn:disabled,
-    .ai-voice-btn:disabled {
-      opacity: 0.7;
-      cursor: not-allowed;
-      transform: none;
     }
 
     .ai-typing {
@@ -596,23 +611,12 @@
       animation: aiDots 1.2s infinite ease-in-out;
     }
 
-    .ai-typing span:nth-child(2) {
-      animation-delay: 0.15s;
-    }
-
-    .ai-typing span:nth-child(3) {
-      animation-delay: 0.3s;
-    }
+    .ai-typing span:nth-child(2) { animation-delay: 0.15s; }
+    .ai-typing span:nth-child(3) { animation-delay: 0.3s; }
 
     @keyframes aiDots {
-      0%, 80%, 100% {
-        opacity: 0.35;
-        transform: translateY(0);
-      }
-      40% {
-        opacity: 1;
-        transform: translateY(-3px);
-      }
+      0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
+      40% { opacity: 1; transform: translateY(-3px); }
     }
 
     @keyframes aiPulse {
@@ -621,59 +625,113 @@
       100% { transform: scale(1); }
     }
 
+    /* DARK MODE */
+    body.theme-dark {
+      --bg-1: #0f172a;
+      --bg-2: #111827;
+      --bg-3: #172033;
+      --text: #e5eefc;
+      --muted: #9fb0cc;
+      --line: #2d3b55;
+      --line-strong: #334155;
+      --card: rgba(17, 24, 39, 0.92);
+      --card-solid: #111827;
+      --danger-2: rgba(127, 29, 29, 0.28);
+      --shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
+      --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    body.theme-dark .topbar,
+    body.theme-dark .ai-chat-shell,
+    body.theme-dark .ai-summary-card,
+    body.theme-dark .ai-empty-card {
+      background: rgba(17, 24, 39, 0.92) !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .ai-chat-head,
+    body.theme-dark .ai-chat-form,
+    body.theme-dark .ai-chat-window {
+      background: linear-gradient(180deg, #111827 0%, #1e293b 100%) !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .brand-title,
+    body.theme-dark .ai-chat-title,
+    body.theme-dark .ai-summary-value,
+    body.theme-dark .ai-empty-title {
+      color: #f3f7ff !important;
+    }
+
+    body.theme-dark .brand-subtitle,
+    body.theme-dark .ai-chat-status,
+    body.theme-dark .ai-summary-label,
+    body.theme-dark .ai-empty-text,
+    body.theme-dark .ai-msg-meta,
+    body.theme-dark .ai-char-count,
+    body.theme-dark .ai-input-tip {
+      color: #9fb0cc !important;
+    }
+
+    body.theme-dark .chip,
+    body.theme-dark .ai-subject-chip,
+    body.theme-dark .ai-mini-btn,
+    body.theme-dark .speak-btn,
+    body.theme-dark .ai-chat-day {
+      background: #1b2a44 !important;
+      border-color: #2d3b55 !important;
+      color: #dbe7ff !important;
+    }
+
+    body.theme-dark .ai-subject-chip.active {
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%) !important;
+      color: white !important;
+    }
+
+    body.theme-dark .ai-bubble-bot {
+      background: #1e293b !important;
+      color: #e5eefc !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .ai-input-box input {
+      background: #111827 !important;
+      border-color: #2d3b55 !important;
+      color: #f3f7ff !important;
+    }
+
+    body.theme-dark .ai-input-box input::placeholder {
+      color: #8fa3c2 !important;
+    }
+
+    @media (max-width: 900px) {
+      .ai-summary-row { grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 700px) {
-      .ai-wrap {
-        width: min(100% - 18px, 1000px);
-        padding-top: 18px;
-      }
-
-      .ai-chat-shell {
-        border-radius: 22px;
-      }
-
-      .ai-chat-head {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .ai-chat-window {
-        min-height: 380px;
-        max-height: 55vh;
-        padding: 14px;
-      }
-
-      .ai-msg-body {
-        max-width: 92%;
-      }
-
-      .ai-chat-form {
-        grid-template-columns: 52px 1fr;
-      }
-
-      .ai-send-btn {
-        grid-column: 1 / -1;
-        width: 100%;
-        height: 52px;
-      }
-
+      .topbar { padding: 0 12px; }
+      .brand-subtitle { display: none; }
+      .ai-wrap { width: min(100% - 18px, 1000px); padding-top: 18px; }
+      .ai-chat-shell { border-radius: 22px; padding: 12px; }
+      .ai-chat-head { flex-direction: column; align-items: flex-start; }
+      .ai-head-actions { width: 100%; }
+      .ai-icon-btn { flex: 1; }
+      .ai-chat-window { min-height: 380px; max-height: 55vh; padding: 14px; }
+      .ai-msg-body { max-width: 92%; }
+      .ai-chat-form { grid-template-columns: 52px 1fr; }
+      .ai-send-btn { grid-column: 1 / -1; width: 100%; height: 52px; }
       .ai-voice-btn,
-      .ai-input-box input {
-        height: 52px;
-      }
-
-      .ai-input-tip {
-        display: none;
-      }
+      .ai-input-box input { height: 52px; }
+      .ai-input-tip { display: none; }
+      .ai-empty-card { padding: 22px 16px; }
+      .ai-char-count { right: 10px; bottom: -2px; }
     }
   </style>
 </head>
-<body class="ai-page">
+
+<body class="ai-page {% if dark_mode %}theme-dark{% endif %}">
 
 <header class="topbar">
-  <button class="iconbtn" id="btnMenu" type="button" aria-label="Menu">
-    <i class="burger"><span></span></i>
-  </button>
-
   <div class="brand">
     <div class="logo">EM</div>
     <div>
@@ -687,29 +745,6 @@
   </div>
 </header>
 
-<aside class="drawer" id="drawer" aria-hidden="true">
-  <div class="drawer-top">
-    <div class="logo big">EM</div>
-    <div>
-      <div class="drawer-title">EduMentor AI</div>
-      <div class="drawer-sub">Navigation</div>
-    </div>
-    <button class="iconbtn" id="btnCloseDrawer" type="button" aria-label="Жабу">✕</button>
-  </div>
-
-  <nav class="drawer-nav">
-    <a class="drawer-link" href="{% url 'home' %}">Басты бет</a>
-    <a class="drawer-link" href="{% url 'guide' %}">Нұсқаулық</a>
-    <a class="drawer-link" href="{% url 'downloads' %}">Материалдар</a>
-    <a class="drawer-link" href="{% url 'courses' %}">Курстар</a>
-    <a class="drawer-link" href="{% url 'quiz' %}">Викторина</a>
-    <a class="drawer-link" href="{% url 'progress' %}">Үлгерім</a>
-    <a class="drawer-link" href="{% url 'contact' %}">Байланыс</a>
-  </nav>
-</aside>
-
-<div class="backdrop" id="backdrop" hidden></div>
-
 <main class="ai-wrap">
   <section class="ai-chat-shell">
     <div class="ai-chat-head">
@@ -722,13 +757,42 @@
       </div>
 
       <div class="ai-head-actions">
+        <button type="button" class="ai-icon-btn" id="clearChatBtn" aria-label="Чатты тазалау">
+          🧹 <span>Тазалау</span>
+        </button>
+
         <button type="button" class="ai-icon-btn" id="toggleVoiceReadBtn" aria-label="Дауыстап оқу">
           <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
             <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
           </svg>
+          <span>Дауыс</span>
         </button>
       </div>
+    </div>
+        <div class="ai-summary-row">
+      <div class="ai-summary-card">
+        <div class="ai-summary-label">Қалай қолдану керек</div>
+        <div class="ai-summary-value">Сұрақ жаз немесе микрофонды бас</div>
+      </div>
+      <div class="ai-summary-card">
+        <div class="ai-summary-label">Ұсыныс</div>
+        <div class="ai-summary-value">Нақты пән мен тақырыпты көрсет</div>
+      </div>
+      <div class="ai-summary-card">
+        <div class="ai-summary-label">Жылдам әрекет</div>
+        <div class="ai-summary-value">Төмендегі көк батырмаларды қолдан</div>
+      </div>
+    </div>
+
+    <div class="ai-error-box" id="errorBox"></div>
+
+    <div class="ai-subject-row">
+      <button type="button" class="ai-subject-chip active" data-subject="">Барлығы</button>
+      <button type="button" class="ai-subject-chip" data-subject="Математика">Математика</button>
+      <button type="button" class="ai-subject-chip" data-subject="Қазақстан тарихы">Тарих</button>
+      <button type="button" class="ai-subject-chip" data-subject="Биология">Биология</button>
+      <button type="button" class="ai-subject-chip" data-subject="Физика">Физика</button>
     </div>
 
     <div class="ai-quick-row">
@@ -741,20 +805,12 @@
     <div class="ai-chat-window" id="chatWindow">
       <div class="ai-chat-day">Бүгін</div>
 
-      <div class="ai-msg ai-msg-bot">
-        <div class="ai-msg-avatar">AI</div>
-        <div class="ai-msg-body">
-          <div class="ai-bubble ai-bubble-bot">
-            Сәлем! Маған сұрағыңды жаз. Қаласаң, дауыс батырмасымен де сөйлесе аласың. Мен интернеттен іздеп көмектесемін.
-          </div>
-          <div class="ai-msg-meta">
-            EduMentor AI
-            <button type="button" class="speak-btn" data-speak="Сәлем! Маған сұрағыңды жаз. Қаласаң, дауыс батырмасымен де сөйлесе аласың. Мен интернеттен іздеп көмектесемін." aria-label="Оқу">
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-              </svg>
-            </button>
+      <div class="ai-empty-state" id="emptyState">
+        <div class="ai-empty-card">
+          <div class="ai-empty-emoji">🤖</div>
+          <div class="ai-empty-title">Сұрағыңды қой</div>
+          <div class="ai-empty-text">
+            Мысалы: «ҰБТ-ға 7 күндік оқу жоспарын құр», «Математика формулаларын түсіндір» немесе «Қазақстан тарихынан тестке көмектес».
           </div>
         </div>
       </div>
@@ -762,17 +818,19 @@
 
     <form class="ai-chat-form" id="chatForm">
       <button type="button" class="ai-voice-btn" id="voiceBtn" aria-label="Voice">
-        <span class="voice-icon">🎤</span>
+        🎤
       </button>
 
       <div class="ai-input-box">
         <input
           type="text"
           id="chatInput"
-          placeholder="Сұрағыңды жаз..."
+          placeholder="Сұрағыңды нақты жаз... Мысалы: ҰБТ математика формулалары"
           autocomplete="off"
+          required
         />
         <div class="ai-input-tip" id="voiceHint">Enter — жіберу</div>
+        <div class="ai-char-count" id="charCount">0 / 500</div>
       </div>
 
       <button type="submit" class="ai-send-btn" id="sendBtn">Жіберу</button>
@@ -781,36 +839,6 @@
 </main>
 
 <script>
-  const btnMenu = document.getElementById("btnMenu");
-  const drawer = document.getElementById("drawer");
-  const backdrop = document.getElementById("backdrop");
-  const btnClose = document.getElementById("btnCloseDrawer");
-
-  function openDrawer() {
-    if (!drawer) return;
-    drawer.classList.add("open");
-    if (backdrop) backdrop.hidden = false;
-  }
-
-  function closeDrawer() {
-    if (!drawer) return;
-    drawer.classList.remove("open");
-    if (backdrop) backdrop.hidden = true;
-  }
-
-  if (btnMenu) btnMenu.addEventListener("click", openDrawer);
-  if (btnClose) btnClose.addEventListener("click", closeDrawer);
-  if (backdrop) backdrop.addEventListener("click", closeDrawer);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeDrawer();
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-    }
-  });
-
   const chatForm = document.getElementById("chatForm");
   const chatInput = document.getElementById("chatInput");
   const chatWindow = document.getElementById("chatWindow");
@@ -820,6 +848,10 @@
   const toggleVoiceReadBtn = document.getElementById("toggleVoiceReadBtn");
   const quickPills = document.querySelectorAll(".ai-quick-pill");
   const sendBtn = document.getElementById("sendBtn");
+  const errorBox = document.getElementById("errorBox");
+  const clearChatBtn = document.getElementById("clearChatBtn");
+  const charCount = document.getElementById("charCount");
+  const subjectChips = document.querySelectorAll(".ai-subject-chip");
 
   let recognition = null;
   let isRecognizing = false;
@@ -831,6 +863,8 @@
 
   let autoSpeakEnabled = true;
   let isSending = false;
+  let selectedSubject = "";
+  let lastUserMessage = "";
 
   function getCookie(name) {
     const value = "; " + document.cookie;
@@ -841,6 +875,49 @@
 
   function scrollChatBottom() {
     chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  function getCurrentTime() {
+    const now = new Date();
+    return now.toLocaleTimeString("kk-KZ", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  function showError(text) {
+    if (!errorBox) return;
+    errorBox.textContent = text;
+    errorBox.style.display = "block";
+    setTimeout(() => {
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+    }, 3500);
+  }
+
+  function updateCharCount() {
+    const len = chatInput.value.length;
+    charCount.textContent = `${len} / 500`;
+    charCount.style.color = len > 500 ? "#ef4444" : "#94a3ba";
+  }
+
+  function hideEmptyState() {
+    const emptyState = document.getElementById("emptyState");
+    if (emptyState) emptyState.remove();
+  }
+
+  function renderEmptyState(message = "Жаңа чат басталды. Сұрағыңды жаз.") {
+    chatWindow.innerHTML = `
+      <div class="ai-chat-day">Бүгін</div>
+      <div class="ai-empty-state" id="emptyState">
+        <div class="ai-empty-card">
+          <div class="ai-empty-emoji">✨</div>
+          <div class="ai-empty-title">Жаңа чат</div>
+          <div class="ai-empty-text">${message}</div>
+        </div>
+      </div>
+    `;
+    scrollChatBottom();
   }
 
   function speakText(text) {
@@ -856,6 +933,8 @@
   }
 
   function appendBotMessage(text) {
+    hideEmptyState();
+
     const div = document.createElement("div");
     div.className = "ai-msg ai-msg-bot";
     div.innerHTML = `
@@ -863,7 +942,12 @@
       <div class="ai-msg-body">
         <div class="ai-bubble ai-bubble-bot"></div>
         <div class="ai-msg-meta">
-          EduMentor AI
+          <span>EduMentor AI</span>
+          <span class="ai-msg-time">${getCurrentTime()}</span>
+        </div>
+        <div class="ai-msg-actions">
+          <button type="button" class="ai-mini-btn copy-btn">Көшіру</button>
+          <button type="button" class="ai-mini-btn retry-btn">Қайта сұрау</button>
           <button type="button" class="speak-btn" aria-label="Оқу">
             <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
@@ -884,12 +968,17 @@
   }
 
   function appendUserMessage(text) {
+    hideEmptyState();
+
     const div = document.createElement("div");
     div.className = "ai-msg ai-msg-user";
     div.innerHTML = `
       <div class="ai-msg-body">
         <div class="ai-bubble ai-bubble-user"></div>
-        <div class="ai-msg-meta">Сіз</div>
+        <div class="ai-msg-meta">
+          <span>Сіз</span>
+          <span class="ai-msg-time">${getCurrentTime()}</span>
+        </div>
       </div>
     `;
     div.querySelector(".ai-bubble").textContent = text;
@@ -899,6 +988,7 @@
 
   function appendTypingRow() {
     removeTypingRow();
+    hideEmptyState();
 
     const div = document.createElement("div");
     div.className = "ai-msg ai-msg-bot";
@@ -909,7 +999,7 @@
         <div class="ai-bubble ai-bubble-bot ai-typing">
           <span></span><span></span><span></span>
         </div>
-        <div class="ai-msg-meta">EduMentor AI іздеп жатыр...</div>
+        <div class="ai-msg-meta">EduMentor AI жауап дайындап жатыр...</div>
       </div>
     `;
     chatWindow.appendChild(div);
@@ -933,6 +1023,7 @@
     isSending = sending;
     if (sendBtn) sendBtn.disabled = sending;
     if (voiceBtn) voiceBtn.disabled = sending;
+    if (chatInput) chatInput.disabled = sending;
 
     if (sending) {
       assistantStatus.textContent = "Жауап дайындап жатыр...";
@@ -940,15 +1031,40 @@
     } else {
       assistantStatus.textContent = "Онлайн • жауап беруге дайын";
       voiceHint.textContent = "Enter — жіберу";
+      if (chatInput) chatInput.disabled = false;
     }
   }
 
   async function sendMessage(text) {
     const cleanText = text.trim();
-    if (!cleanText || isSending) return;
 
-    appendUserMessage(cleanText);
+    if (!cleanText) {
+      showError("Сұрақ бос болмауы керек.");
+      return;
+    }
+
+    if (cleanText.length < 2) {
+      showError("Сұрақ тым қысқа. Нақтырақ жаз.");
+      return;
+    }
+
+    if (cleanText.length > 500) {
+      showError("Сұрақ 500 таңбадан аспауы керек.");
+      return;
+    }
+
+    if (isSending) return;
+
+    lastUserMessage = cleanText;
+
+    let finalMessage = cleanText;
+    if (selectedSubject) {
+      finalMessage = `${selectedSubject} пәні бойынша: ${cleanText}`;
+    }
+
+    appendUserMessage(finalMessage);
     chatInput.value = "";
+    updateCharCount();
     chatInput.focus();
 
     appendTypingRow();
@@ -962,7 +1078,7 @@
           "X-CSRFToken": getCookie("csrftoken")
         },
         body: JSON.stringify({
-          message: cleanText
+          message: finalMessage
         })
       });
 
@@ -970,13 +1086,16 @@
       removeTypingRow();
 
       if (!response.ok || !data.ok) {
-        appendBotMessage(data.error || "Қате шықты. Кейінірек қайта байқап көр.");
+        const msg = data.error || "Қате шықты. Кейінірек қайта байқап көр.";
+        appendBotMessage(msg);
+        showError(msg);
       } else {
         appendBotMessage(data.answer || "Жауап бос қайтты.");
       }
     } catch (error) {
       removeTypingRow();
       appendBotMessage("Сервермен байланыс кезінде қате шықты.");
+      showError("Сервермен байланыс кезінде қате шықты.");
     } finally {
       setSendingState(false);
     }
@@ -1021,6 +1140,7 @@
       }
 
       chatInput.value = (finalTranscript + interimText).trim();
+      updateCharCount();
     };
 
     recognition.onerror = (event) => {
@@ -1030,6 +1150,7 @@
         status: "Voice қатесі: " + event.error,
         hint: "Қайта байқап көр"
       });
+      showError("Дауысты оқу кезінде қате: " + event.error);
     };
 
     recognition.onend = () => {
@@ -1063,6 +1184,7 @@
   async function startRecorderFallback() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       appendBotMessage("Бұл браузерде микрофон API қолжетімсіз.");
+      showError("Бұл браузерде микрофон API қолжетімсіз.");
       return;
     }
 
@@ -1104,6 +1226,7 @@
           }
 
           chatInput.value = data.text || "";
+          updateCharCount();
           assistantStatus.textContent = "Дауыстық мәтін дайын";
           voiceHint.textContent = "Enter — жіберу";
           chatInput.focus();
@@ -1112,6 +1235,7 @@
           assistantStatus.textContent = "Қате шықты";
           voiceHint.textContent = "Қайта байқап көр";
           appendBotMessage("Voice transcription қатесі: " + error.message);
+          showError("Voice transcription қатесі: " + error.message);
         } finally {
           if (mediaStream) {
             mediaStream.getTracks().forEach((track) => track.stop());
@@ -1133,6 +1257,7 @@
 
     } catch (error) {
       appendBotMessage("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
+      showError("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
       setVoiceState({
         listening: false,
         status: "Микрофон қолжетімсіз",
@@ -1176,6 +1301,8 @@
     }
   });
 
+  chatInput.addEventListener("input", updateCharCount);
+
   if (voiceBtn) {
     voiceBtn.addEventListener("click", handleVoiceClick);
   }
@@ -1188,27 +1315,87 @@
       if (!autoSpeakEnabled && "speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
+
+      assistantStatus.textContent = autoSpeakEnabled
+        ? "Онлайн • дауыспен оқу қосулы"
+        : "Онлайн • дауыспен оқу сөндірулі";
     });
   }
 
-  quickPills.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      chatInput.value = this.dataset.text || "";
+  if (clearChatBtn) {
+    clearChatBtn.addEventListener("click", function () {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+      removeTypingRow();
+      renderEmptyState("Жаңа чат басталды. Төменге сұрағыңды жаз.");
+      assistantStatus.textContent = "Онлайн • жаңа чат дайын";
+      voiceHint.textContent = "Enter — жіберу";
+      chatInput.value = "";
+      updateCharCount();
+      chatInput.focus();
+    });
+  }
+
+  subjectChips.forEach((chip) => {
+    chip.addEventListener("click", function () {
+      subjectChips.forEach((c) => c.classList.remove("active"));
+      this.classList.add("active");
+      selectedSubject = this.dataset.subject || "";
       chatInput.focus();
     });
   });
 
-  document.addEventListener("click", function (e) {
-    const speakBtn = e.target.closest(".speak-btn");
-    if (!speakBtn) return;
+  quickPills.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      chatInput.value = this.dataset.text || "";
+      updateCharCount();
+      chatInput.focus();
+    });
+  });
 
-    const text = speakBtn.dataset.speak || "";
-    if (text) speakText(text);
+  document.addEventListener("click", async function (e) {
+    const copyBtn = e.target.closest(".copy-btn");
+    if (copyBtn) {
+      const msgBody = copyBtn.closest(".ai-msg-body");
+      const bubble = msgBody.querySelector(".ai-bubble");
+      const text = bubble ? bubble.textContent : "";
+
+      if (text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.textContent = "Көшірілді";
+          setTimeout(() => {
+            copyBtn.textContent = "Көшіру";
+          }, 1200);
+        } catch {
+          showError("Мәтінді көшіру мүмкін болмады.");
+        }
+      }
+      return;
+    }
+
+    const retryBtn = e.target.closest(".retry-btn");
+    if (retryBtn) {
+      if (lastUserMessage) {
+        sendMessage(lastUserMessage);
+      } else {
+        showError("Қайта жіберетін соңғы сұрақ жоқ.");
+      }
+      return;
+    }
+
+    const speakBtn = e.target.closest(".speak-btn");
+    if (speakBtn) {
+      const text = speakBtn.dataset.speak || "";
+      if (text) speakText(text);
+    }
   });
 
   window.addEventListener("load", () => {
     scrollChatBottom();
     initSpeechRecognition();
+    updateCharCount();
   });
 </script>
 
