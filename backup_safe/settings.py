@@ -104,6 +104,10 @@ LOGOUT_REDIRECT_URL = "login"
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyBCedmJ16bBc1ziQukmUb0Q1gZTrbPdQIg")
 
+<<<<<<< HEAD
 GEMINI_API_KEY = "AIzaSyBCedmJ16bBc1ziQukmUb0Q1gZTrbPdQIg"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+=======
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+>>>>>>> 2fb66b60e5cd0fb4e449e2c10377c89bb53b022d
