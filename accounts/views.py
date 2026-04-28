@@ -107,10 +107,10 @@ def ai_web_chat_api(request):
         if not api_key:
             return JsonResponse({
                 "ok": True,
-                "answer": "GEMINI_API_KEY орнатылмаған. Render Environment ішіне GEMINI_API_KEY қосыңыз."
+                "answer": "GEMINI_API_KEY орнатылмаған."
             })
 
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
 
         payload = {
             "contents": [
@@ -119,8 +119,7 @@ def ai_web_chat_api(request):
                         {
                             "text": (
                                 "Сен EduMentor AI атты оқу көмекшісісің. "
-                                "Қолданушыға қазақша немесе өзі жазған тілде жауап бер. "
-                                "Жауап қысқа, түсінікті, оқушыға пайдалы болсын.\n\n"
+                                "Қазақша қысқа әрі түсінікті жауап бер.\n\n"
                                 f"Сұрақ: {user_message}"
                             )
                         }
@@ -134,26 +133,14 @@ def ai_web_chat_api(request):
 
         if response.status_code != 200:
             error_message = result.get("error", {}).get("message", "Gemini API қатесі шықты.")
-            return JsonResponse({
-                "ok": True,
-                "answer": f"AI қатесі: {error_message}"
-            })
+            return JsonResponse({"ok": True, "answer": f"AI қатесі: {error_message}"})
 
-        try:
-            answer_text = result["candidates"][0]["content"]["parts"][0]["text"]
-        except Exception:
-            answer_text = get_demo_reply(user_message)
+        answer_text = result["candidates"][0]["content"]["parts"][0]["text"]
 
-        return JsonResponse({
-            "ok": True,
-            "answer": answer_text
-        })
+        return JsonResponse({"ok": True, "answer": answer_text})
 
     except Exception as e:
-        return JsonResponse({
-            "ok": True,
-            "answer": f"AI қатесі: {str(e)}"
-        })
+        return JsonResponse({"ok": True, "answer": f"AI қатесі: {str(e)}"})
 
 
 def contact_view(request):
