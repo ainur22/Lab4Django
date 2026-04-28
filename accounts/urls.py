@@ -22,4 +22,8 @@ urlpatterns = [
     path('profile/grants/', views.profile_grants_view, name='profile_grants'),
     path('profile/leaderboard/', views.profile_leaderboard_view, name='profile_leaderboard'),
     path('profile/settings/', views.profile_settings_view, name='profile_settings'),
+<<<<<<< HEAD
 ]
+=======
+]
+>>>>>>> 2fb66b60e5cd0fb4e449e2c10377c89bb53b022d
