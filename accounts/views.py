@@ -111,9 +111,9 @@ def ai_web_chat_api(request):
             })
 
         url = (
-            "https://generativelanguage.googleapis.com/v1beta/"
-            f"models/gemini-1.5-flash:generateContent?key={api_key}"
-        )
+    "https://generativelanguage.googleapis.com/v1beta/"
+    f"models/gemini-1.5-flash-latest:generateContent?key={api_key}"
+)
 
         payload = {
             "contents": [
