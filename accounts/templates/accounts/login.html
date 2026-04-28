@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EduMentor AI — Тіркелу</title>
+<title>EduMentor AI — Кіру</title>
 
 <style>
 *{box-sizing:border-box}
@@ -85,35 +85,6 @@ input:focus{
   border-color:#8db6ff;
   box-shadow:0 0 0 4px rgba(74,134,247,.12);
 }
-.errorlist{
-  list-style:none;
-  padding:0;
-  margin:8px 0 0;
-  color:#b91c1c;
-  font-size:13px;
-  font-weight:700;
-}
-.strength{
-  margin-top:10px;
-}
-.strength-bar{
-  height:9px;
-  border-radius:999px;
-  background:#e5eaf5;
-  overflow:hidden;
-}
-.strength-fill{
-  height:100%;
-  width:0%;
-  border-radius:999px;
-  transition:.25s;
-}
-.strength-text{
-  margin-top:7px;
-  font-size:13px;
-  font-weight:800;
-  color:#7e91b4;
-}
 .btn{
   width:100%;
   height:56px;
@@ -154,10 +125,10 @@ input:focus{
 <div class="auth-page">
   <section class="left">
     <div class="left-box">
-      <h1>EduMentor AI-ға қош келдің</h1>
-      <p>Аккаунт ашып, курстарды өтіп, Quiz тапсырып, AI Chat арқылы оқу процесін жеңілдет.</p>
-      <div class="step">1. Тіркел</div>
-      <div class="step">2. Курсты таңда</div>
+      <h1>EduMentor AI-ға қайта қош келдің</h1>
+      <p>Аккаунтыңа кіріп, курстарды, Quiz, AI Chat және прогресті жалғастыр.</p>
+      <div class="step">1. Аккаунтқа кір</div>
+      <div class="step">2. Курсты жалғастыр</div>
       <div class="step">3. Прогресті бақыла</div>
     </div>
   </section>
@@ -168,9 +139,9 @@ input:focus{
         <div class="logo">EM</div>
       </a>
 
-      <div class="badge">Жаңа аккаунт</div>
-      <h2>Тіркелу</h2>
-      <p class="desc">Барлық оқу мүмкіндіктерін қолдану үшін аккаунт құрыңыз.</p>
+      <div class="badge">Жүйеге кіру</div>
+      <h2>Кіру</h2>
+      <p class="desc">Username немесе email арқылы кіре аласыз.</p>
 
       {% if messages %}
       <div class="messages">
@@ -184,92 +155,23 @@ input:focus{
         {% csrf_token %}
 
         <div class="field">
-          <label for="id_username">Пайдаланушы аты</label>
-          {{ form.username }}
-          {{ form.username.errors }}
+          <label for="id_username">Username немесе Email</label>
+          <input type="text" name="username" id="id_username" placeholder="Username немесе email енгізіңіз" required>
         </div>
 
         <div class="field">
-          <label for="id_email">Email</label>
-          {{ form.email }}
-          {{ form.email.errors }}
+          <label for="id_password">Құпия сөз</label>
+          <input type="password" name="password" id="id_password" placeholder="Құпия сөз енгізіңіз" required>
         </div>
 
-        <div class="field">
-          <label for="id_password1">Құпия сөз</label>
-          {{ form.password1 }}
-          <div class="strength">
-            <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-            <div class="strength-text" id="strengthText">Құпия сөз күшін көрсетеді</div>
-          </div>
-          {{ form.password1.errors }}
-        </div>
-
-        <div class="field">
-          <label for="id_password2">Құпия сөзді қайталау</label>
-          {{ form.password2 }}
-          {{ form.password2.errors }}
-        </div>
-
-        <button class="btn" type="submit">Тіркелу</button>
+        <button class="btn" type="submit">Кіру</button>
       </form>
 
       <div class="bottom">
-        Аккаунтыңыз бар ма? <a href="{% url 'login' %}">Кіру</a>
+        Аккаунтыңыз жоқ па? <a href="{% url 'register' %}">Тіркелу</a>
       </div>
     </div>
   </section>
 </div>
-
-<script>
-const p1 = document.getElementById("id_password1");
-const fill = document.getElementById("strengthFill");
-const text = document.getElementById("strengthText");
-
-document.addEventListener("DOMContentLoaded", () => {
-  const username = document.getElementById("id_username");
-  const email = document.getElementById("id_email");
-  const p2 = document.getElementById("id_password2");
-
-  if(username) username.placeholder = "Мысалы: ainur2025";
-  if(email) email.placeholder = "Email енгізіңіз";
-  if(p1) p1.placeholder = "Құпия сөз";
-  if(p2) p2.placeholder = "Құпия сөзді қайталау";
-});
-
-if(p1){
-  p1.addEventListener("input", () => {
-    const v = p1.value;
-    let score = 0;
-
-    if(v.length >= 8) score++;
-    if(/[A-ZА-Я]/.test(v)) score++;
-    if(/[0-9]/.test(v)) score++;
-    if(/[^A-Za-zА-Яа-я0-9]/.test(v)) score++;
-
-    if(v.length === 0){
-      fill.style.width = "0%";
-      fill.style.background = "#e5eaf5";
-      text.textContent = "Құпия сөз күшін көрсетеді";
-      text.style.color = "#7e91b4";
-    } else if(score <= 1){
-      fill.style.width = "33%";
-      fill.style.background = "#ef4444";
-      text.textContent = "Қауіпсіздік төмен";
-      text.style.color = "#ef4444";
-    } else if(score <= 3){
-      fill.style.width = "66%";
-      fill.style.background = "#f59e0b";
-      text.textContent = "Қауіпсіздік орташа";
-      text.style.color = "#f59e0b";
-    } else {
-      fill.style.width = "100%";
-      fill.style.background = "#10b981";
-      text.textContent = "Қауіпсіздік жоғары";
-      text.style.color = "#10b981";
-    }
-  });
-}
-</script>
 </body>
 </html>
