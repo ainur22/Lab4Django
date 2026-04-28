@@ -4,607 +4,1400 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EduMentor AI — Викторина</title>
-  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+  <title>EduMentor AI — AI Chat</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-1: #eef4ff;
+      --bg-2: #f8fbff;
+      --bg-3: #eefbf5;
+      --text: #233454;
+      --muted: #7b8ca7;
+      --line: #dfe8f3;
+      --line-strong: #cfd9e8;
+      --card: rgba(255, 255, 255, 0.78);
+      --card-solid: #ffffff;
+      --blue-1: #2563eb;
+      --blue-2: #3b82f6;
+      --blue-3: #dbeafe;
+      --green-1: #10b981;
+      --green-2: #34d399;
+      --danger-1: #ef4444;
+      --danger-2: #fef2f2;
+      --shadow: 0 18px 46px rgba(68, 88, 126, 0.10);
+      --shadow-soft: 0 8px 20px rgba(87, 114, 168, 0.16);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+      color: var(--text);
+    }
+
+    body.ai-page {
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body.ai-page::before,
+    body.ai-page::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(70px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    body.ai-page::before {
+      width: 280px;
+      height: 280px;
+      top: -60px;
+      right: -80px;
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    body.ai-page::after {
+      width: 260px;
+      height: 260px;
+      bottom: -80px;
+      left: -70px;
+      background: rgba(16, 185, 129, 0.12);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 0 18px;
+      background: rgba(255, 255, 255, 0.82);
+      border-bottom: 1px solid rgba(70, 95, 140, 0.08);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      color: #fff;
+      background: linear-gradient(135deg, #2563eb, #60a5fa);
+      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+      flex-shrink: 0;
+    }
+
+    .brand-title {
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 800;
+      line-height: 1.2;
+    }
+
+    .brand-subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.2;
+      margin-top: 2px;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .chip {
+      min-height: 42px;
+      padding: 0 15px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #eff6ff 0%, #e0ecff 100%);
+      color: #2554b8;
+      border: 1px solid #d4e3ff;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .chip:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #e8f1ff 0%, #d9e8ff 100%);
+    }
+
+    .ai-wrap {
+      position: relative;
+      z-index: 1;
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 44px;
+    }
+
+    .ai-chat-shell {
+      background: var(--card);
+      border: 1px solid #e3eaf3;
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .ai-chat-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 16px 18px;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(180deg, #fbfdff 0%, #edf4ff 100%);
+      border: 1px solid #e2ebf7;
+      margin-bottom: 14px;
+    }
+
+    .ai-chat-head-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .ai-avatar,
+    .ai-msg-avatar {
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      background: linear-gradient(135deg, #2563eb, #60a5fa);
+    }
+
+    .ai-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      box-shadow: var(--shadow-soft);
+      flex-shrink: 0;
+    }
+
+    .ai-chat-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #21375c;
+    }
+
+    .ai-chat-status {
+      margin-top: 4px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .ai-head-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ai-icon-btn {
+      min-width: 44px;
+      height: 44px;
+      border: 1px solid #cfd9ea;
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #edf4ff 100%);
+      color: #4d6da3;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 0 14px;
+      outline: none;
+      box-shadow: 0 6px 16px rgba(79, 106, 156, 0.08);
+      transition: 0.2s ease;
+      appearance: none;
+      -webkit-appearance: none;
+      font-weight: 700;
+      gap: 8px;
+    }
+
+    .ai-icon-btn:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(180deg, #f8fbff 0%, #e7f0ff 100%);
+      border-color: #bccbe3;
+    }
+
+    .ai-icon-btn.is-off {
+      opacity: 0.55;
+    }
+
+    .ai-icon-btn svg {
+      width: 18px;
+      height: 18px;
+      display: block;
+      stroke: currentColor;
+    }
+
+    .ai-summary-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .ai-summary-card {
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid #e4edf8;
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: 0 10px 20px rgba(84, 108, 150, 0.05);
+    }
+
+    .ai-summary-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .ai-summary-value {
+      font-size: 15px;
+      font-weight: 800;
+      color: #28416d;
+    }
+
+    .ai-error-box {
+      display: none;
+      margin-bottom: 14px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: var(--danger-2);
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .ai-subject-row,
+    .ai-quick-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 0 0 14px 0;
+    }
+
+    .ai-subject-chip {
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid #d7e5ff;
+      border-radius: 999px;
+      background: #ffffff;
+      color: #3460b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .ai-subject-chip:hover {
+      background: #eff6ff;
+      transform: translateY(-1px);
+    }
+
+    .ai-subject-chip.active {
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
+    }
+
+    .ai-quick-pill {
+      min-height: 42px;
+      padding: 0 16px;
+      border: 1px solid #7fa3dc;
+      border-radius: 13px;
+      background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 8px 18px rgba(90, 125, 191, 0.16);
+      transition: 0.2s ease;
+    }
+
+    .ai-quick-pill:hover {
+      transform: translateY(-1px);
+      background: linear-gradient(135deg, #2f76f0 0%, #5298fb 100%);
+    }
+
+    .ai-chat-window {
+      min-height: 520px;
+      max-height: 68vh;
+      overflow-y: auto;
+      padding: 22px 18px;
+      border-radius: 24px;
+      background: linear-gradient(180deg, #fcfdff 0%, #f4f8ff 100%);
+      border: 1px solid #e6edf5;
+      position: relative;
+      scroll-behavior: smooth;
+    }
+
+    .ai-chat-day {
+      width: fit-content;
+      margin: 0 auto 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: #eef4ff;
+      color: #6f84a7;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .ai-empty-state {
+      min-height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .ai-empty-card {
+      max-width: 420px;
+      padding: 28px 22px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.88);
+      border: 1px solid #e5edf9;
+      box-shadow: 0 14px 32px rgba(76, 95, 132, 0.08);
+    }
+
+    .ai-empty-emoji {
+      font-size: 42px;
+      margin-bottom: 12px;
+    }
+
+    .ai-empty-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #29406a;
+      margin-bottom: 8px;
+    }
+
+    .ai-empty-text {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .ai-msg {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .ai-msg-user {
+      justify-content: flex-end;
+    }
+
+    .ai-msg-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 13px;
+      flex-shrink: 0;
+      font-size: 12px;
+      margin-top: 2px;
+      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.14);
+    }
+
+    .ai-msg-body {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-width: min(78%, 720px);
+    }
+
+    .ai-msg-user .ai-msg-body {
+      align-items: flex-end;
+    }
+
+    .ai-bubble {
+      padding: 14px 16px;
+      border-radius: 20px;
+      font-size: 15px;
+      line-height: 1.65;
+      word-break: break-word;
+      box-shadow: 0 8px 18px rgba(75, 95, 128, 0.05);
+      white-space: pre-wrap;
+    }
+
+    .ai-bubble-bot {
+      background: #edf3ff;
+      color: #395072;
+      border: 1px solid #dce8fb;
+      border-top-left-radius: 8px;
+    }
+
+    .ai-bubble-user {
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-top-right-radius: 8px;
+    }
+
+    .ai-msg-meta {
+      font-size: 12px;
+      color: #8a99b0;
+      padding: 0 4px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .ai-msg-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .ai-mini-btn,
+    .speak-btn {
+      min-height: 28px;
+      padding: 0 10px;
+      border: 1px solid #d8e3f3;
+      border-radius: 10px;
+      background: #fff;
+      color: #5372a6;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .speak-btn {
+      width: 28px;
+      height: 28px;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .speak-btn svg {
+      width: 15px;
+      height: 15px;
+      stroke: currentColor;
+    }
+
+    .ai-chat-form {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 56px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #f9fbff 0%, #edf4ff 100%);
+      border: 1px solid #e2eaf3;
+    }
+
+    .ai-input-box {
+      position: relative;
+      padding-bottom: 18px;
+    }
+
+    .ai-input-box input {
+      width: 100%;
+      height: 56px;
+      border: 1px solid #d9e2ee;
+      outline: none;
+      border-radius: 18px;
+      padding: 0 18px;
+      background: #ffffff;
+      color: #2b3e63;
+      font-size: 15px;
+    }
+
+    .ai-input-tip {
+      position: absolute;
+      right: 14px;
+      top: 18px;
+      color: #9baabe;
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    .ai-char-count {
+      position: absolute;
+      right: 14px;
+      bottom: -2px;
+      font-size: 12px;
+      color: #94a3ba;
+    }
+
+    .ai-voice-btn {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
+      color: #fff;
+      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.20);
+      border: 0;
+      cursor: pointer;
+      transition: 0.25s ease;
+      font-size: 20px;
+    }
+
+    .ai-voice-btn.is-listening {
+      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
+      animation: aiPulse 1s infinite;
+    }
+
+    .ai-send-btn {
+      height: 56px;
+      padding: 0 22px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
+      color: #fff;
+      font-weight: 800;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .ai-typing {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 70px;
+    }
+
+    .ai-typing span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #91a3be;
+      display: inline-block;
+      animation: aiDots 1.2s infinite ease-in-out;
+    }
+
+    .ai-typing span:nth-child(2) { animation-delay: 0.15s; }
+    .ai-typing span:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes aiDots {
+      0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
+      40% { opacity: 1; transform: translateY(-3px); }
+    }
+
+    @keyframes aiPulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.04); }
+      100% { transform: scale(1); }
+    }
+
+    /* DARK MODE */
+    body.theme-dark {
+      --bg-1: #0f172a;
+      --bg-2: #111827;
+      --bg-3: #172033;
+      --text: #e5eefc;
+      --muted: #9fb0cc;
+      --line: #2d3b55;
+      --line-strong: #334155;
+      --card: rgba(17, 24, 39, 0.92);
+      --card-solid: #111827;
+      --danger-2: rgba(127, 29, 29, 0.28);
+      --shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
+      --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.22);
+    }
+
+    body.theme-dark .topbar,
+    body.theme-dark .ai-chat-shell,
+    body.theme-dark .ai-summary-card,
+    body.theme-dark .ai-empty-card {
+      background: rgba(17, 24, 39, 0.92) !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .ai-chat-head,
+    body.theme-dark .ai-chat-form,
+    body.theme-dark .ai-chat-window {
+      background: linear-gradient(180deg, #111827 0%, #1e293b 100%) !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .brand-title,
+    body.theme-dark .ai-chat-title,
+    body.theme-dark .ai-summary-value,
+    body.theme-dark .ai-empty-title {
+      color: #f3f7ff !important;
+    }
+
+    body.theme-dark .brand-subtitle,
+    body.theme-dark .ai-chat-status,
+    body.theme-dark .ai-summary-label,
+    body.theme-dark .ai-empty-text,
+    body.theme-dark .ai-msg-meta,
+    body.theme-dark .ai-char-count,
+    body.theme-dark .ai-input-tip {
+      color: #9fb0cc !important;
+    }
+
+    body.theme-dark .chip,
+    body.theme-dark .ai-subject-chip,
+    body.theme-dark .ai-mini-btn,
+    body.theme-dark .speak-btn,
+    body.theme-dark .ai-chat-day {
+      background: #1b2a44 !important;
+      border-color: #2d3b55 !important;
+      color: #dbe7ff !important;
+    }
+
+    body.theme-dark .ai-subject-chip.active {
+      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%) !important;
+      color: white !important;
+    }
+
+    body.theme-dark .ai-bubble-bot {
+      background: #1e293b !important;
+      color: #e5eefc !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .ai-input-box input {
+      background: #111827 !important;
+      border-color: #2d3b55 !important;
+      color: #f3f7ff !important;
+    }
+
+    body.theme-dark .ai-input-box input::placeholder {
+      color: #8fa3c2 !important;
+    }
+
+    @media (max-width: 900px) {
+      .ai-summary-row { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .topbar { padding: 0 12px; }
+      .brand-subtitle { display: none; }
+      .ai-wrap { width: min(100% - 18px, 1000px); padding-top: 18px; }
+      .ai-chat-shell { border-radius: 22px; padding: 12px; }
+      .ai-chat-head { flex-direction: column; align-items: flex-start; }
+      .ai-head-actions { width: 100%; }
+      .ai-icon-btn { flex: 1; }
+      .ai-chat-window { min-height: 380px; max-height: 55vh; padding: 14px; }
+      .ai-msg-body { max-width: 92%; }
+      .ai-chat-form { grid-template-columns: 52px 1fr; }
+      .ai-send-btn { grid-column: 1 / -1; width: 100%; height: 52px; }
+      .ai-voice-btn,
+      .ai-input-box input { height: 52px; }
+      .ai-input-tip { display: none; }
+      .ai-empty-card { padding: 22px 16px; }
+      .ai-char-count { right: 10px; bottom: -2px; }
+    }
+  </style>
 </head>
-<body class="quiz-modern-page">
 
-  <header class="main-header">
-    <div class="top-mini-bar">
-      <div class="top-mini-right">
-        <button class="lang-switch" type="button">🌐 Қазақша</button>
-      </div>
+<body class="ai-page {% if dark_mode %}theme-dark{% endif %}">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">EM</div>
+    <div>
+      <div class="brand-title">AI Chat</div>
+      <div class="brand-subtitle">Ақылды көмекші чат</div>
     </div>
+  </div>
 
-    <div class="main-nav-wrap">
-      <div class="main-brand">
-        <div class="main-brand-logo">E</div>
+  <div class="top-actions">
+    <a class="chip" href="{% url 'home' %}">Басты бет</a>
+  </div>
+</header>
+
+<main class="ai-wrap">
+  <section class="ai-chat-shell">
+    <div class="ai-chat-head">
+      <div class="ai-chat-head-left">
+        <div class="ai-avatar">AI</div>
         <div>
-          <div class="main-brand-title">EduMentor AI</div>
-          <div class="main-brand-sub">Викторина</div>
+          <div class="ai-chat-title">EduMentor AI Chat</div>
+          <div class="ai-chat-status" id="assistantStatus">Онлайн • жауап беруге дайын</div>
         </div>
       </div>
 
-      <nav class="main-site-nav">
-        <a href="/">Басты бет</a>
-        <a href="/guide/">Нұсқаулық</a>
-        <a href="/contact/">Байланыс</a>
-        <a href="/profile/">Профиль</a>
-        <a href="/progress/">Прогресс</a>
-        <a href="/quiz/" class="active">Quiz</a>
-      </nav>
+      <div class="ai-head-actions">
+        <button type="button" class="ai-icon-btn" id="clearChatBtn" aria-label="Чатты тазалау">
+          🧹 <span>Тазалау</span>
+        </button>
 
-      <div class="main-nav-actions">
-        <a href="/" class="main-login-btn ghost">Басты бет</a>
+        <button type="button" class="ai-icon-btn" id="toggleVoiceReadBtn" aria-label="Дауыстап оқу">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+          <span>Дауыс</span>
+        </button>
       </div>
     </div>
-  </header>
+        <div class="ai-summary-row">
+      <div class="ai-summary-card">
+        <div class="ai-summary-label">Қалай қолдану керек</div>
+        <div class="ai-summary-value">Сұрақ жаз немесе микрофонды бас</div>
+      </div>
+      <div class="ai-summary-card">
+        <div class="ai-summary-label">Ұсыныс</div>
+        <div class="ai-summary-value">Нақты пән мен тақырыпты көрсет</div>
+      </div>
+      <div class="ai-summary-card">
+        <div class="ai-summary-label">Жылдам әрекет</div>
+        <div class="ai-summary-value">Төмендегі көк батырмаларды қолдан</div>
+      </div>
+    </div>
 
-  <main class="wrap">
-    <section class="quiz-modern-shell">
+    <div class="ai-error-box" id="errorBox"></div>
 
-      <div class="quiz-main-col">
-        <div class="quiz-hero-card">
-          <div class="quiz-hero-top">
-            <div>
-              <div class="quiz-badge">ҰБТ Mini-тест</div>
-              <h1 id="subjectTitle">Информатика</h1>
-              <p id="subjectDesc">Қысқа форматтағы тест. Әр сұраққа жауап беріп, соңында нәтижені көр.</p>
-            </div>
+    <div class="ai-subject-row">
+      <button type="button" class="ai-subject-chip active" data-subject="">Барлығы</button>
+      <button type="button" class="ai-subject-chip" data-subject="Математика">Математика</button>
+      <button type="button" class="ai-subject-chip" data-subject="Қазақстан тарихы">Тарих</button>
+      <button type="button" class="ai-subject-chip" data-subject="Биология">Биология</button>
+      <button type="button" class="ai-subject-chip" data-subject="Физика">Физика</button>
+    </div>
 
-            <div class="quiz-stat-chip">
-              <span id="quizCurrentNum">1</span> / <span id="quizTotalNum">5</span>
-            </div>
+    <div class="ai-quick-row">
+      <button type="button" class="ai-quick-pill" data-text="Маған оқу жоспарын жасап бер">Оқу жоспары</button>
+      <button type="button" class="ai-quick-pill" data-text="Қазақстан тарихын қарапайым тілмен түсіндір">Тарих</button>
+      <button type="button" class="ai-quick-pill" data-text="Математикадан көмек керек">Математика</button>
+      <button type="button" class="ai-quick-pill" data-text="Биологиядан тестке дайындалуға көмектес">Биология</button>
+    </div>
+
+    <div class="ai-chat-window" id="chatWindow">
+      <div class="ai-chat-day">Бүгін</div>
+
+      <div class="ai-empty-state" id="emptyState">
+        <div class="ai-empty-card">
+          <div class="ai-empty-emoji">🤖</div>
+          <div class="ai-empty-title">Сұрағыңды қой</div>
+          <div class="ai-empty-text">
+            Мысалы: «ҰБТ-ға 7 күндік оқу жоспарын құр», «Математика формулаларын түсіндір» немесе «Қазақстан тарихынан тестке көмектес».
           </div>
-
-          <div class="quiz-progress">
-            <span id="quizProgressBar" style="width:20%"></span>
-          </div>
-        </div>
-
-        <div class="quiz-card">
-          <form id="quizForm" class="quiz-modern-form">
-            <div id="quizStepsContainer"></div>
-
-            <div class="quiz-actions-row">
-              <button type="button" class="quiz-btn secondary" id="btnPrev">Артқа</button>
-              <button type="button" class="quiz-btn primary" id="btnNext">Келесі</button>
-              <button type="submit" class="quiz-btn success" id="btnFinish" hidden>Аяқтау</button>
-            </div>
-
-            <div class="quiz-result-card" id="quizResult" hidden>
-              <div class="quiz-result-top">
-                <div class="quiz-result-badge">Нәтиже</div>
-                <h3 id="quizResultTitle">Тест аяқталды</h3>
-              </div>
-
-              <div class="quiz-score-circle">
-                <span id="quizScoreText">0 / 5</span>
-              </div>
-
-              <div class="quiz-result-summary" id="quizResultSummary"></div>
-
-              <div class="quiz-review-list" id="quizReviewList"></div>
-
-              <div class="quiz-result-actions">
-                <button type="button" class="quiz-btn primary" id="btnRestart">Қайта бастау</button>
-              </div>
-            </div>
-          </form>
         </div>
       </div>
+    </div>
 
-      <aside class="quiz-side-col">
-        <div class="quiz-side-card">
-          <div class="quiz-side-title">Пәндер</div>
+    <form class="ai-chat-form" id="chatForm">
+      <button type="button" class="ai-voice-btn" id="voiceBtn" aria-label="Voice">
+        🎤
+      </button>
 
-          <div class="quiz-subject-list">
-            <a href="/quiz/?subject=informatika" class="quiz-subject-pill" data-subject="informatika">Информатика</a>
-            <a href="/quiz/?subject=math" class="quiz-subject-pill" data-subject="math">Математикалық сауаттылық</a>
-            <a href="/quiz/?subject=reading" class="quiz-subject-pill" data-subject="reading">Оқу сауаттылығы</a>
-            <a href="/quiz/?subject=history" class="quiz-subject-pill" data-subject="history">Қазақстан тарихы</a>
-            <a href="/quiz/?subject=biology" class="quiz-subject-pill" data-subject="biology">Биология</a>
-            <a href="/quiz/?subject=chemistry" class="quiz-subject-pill" data-subject="chemistry">Химия</a>
-            <a href="/quiz/?subject=physics" class="quiz-subject-pill" data-subject="physics">Физика</a>
-            <a href="/quiz/?subject=geography" class="quiz-subject-pill" data-subject="geography">География</a>
-            <a href="/quiz/?subject=kazakh" class="quiz-subject-pill" data-subject="kazakh">Қазақ тілі</a>
-          </div>
+      <div class="ai-input-box">
+        <input
+          type="text"
+          id="chatInput"
+          placeholder="Сұрағыңды нақты жаз... Мысалы: ҰБТ математика формулалары"
+          autocomplete="off"
+          required
+        />
+        <div class="ai-input-tip" id="voiceHint">Enter — жіберу</div>
+        <div class="ai-char-count" id="charCount">0 / 500</div>
+      </div>
+
+      <button type="submit" class="ai-send-btn" id="sendBtn">Жіберу</button>
+    </form>
+  </section>
+</main>
+
+<script>
+  const chatForm = document.getElementById("chatForm");
+  const chatInput = document.getElementById("chatInput");
+  const chatWindow = document.getElementById("chatWindow");
+  const voiceBtn = document.getElementById("voiceBtn");
+  const assistantStatus = document.getElementById("assistantStatus");
+  const voiceHint = document.getElementById("voiceHint");
+  const toggleVoiceReadBtn = document.getElementById("toggleVoiceReadBtn");
+  const quickPills = document.querySelectorAll(".ai-quick-pill");
+  const sendBtn = document.getElementById("sendBtn");
+  const errorBox = document.getElementById("errorBox");
+  const clearChatBtn = document.getElementById("clearChatBtn");
+  const charCount = document.getElementById("charCount");
+  const subjectChips = document.querySelectorAll(".ai-subject-chip");
+
+  let recognition = null;
+  let isRecognizing = false;
+
+  let mediaRecorder = null;
+  let audioChunks = [];
+  let mediaStream = null;
+  let isRecording = false;
+
+  let autoSpeakEnabled = true;
+  let isSending = false;
+  let selectedSubject = "";
+  let lastUserMessage = "";
+
+  function getCookie(name) {
+    const value = "; " + document.cookie;
+    const parts = value.split("; " + name + "=");
+    if (parts.length === 2) return parts.pop().split(";").shift();
+    return "";
+  }
+
+  function scrollChatBottom() {
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  }
+
+  function getCurrentTime() {
+    const now = new Date();
+    return now.toLocaleTimeString("kk-KZ", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+  }
+
+  function showError(text) {
+    if (!errorBox) return;
+    errorBox.textContent = text;
+    errorBox.style.display = "block";
+    setTimeout(() => {
+      errorBox.style.display = "none";
+      errorBox.textContent = "";
+    }, 3500);
+  }
+
+  function updateCharCount() {
+    const len = chatInput.value.length;
+    charCount.textContent = `${len} / 500`;
+    charCount.style.color = len > 500 ? "#ef4444" : "#94a3ba";
+  }
+
+  function hideEmptyState() {
+    const emptyState = document.getElementById("emptyState");
+    if (emptyState) emptyState.remove();
+  }
+
+  function renderEmptyState(message = "Жаңа чат басталды. Сұрағыңды жаз.") {
+    chatWindow.innerHTML = `
+      <div class="ai-chat-day">Бүгін</div>
+      <div class="ai-empty-state" id="emptyState">
+        <div class="ai-empty-card">
+          <div class="ai-empty-emoji">✨</div>
+          <div class="ai-empty-title">Жаңа чат</div>
+          <div class="ai-empty-text">${message}</div>
         </div>
+      </div>
+    `;
+    scrollChatBottom();
+  }
 
-        <div class="quiz-side-card">
-          <div class="quiz-side-title">Нұсқаулық</div>
-          <div class="quiz-side-text">
-            Барлық сұраққа жауап бер. Соңында жүйе дұрыс және қате жауаптарды көрсетеді.
-          </div>
+  function speakText(text) {
+    if (!("speechSynthesis" in window) || !text) return;
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "kk-KZ";
+    utterance.rate = 1;
+    utterance.pitch = 1;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function appendBotMessage(text) {
+    hideEmptyState();
+
+    const div = document.createElement("div");
+    div.className = "ai-msg ai-msg-bot";
+    div.innerHTML = `
+      <div class="ai-msg-avatar">AI</div>
+      <div class="ai-msg-body">
+        <div class="ai-bubble ai-bubble-bot"></div>
+        <div class="ai-msg-meta">
+          <span>EduMentor AI</span>
+          <span class="ai-msg-time">${getCurrentTime()}</span>
         </div>
-      </aside>
+        <div class="ai-msg-actions">
+          <button type="button" class="ai-mini-btn copy-btn">Көшіру</button>
+          <button type="button" class="ai-mini-btn retry-btn">Қайта сұрау</button>
+          <button type="button" class="speak-btn" aria-label="Оқу">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    `;
+    div.querySelector(".ai-bubble").textContent = text;
+    div.querySelector(".speak-btn").setAttribute("data-speak", text);
+    chatWindow.appendChild(div);
+    scrollChatBottom();
 
-    </section>
-  </main>
+    if (autoSpeakEnabled) {
+      speakText(text);
+    }
+  }
 
-  <a href="/ai-chat/" class="ai-chat-btn" title="AI Chat">
-    <span>AI чат</span>
-  </a>
+  function appendUserMessage(text) {
+    hideEmptyState();
 
-  <script>
-    (function () {
-      const quizData = {
-        informatika: {
-          title: "Информатика",
-          description: "Информатика пәні бойынша қысқа тест.",
-          questions: [
-            {
-              question: "Компьютердің ең негізгі құрылғысы қайсысы?",
-              options: ["Монитор", "Процессор", "Пернетақта", "Принтер"],
-              answer: "B"
-            },
-            {
-              question: "Ақпаратты енгізу құрылғысын таңда.",
-              options: ["Тінтуір", "Баған", "Монитор", "Проектор"],
-              answer: "A"
-            },
-            {
-              question: "1 байт неше биттен тұрады?",
-              options: ["2 бит", "4 бит", "8 бит", "16 бит"],
-              answer: "C"
-            },
-            {
-              question: "MS Word қандай бағдарламалар тобына жатады?",
-              options: ["Мәтіндік редактор", "Графикалық редактор", "Операциялық жүйе", "Браузер"],
-              answer: "A"
-            },
-            {
-              question: "Интернеттегі сайт адресі қалай аталады?",
-              options: ["Формула", "URL", "Код", "Архив"],
-              answer: "B"
-            }
-          ]
+    const div = document.createElement("div");
+    div.className = "ai-msg ai-msg-user";
+    div.innerHTML = `
+      <div class="ai-msg-body">
+        <div class="ai-bubble ai-bubble-user"></div>
+        <div class="ai-msg-meta">
+          <span>Сіз</span>
+          <span class="ai-msg-time">${getCurrentTime()}</span>
+        </div>
+      </div>
+    `;
+    div.querySelector(".ai-bubble").textContent = text;
+    chatWindow.appendChild(div);
+    scrollChatBottom();
+  }
+
+  function appendTypingRow() {
+    removeTypingRow();
+    hideEmptyState();
+
+    const div = document.createElement("div");
+    div.className = "ai-msg ai-msg-bot";
+    div.id = "typingRow";
+    div.innerHTML = `
+      <div class="ai-msg-avatar">AI</div>
+      <div class="ai-msg-body">
+        <div class="ai-bubble ai-bubble-bot ai-typing">
+          <span></span><span></span><span></span>
+        </div>
+        <div class="ai-msg-meta">EduMentor AI жауап дайындап жатыр...</div>
+      </div>
+    `;
+    chatWindow.appendChild(div);
+    scrollChatBottom();
+  }
+
+  function removeTypingRow() {
+    const typingRow = document.getElementById("typingRow");
+    if (typingRow) typingRow.remove();
+  }
+
+  function setVoiceState({ listening = false, status = "", hint = "" }) {
+    if (voiceBtn) {
+      voiceBtn.classList.toggle("is-listening", listening);
+    }
+    if (status && assistantStatus) assistantStatus.textContent = status;
+    if (hint && voiceHint) voiceHint.textContent = hint;
+  }
+
+  function setSendingState(sending) {
+    isSending = sending;
+    if (sendBtn) sendBtn.disabled = sending;
+    if (voiceBtn) voiceBtn.disabled = sending;
+    if (chatInput) chatInput.disabled = sending;
+
+    if (sending) {
+      assistantStatus.textContent = "Жауап дайындап жатыр...";
+      voiceHint.textContent = "Күте тұр";
+    } else {
+      assistantStatus.textContent = "Онлайн • жауап беруге дайын";
+      voiceHint.textContent = "Enter — жіберу";
+      if (chatInput) chatInput.disabled = false;
+    }
+  }
+
+  async function sendMessage(text) {
+    const cleanText = text.trim();
+
+    if (!cleanText) {
+      showError("Сұрақ бос болмауы керек.");
+      return;
+    }
+
+    if (cleanText.length < 2) {
+      showError("Сұрақ тым қысқа. Нақтырақ жаз.");
+      return;
+    }
+
+    if (cleanText.length > 500) {
+      showError("Сұрақ 500 таңбадан аспауы керек.");
+      return;
+    }
+
+    if (isSending) return;
+
+    lastUserMessage = cleanText;
+
+    let finalMessage = cleanText;
+    if (selectedSubject) {
+      finalMessage = `${selectedSubject} пәні бойынша: ${cleanText}`;
+    }
+
+    appendUserMessage(finalMessage);
+    chatInput.value = "";
+    updateCharCount();
+    chatInput.focus();
+
+    appendTypingRow();
+    setSendingState(true);
+
+    try {
+      const response = await fetch("{% url 'ai_web_chat_api' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": getCookie("csrftoken")
         },
+        body: JSON.stringify({
+          message: finalMessage
+        })
+      });
 
-        math: {
-          title: "Математикалық сауаттылық",
-          description: "Математикалық сауаттылық бойынша қысқа тест.",
-          questions: [
-            {
-              question: "25 + 17 мәнін тап.",
-              options: ["40", "41", "42", "43"],
-              answer: "C"
-            },
-            {
-              question: "12 · 3 неге тең?",
-              options: ["36", "24", "30", "48"],
-              answer: "A"
-            },
-            {
-              question: "Егер x = 5 болса, x² нешеге тең?",
-              options: ["10", "15", "20", "25"],
-              answer: "D"
-            },
-            {
-              question: "Шеңбердің 1/2 бөлігі қалай аталады?",
-              options: ["Квадрат", "Диаметр", "Жарты шеңбер", "Үшбұрыш"],
-              answer: "C"
-            },
-            {
-              question: "60 санының 10%-ы қанша?",
-              options: ["5", "6", "7", "8"],
-              answer: "B"
-            }
-          ]
-        },
+      const data = await response.json();
+      removeTypingRow();
 
-        reading: {
-          title: "Оқу сауаттылығы",
-          description: "Оқу сауаттылығы бойынша қысқа тест.",
-          questions: [
-            {
-              question: "Мәтіннің негізгі ойын табу нені білдіреді?",
-              options: ["Әр сөзді жаттау", "Автордың басты ойын түсіну", "Тек тақырыпты оқу", "Суретке қарау"],
-              answer: "B"
-            },
-            {
-              question: "Мәтіндегі деректі ақпарат дегеніміз не?",
-              options: ["Дәлелсіз пікір", "Қиялдан туған ой", "Нақты мәлімет", "Мақал-мәтел"],
-              answer: "C"
-            },
-            {
-              question: "Антоним сөздерді таңда.",
-              options: ["Үлкен – зор", "Ақ – қара", "Сұлу – әдемі", "Жылдам – тез"],
-              answer: "B"
-            },
-            {
-              question: "Мәтіннің тақырыбы нені білдіреді?",
-              options: ["Мәтінде не туралы айтылғанын", "Сөйлем санын", "Автордың жасын", "Қаріп түрін"],
-              answer: "A"
-            },
-            {
-              question: "Жоспар құрудың мақсаты қандай?",
-              options: ["Мәтінді қысқарту", "Мазмұнын жүйелеу", "Сөз санын көбейту", "Сөйлемдерді өзгерту"],
-              answer: "B"
-            }
-          ]
-        },
+      if (!response.ok || !data.ok) {
+        const msg = data.error || "Қате шықты. Кейінірек қайта байқап көр.";
+        appendBotMessage(msg);
+        showError(msg);
+      } else {
+        appendBotMessage(data.answer || "Жауап бос қайтты.");
+      }
+    } catch (error) {
+      removeTypingRow();
+      appendBotMessage("Сервермен байланыс кезінде қате шықты.");
+      showError("Сервермен байланыс кезінде қате шықты.");
+    } finally {
+      setSendingState(false);
+    }
+  }
 
-        history: {
-          title: "Қазақстан тарихы",
-          description: "Қазақстан тарихы бойынша қысқа тест.",
-          questions: [
-            {
-              question: "Қазақ хандығы қай ғасырда құрылды?",
-              options: ["XIII ғасыр", "XIV ғасыр", "XV ғасыр", "XVI ғасыр"],
-              answer: "C"
-            },
-            {
-              question: "Қазақ хандығын құрған хандар кімдер?",
-              options: ["Тәуке мен Абылай", "Керей мен Жәнібек", "Есім мен Қасым", "Абылай мен Кенесары"],
-              answer: "B"
-            },
-            {
-              question: "Қазақстан тәуелсіздігін қашан алды?",
-              options: ["1990", "1991", "1992", "1993"],
-              answer: "B"
-            },
-            {
-              question: "Алтын Орда қай мемлекеттен бөлініп шықты?",
-              options: ["Түрік қағанаты", "Моңғол империясы", "Қарахан мемлекеті", "Ноғай Ордасы"],
-              answer: "B"
-            },
-            {
-              question: "Қасым ханның қасқа жолы нені білдіреді?",
-              options: ["Заңдар жинағы", "Салық түрі", "Әскери жорық", "Жер атауы"],
-              answer: "A"
-            }
-          ]
-        },
+  function detectSpeechRecognition() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  }
 
-        biology: {
-          title: "Биология",
-          description: "Биология пәні бойынша қысқа тест.",
-          questions: [
-            {
-              question: "Жасушаның негізгі бөлігі қайсысы?",
-              options: ["Ядро", "Бұлшықет", "Сүйек", "Қан"],
-              answer: "A"
-            },
-            {
-              question: "Фотосинтез қайда жүреді?",
-              options: ["Тамырда", "Жапырақта", "Гүлде", "Тұқымда"],
-              answer: "B"
-            },
-            {
-              question: "Адамда қанша жүрек бар?",
-              options: ["1", "2", "3", "4"],
-              answer: "A"
-            },
-            {
-              question: "Тыныс алу мүшесін белгіле.",
-              options: ["Бауыр", "Өкпе", "Асқазан", "Бүйрек"],
-              answer: "B"
-            },
-            {
-              question: "ДНҚ нені сақтайды?",
-              options: ["Энергияны", "Генетикалық ақпаратты", "Суды", "Минералды"],
-              answer: "B"
-            }
-          ]
-        },
+  function initSpeechRecognition() {
+    const SR = detectSpeechRecognition();
+    if (!SR) return false;
 
-        chemistry: {
-          title: "Химия",
-          description: "Химия пәні бойынша қысқа тест.",
-          questions: [
-            {
-              question: "H2O қандай зат?",
-              options: ["Оттек", "Сутек", "Су", "Тұз"],
-              answer: "C"
-            },
-            {
-              question: "Химиялық элементтердің кестесі қалай аталады?",
-              options: ["Менделеев кестесі", "Көбейту кестесі", "Тарих картасы", "Физика заңы"],
-              answer: "A"
-            },
-            {
-              question: "NaCl қандай зат?",
-              options: ["Қант", "Ас тұзы", "Су", "Көмірқышқыл газы"],
-              answer: "B"
-            },
-            {
-              question: "Оттектің химиялық таңбасы:",
-              options: ["O", "H", "N", "C"],
-              answer: "A"
-            },
-            {
-              question: "Қышқылдың дәмі қандай болады?",
-              options: ["Ащы", "Қышқыл", "Тәтті", "Тұзды"],
-              answer: "B"
-            }
-          ]
-        },
+    recognition = new SR();
+    recognition.lang = "kk-KZ";
+    recognition.interimResults = true;
+    recognition.continuous = false;
 
-        physics: {
-          title: "Физика",
-          description: "Физика пәні бойынша қысқа тест.",
-          questions: [
-            {
-              question: "Күштің өлшем бірлігі қандай?",
-              options: ["Вт", "Ньютон", "Паскаль", "Метр"],
-              answer: "B"
-            },
-            {
-              question: "Жылдамдықтың формуласы:",
-              options: ["v = s / t", "v = m / t", "v = F / s", "v = p / t"],
-              answer: "A"
-            },
-            {
-              question: "Жерге денелердің құлау себебі:",
-              options: ["Үйкеліс", "Қысым", "Ауырлық күші", "Жылу"],
-              answer: "C"
-            },
-            {
-              question: "Температураны өлшейтін құрал:",
-              options: ["Сызғыш", "Термометр", "Таразы", "Секундомер"],
-              answer: "B"
-            },
-            {
-              question: "Электр тогының өлшем бірлігі:",
-              options: ["Ампер", "Метр", "Литр", "Кельвин"],
-              answer: "A"
-            }
-          ]
-        },
+    let finalTranscript = "";
 
-        geography: {
-          title: "География",
-          description: "География пәні бойынша қысқа тест.",
-          questions: [
-            {
-              question: "Қазақстанның астанасы қай қала?",
-              options: ["Алматы", "Шымкент", "Астана", "Тараз"],
-              answer: "C"
-            },
-            {
-              question: "Ең үлкен мұхит:",
-              options: ["Атлант", "Үнді", "Солтүстік Мұзды", "Тынық"],
-              answer: "D"
-            },
-            {
-              question: "Картадағы көк түс нені білдіреді?",
-              options: ["Тауларды", "Өзен-көлдерді", "Ормандарды", "Жолдарды"],
-              answer: "B"
-            },
-            {
-              question: "Экватор дегеніміз не?",
-              options: ["Ең ұзын өзен", "Жерді екіге бөлетін сызық", "Таудың түрі", "Климат атауы"],
-              answer: "B"
-            },
-            {
-              question: "Қазақстан қай материкте орналасқан?",
-              options: ["Африка", "Еуразия", "Аустралия", "Оңтүстік Америка"],
-              answer: "B"
-            }
-          ]
-        },
+    recognition.onstart = () => {
+      isRecognizing = true;
+      finalTranscript = "";
+      setVoiceState({
+        listening: true,
+        status: "Тыңдап тұр...",
+        hint: "Сөйлей бер"
+      });
+    };
 
-        kazakh: {
-          title: "Қазақ тілі",
-          description: "Қазақ тілі пәні бойынша қысқа тест.",
-          questions: [
-            {
-              question: "Зат есімді таңда.",
-              options: ["Жүгіру", "Әдемі", "Кітап", "Бес"],
-              answer: "C"
-            },
-            {
-              question: "Етістікті белгіле.",
-              options: ["Мектеп", "Оқу", "Жасыл", "Биік"],
-              answer: "B"
-            },
-            {
-              question: "Көптік жалғауын көрсет.",
-              options: ["-лар, -лер", "-ның, -нің", "-ға, -ге", "-мен"],
-              answer: "A"
-            },
-            {
-              question: "Сын есім нені білдіреді?",
-              options: ["Қимылды", "Заттың санын", "Заттың сынын", "Мезгілді"],
-              answer: "C"
-            },
-            {
-              question: "Бастауыш пен баяндауыштан тұратын сөйлем түрі:",
-              options: ["Жалаң сөйлем", "Құрмалас сөйлем", "Лепті сөйлем", "Сұраулы сөйлем"],
-              answer: "A"
-            }
-          ]
+    recognition.onresult = (event) => {
+      let interimText = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interimText += transcript;
+        }
+      }
+
+      chatInput.value = (finalTranscript + interimText).trim();
+      updateCharCount();
+    };
+
+    recognition.onerror = (event) => {
+      isRecognizing = false;
+      setVoiceState({
+        listening: false,
+        status: "Voice қатесі: " + event.error,
+        hint: "Қайта байқап көр"
+      });
+      showError("Дауысты оқу кезінде қате: " + event.error);
+    };
+
+    recognition.onend = () => {
+      isRecognizing = false;
+      setVoiceState({
+        listening: false,
+        status: "Дауыстық мәтін дайын",
+        hint: "Enter — жіберу"
+      });
+      chatInput.focus();
+    };
+
+    return true;
+  }
+
+  async function startBrowserRecognition() {
+    if (!recognition) {
+      const ok = initSpeechRecognition();
+      if (!ok) return false;
+    }
+
+    if (isRecognizing) {
+      recognition.stop();
+      return true;
+    }
+
+    recognition.start();
+    return true;
+  }
+
+  async function startRecorderFallback() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      appendBotMessage("Бұл браузерде микрофон API қолжетімсіз.");
+      showError("Бұл браузерде микрофон API қолжетімсіз.");
+      return;
+    }
+
+    try {
+      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunks = [];
+      mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "audio/webm" });
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunks.push(event.data);
         }
       };
 
-      const params = new URLSearchParams(window.location.search);
-      const currentSubjectKey = params.get("subject") || "informatika";
-      const currentSubject = quizData[currentSubjectKey] || quizData.informatika;
+      mediaRecorder.onstop = async () => {
+        try {
+          setVoiceState({
+            listening: false,
+            status: "Аудио жіберіліп жатыр...",
+            hint: "Күте тұр"
+          });
 
-      const subjectTitle = document.getElementById("subjectTitle");
-      const subjectDesc = document.getElementById("subjectDesc");
-      const quizStepsContainer = document.getElementById("quizStepsContainer");
+          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+          const formData = new FormData();
+          formData.append("audio", audioBlob, "voice.webm");
 
-      const form = document.getElementById("quizForm");
-      const btnPrev = document.getElementById("btnPrev");
-      const btnNext = document.getElementById("btnNext");
-      const btnFinish = document.getElementById("btnFinish");
-      const btnRestart = document.getElementById("btnRestart");
-      const currentNum = document.getElementById("quizCurrentNum");
-      const totalNum = document.getElementById("quizTotalNum");
-      const progressBar = document.getElementById("quizProgressBar");
-      const resultCard = document.getElementById("quizResult");
-      const resultTitle = document.getElementById("quizResultTitle");
-      const scoreText = document.getElementById("quizScoreText");
-      const resultSummary = document.getElementById("quizResultSummary");
-      const reviewList = document.getElementById("quizReviewList");
+          const response = await fetch("{% url 'transcribe_audio' %}", {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": getCookie("csrftoken")
+            },
+            body: formData
+          });
 
-      let currentStep = 1;
-      const questions = currentSubject.questions;
-      const totalQuestions = questions.length;
+          const data = await response.json();
 
-      subjectTitle.textContent = currentSubject.title;
-      subjectDesc.textContent = currentSubject.description;
-      totalNum.textContent = totalQuestions;
-
-      document.querySelectorAll(".quiz-subject-pill").forEach((pill) => {
-        if (pill.dataset.subject === currentSubjectKey) {
-          pill.classList.add("active");
-        } else {
-          pill.classList.remove("active");
-        }
-      });
-
-      function renderQuestions() {
-        let html = "";
-
-        questions.forEach((q, index) => {
-          const step = index + 1;
-          const letters = ["A", "B", "C", "D"];
-
-          html += `
-            <div class="quiz-question-step ${step === 1 ? 'active' : ''}" data-step="${step}" id="step${step}">
-              <div class="quiz-question-head">
-                <div class="quiz-question-label">Сұрақ ${step}</div>
-                <div class="quiz-question-points">1 балл</div>
-              </div>
-
-              <h2 class="quiz-question-title">${q.question}</h2>
-
-              <div class="quiz-options">
-                ${q.options.map((option, i) => `
-                  <label class="quiz-option">
-                    <input type="radio" name="q${step}" value="${letters[i]}">
-                    <span>${letters[i]}) ${option}</span>
-                  </label>
-                `).join("")}
-              </div>
-            </div>
-          `;
-        });
-
-        quizStepsContainer.innerHTML = html;
-      }
-
-      function showStep(step) {
-        const steps = document.querySelectorAll(".quiz-question-step");
-        steps.forEach((item) => item.classList.remove("active"));
-
-        const activeStep = document.getElementById("step" + step);
-        if (activeStep) activeStep.classList.add("active");
-
-        currentStep = step;
-        currentNum.textContent = step;
-
-        const percent = (step / totalQuestions) * 100;
-        progressBar.style.width = percent + "%";
-
-        btnPrev.disabled = step === 1;
-        btnNext.hidden = step === totalQuestions;
-        btnFinish.hidden = step !== totalQuestions;
-      }
-
-      function clearStates() {
-        document.querySelectorAll(".quiz-option").forEach((opt) => {
-          opt.classList.remove("correct", "wrong");
-        });
-      }
-
-      function getCheckedValue(name) {
-        const checked = form.querySelector(`input[name="${name}"]:checked`);
-        return checked ? checked.value : null;
-      }
-
-      function markAnswers() {
-        clearStates();
-
-        questions.forEach((q, index) => {
-          const key = "q" + (index + 1);
-          const selected = form.querySelector(`input[name="${key}"]:checked`);
-          const correct = form.querySelector(`input[name="${key}"][value="${q.answer}"]`);
-
-          if (selected) {
-            const option = selected.closest(".quiz-option");
-            if (selected.value === q.answer) {
-              option.classList.add("correct");
-            } else {
-              option.classList.add("wrong");
-            }
+          if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Transcription failed");
           }
 
-          if (correct) {
-            correct.closest(".quiz-option").classList.add("correct");
+          chatInput.value = data.text || "";
+          updateCharCount();
+          assistantStatus.textContent = "Дауыстық мәтін дайын";
+          voiceHint.textContent = "Enter — жіберу";
+          chatInput.focus();
+
+        } catch (error) {
+          assistantStatus.textContent = "Қате шықты";
+          voiceHint.textContent = "Қайта байқап көр";
+          appendBotMessage("Voice transcription қатесі: " + error.message);
+          showError("Voice transcription қатесі: " + error.message);
+        } finally {
+          if (mediaStream) {
+            mediaStream.getTracks().forEach((track) => track.stop());
+            mediaStream = null;
           }
-        });
+          isRecording = false;
+          if (voiceBtn) voiceBtn.classList.remove("is-listening");
+        }
+      };
+
+      mediaRecorder.start();
+      isRecording = true;
+
+      setVoiceState({
+        listening: true,
+        status: "Жазып жатыр...",
+        hint: "Тоқтату үшін қайта бас"
+      });
+
+    } catch (error) {
+      appendBotMessage("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
+      showError("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
+      setVoiceState({
+        listening: false,
+        status: "Микрофон қолжетімсіз",
+        hint: "Рұқсат беріп қайта байқап көр"
+      });
+    }
+  }
+
+  function stopRecorderFallback() {
+    if (mediaRecorder && isRecording) {
+      mediaRecorder.stop();
+    }
+  }
+
+  async function handleVoiceClick() {
+    if (isSending) return;
+
+    const hasSpeechRecognition = !!detectSpeechRecognition();
+
+    if (hasSpeechRecognition) {
+      await startBrowserRecognition();
+      return;
+    }
+
+    if (isRecording) {
+      stopRecorderFallback();
+    } else {
+      await startRecorderFallback();
+    }
+  }
+
+  chatForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    sendMessage(chatInput.value);
+  });
+
+  chatInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      sendMessage(chatInput.value);
+    }
+  });
+
+  chatInput.addEventListener("input", updateCharCount);
+
+  if (voiceBtn) {
+    voiceBtn.addEventListener("click", handleVoiceClick);
+  }
+
+  if (toggleVoiceReadBtn) {
+    toggleVoiceReadBtn.addEventListener("click", function () {
+      autoSpeakEnabled = !autoSpeakEnabled;
+      this.classList.toggle("is-off", !autoSpeakEnabled);
+
+      if (!autoSpeakEnabled && "speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
       }
 
-      function buildResult() {
-        let score = 0;
-        let reviewHtml = "";
+      assistantStatus.textContent = autoSpeakEnabled
+        ? "Онлайн • дауыспен оқу қосулы"
+        : "Онлайн • дауыспен оқу сөндірулі";
+    });
+  }
 
-        questions.forEach((q, index) => {
-          const key = "q" + (index + 1);
-          const selectedValue = getCheckedValue(key);
-          const isCorrect = selectedValue === q.answer;
-
-          if (isCorrect) score++;
-
-          reviewHtml += `
-            <div class="quiz-review-item ${isCorrect ? 'good' : 'bad'}">
-              <div class="quiz-review-question">Сұрақ ${index + 1}</div>
-              <div class="quiz-review-answer">
-                ${isCorrect ? 'Дұрыс жауап берілді' : 'Қате жауап'}
-              </div>
-            </div>
-          `;
-        });
-
-        scoreText.textContent = `${score} / ${totalQuestions}`;
-
-        resultTitle.textContent =
-          score === totalQuestions
-            ? "Тамаша нәтиже!"
-            : score >= Math.ceil(totalQuestions * 0.6)
-              ? "Жақсы нәтиже!"
-              : "Қайта дайындалып көр";
-
-        const percent = Math.round((score / totalQuestions) * 100);
-        resultSummary.innerHTML = `Жалпы нәтиже: <strong>${percent}%</strong>`;
-        reviewList.innerHTML = reviewHtml;
-
-        resultCard.hidden = false;
-        resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+  if (clearChatBtn) {
+    clearChatBtn.addEventListener("click", function () {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
       }
+      removeTypingRow();
+      renderEmptyState("Жаңа чат басталды. Төменге сұрағыңды жаз.");
+      assistantStatus.textContent = "Онлайн • жаңа чат дайын";
+      voiceHint.textContent = "Enter — жіберу";
+      chatInput.value = "";
+      updateCharCount();
+      chatInput.focus();
+    });
+  }
 
-      btnNext.addEventListener("click", function () {
-        if (currentStep < totalQuestions) {
-          showStep(currentStep + 1);
+  subjectChips.forEach((chip) => {
+    chip.addEventListener("click", function () {
+      subjectChips.forEach((c) => c.classList.remove("active"));
+      this.classList.add("active");
+      selectedSubject = this.dataset.subject || "";
+      chatInput.focus();
+    });
+  });
+
+  quickPills.forEach((btn) => {
+    btn.addEventListener("click", function () {
+      chatInput.value = this.dataset.text || "";
+      updateCharCount();
+      chatInput.focus();
+    });
+  });
+
+  document.addEventListener("click", async function (e) {
+    const copyBtn = e.target.closest(".copy-btn");
+    if (copyBtn) {
+      const msgBody = copyBtn.closest(".ai-msg-body");
+      const bubble = msgBody.querySelector(".ai-bubble");
+      const text = bubble ? bubble.textContent : "";
+
+      if (text) {
+        try {
+          await navigator.clipboard.writeText(text);
+          copyBtn.textContent = "Көшірілді";
+          setTimeout(() => {
+            copyBtn.textContent = "Көшіру";
+          }, 1200);
+        } catch {
+          showError("Мәтінді көшіру мүмкін болмады.");
         }
-      });
+      }
+      return;
+    }
 
-      btnPrev.addEventListener("click", function () {
-        if (currentStep > 1) {
-          showStep(currentStep - 1);
-        }
-      });
+    const retryBtn = e.target.closest(".retry-btn");
+    if (retryBtn) {
+      if (lastUserMessage) {
+        sendMessage(lastUserMessage);
+      } else {
+        showError("Қайта жіберетін соңғы сұрақ жоқ.");
+      }
+      return;
+    }
 
-      form.addEventListener("submit", function (e) {
-        e.preventDefault();
-        markAnswers();
-        buildResult();
-      });
+    const speakBtn = e.target.closest(".speak-btn");
+    if (speakBtn) {
+      const text = speakBtn.dataset.speak || "";
+      if (text) speakText(text);
+    }
+  });
 
-      btnRestart.addEventListener("click", function () {
-        form.reset();
-        clearStates();
-        resultCard.hidden = true;
-        showStep(1);
-      });
+  window.addEventListener("load", () => {
+    scrollChatBottom();
+    initSpeechRecognition();
+    updateCharCount();
+  });
+</script>
 
-      renderQuestions();
-      showStep(1);
-    })();
-  </script>
 </body>
 </html>
