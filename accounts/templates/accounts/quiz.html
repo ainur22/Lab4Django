@@ -4,10 +4,16 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EduMentor AI — AI Chat</title>
+  <title>EduMentor AI — Викторина</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
     }
 
@@ -15,65 +21,67 @@
       --bg-1: #eef4ff;
       --bg-2: #f8fbff;
       --bg-3: #eefbf5;
-      --text: #233454;
+      --text: #22324d;
       --muted: #7b8ca7;
-      --line: #dfe8f3;
-      --line-strong: #cfd9e8;
-      --card: rgba(255, 255, 255, 0.78);
-      --card-solid: #ffffff;
+      --line: #dde8f5;
+      --card: rgba(255, 255, 255, 0.84);
+      --white: #ffffff;
       --blue-1: #2563eb;
-      --blue-2: #3b82f6;
-      --blue-3: #dbeafe;
+      --blue-2: #60a5fa;
+      --blue-3: #1d4ed8;
+      --blue-soft: #eaf2ff;
       --green-1: #10b981;
       --green-2: #34d399;
-      --danger-1: #ef4444;
-      --danger-2: #fef2f2;
-      --shadow: 0 18px 46px rgba(68, 88, 126, 0.10);
-      --shadow-soft: 0 8px 20px rgba(87, 114, 168, 0.16);
+      --green-soft: #ecfdf5;
+      --red-1: #ef4444;
+      --yellow-1: #f59e0b;
+      --purple-1: #6366f1;
+      --purple-2: #8b5cf6;
+      --shadow: 0 20px 50px rgba(75, 96, 136, 0.10);
+      --shadow-soft: 0 10px 24px rgba(37, 99, 235, 0.12);
       --radius-xl: 28px;
       --radius-lg: 22px;
       --radius-md: 18px;
       --radius-sm: 14px;
+      --wrap: min(1280px, calc(100% - 28px));
     }
 
     html, body {
-      margin: 0;
-      padding: 0;
       font-family: Inter, Arial, sans-serif;
-      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 52%, var(--bg-3) 100%);
       color: var(--text);
-    }
-
-    body.ai-page {
-      min-height: 100vh;
-      position: relative;
       overflow-x: hidden;
     }
 
-    body.ai-page::before,
-    body.ai-page::after {
+    body.quiz-modern-page {
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body.quiz-modern-page::before,
+    body.quiz-modern-page::after {
       content: "";
       position: fixed;
       border-radius: 50%;
-      filter: blur(70px);
+      filter: blur(75px);
       z-index: 0;
       pointer-events: none;
     }
 
-    body.ai-page::before {
-      width: 280px;
-      height: 280px;
-      top: -60px;
-      right: -80px;
-      background: rgba(59, 130, 246, 0.15);
+    body.quiz-modern-page::before {
+      width: 320px;
+      height: 320px;
+      top: -80px;
+      right: -100px;
+      background: rgba(59, 130, 246, 0.14);
     }
 
-    body.ai-page::after {
+    body.quiz-modern-page::after {
       width: 260px;
       height: 260px;
-      bottom: -80px;
+      bottom: -70px;
       left: -70px;
-      background: rgba(16, 185, 129, 0.12);
+      background: rgba(16, 185, 129, 0.10);
     }
 
     a {
@@ -81,1323 +89,2374 @@
       color: inherit;
     }
 
-    .topbar {
+    .main-header {
       position: sticky;
       top: 0;
-      z-index: 30;
-      height: 76px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 0 18px;
+      z-index: 40;
       background: rgba(255, 255, 255, 0.82);
-      border-bottom: 1px solid rgba(70, 95, 140, 0.08);
       backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(90, 115, 160, 0.10);
     }
 
-    .brand {
+    .top-mini-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 8px 14px 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .top-mini-right {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .lang-switch {
+      min-height: 40px;
+      padding: 0 16px;
+      border: 1px solid #dce7f8;
+      border-radius: 999px;
+      background: #f7fbff;
+      color: #3963aa;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .lang-switch:hover {
+      background: #eef6ff;
+      transform: translateY(-1px);
+    }
+
+    .main-nav-wrap {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 14px 28px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .main-brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       min-width: 0;
     }
 
-    .logo {
-      width: 44px;
-      height: 44px;
-      border-radius: 15px;
+    .main-brand-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
       display: grid;
       place-items: center;
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      font-size: 26px;
       font-weight: 800;
-      color: #fff;
-      background: linear-gradient(135deg, #2563eb, #60a5fa);
-      box-shadow: 0 10px 22px rgba(37, 99, 235, 0.22);
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.22);
       flex-shrink: 0;
     }
 
-    .brand-title {
-      color: var(--text);
-      font-size: 16px;
+    .main-brand-title {
+      font-size: 17px;
       font-weight: 800;
+      color: #243755;
       line-height: 1.2;
     }
 
-    .brand-subtitle {
-      color: var(--muted);
+    .main-brand-sub {
       font-size: 13px;
-      line-height: 1.2;
+      color: var(--muted);
       margin-top: 2px;
+      line-height: 1.2;
     }
 
-    .top-actions {
+    .main-site-nav {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: nowrap;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
     }
 
-    .chip {
-      min-height: 42px;
-      padding: 0 15px;
+    .main-site-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .main-site-nav a {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 18px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border-radius: 13px;
-      background: linear-gradient(135deg, #eff6ff 0%, #e0ecff 100%);
-      color: #2554b8;
-      border: 1px solid #d4e3ff;
-      font-size: 14px;
-      font-weight: 700;
+      color: #49658f;
+      font-size: 15px;
+      font-weight: 800;
+      transition: .2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .main-site-nav a:hover {
+      background: #edf5ff;
+      color: #2453b3;
+      transform: translateY(-1px);
+    }
+
+    .main-site-nav a.active {
+      background: linear-gradient(135deg, #edf4ff 0%, #dceaff 100%);
+      color: #2453b3;
+      border: 1px solid #d4e2fb;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+    }
+
+    .profile-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: flex-end;
+    }
+
+    .header-profile-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px 6px 6px;
+      border-radius: 999px;
+      background: #f8fbff;
+      border: 1px solid #dbe7f6;
       transition: 0.2s ease;
     }
 
-    .chip:hover {
+    .header-profile-link:hover {
+      background: #edf5ff;
       transform: translateY(-1px);
-      background: linear-gradient(135deg, #e8f1ff 0%, #d9e8ff 100%);
     }
 
-    .ai-wrap {
+    .header-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 2px solid #dbe7ff;
+      flex-shrink: 0;
+    }
+
+    .header-avatar-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #4b87ff, #2563eb);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .header-profile-text {
+      font-size: 15px;
+      font-weight: 800;
+      color: #29406a;
+      white-space: nowrap;
+    }
+
+    .main-login-btn {
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      transition: .2s ease;
+      white-space: nowrap;
+      border: none;
+    }
+
+    .main-login-btn.ghost {
+      background: #f5f9ff;
+      border: 1px solid #d9e6fb;
+      color: #2b58b7;
+    }
+
+    .main-login-btn:not(.ghost) {
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+    }
+
+    .main-login-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .wrap {
       position: relative;
       z-index: 1;
-      width: min(1120px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 44px;
+      width: var(--wrap);
+      margin: 24px auto 40px;
     }
 
-    .ai-chat-shell {
+    .quiz-modern-shell {
+      display: grid;
+      grid-template-columns: minmax(0, 1.7fr) minmax(300px, 0.95fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .quiz-main-col,
+    .quiz-side-col {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .quiz-hero-card,
+    .quiz-card,
+    .quiz-side-card {
       background: var(--card);
-      border: 1px solid #e3eaf3;
+      border: 1px solid #e3edf8;
       border-radius: var(--radius-xl);
-      padding: 18px;
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
     }
 
-    .ai-chat-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 16px 18px;
-      border-radius: var(--radius-lg);
-      background: linear-gradient(180deg, #fbfdff 0%, #edf4ff 100%);
-      border: 1px solid #e2ebf7;
-      margin-bottom: 14px;
-    }
-
-    .ai-chat-head-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .ai-avatar,
-    .ai-msg-avatar {
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 800;
-      background: linear-gradient(135deg, #2563eb, #60a5fa);
-    }
-
-    .ai-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      box-shadow: var(--shadow-soft);
-      flex-shrink: 0;
-    }
-
-    .ai-chat-title {
-      font-size: 17px;
-      font-weight: 800;
-      color: #21375c;
-    }
-
-    .ai-chat-status {
-      margin-top: 4px;
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    .ai-head-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .ai-icon-btn {
-      min-width: 44px;
-      height: 44px;
-      border: 1px solid #cfd9ea;
-      border-radius: 14px;
-      background: linear-gradient(180deg, #ffffff 0%, #edf4ff 100%);
-      color: #4d6da3;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      padding: 0 14px;
-      outline: none;
-      box-shadow: 0 6px 16px rgba(79, 106, 156, 0.08);
-      transition: 0.2s ease;
-      appearance: none;
-      -webkit-appearance: none;
-      font-weight: 700;
-      gap: 8px;
-    }
-
-    .ai-icon-btn:hover {
-      transform: translateY(-1px);
-      background: linear-gradient(180deg, #f8fbff 0%, #e7f0ff 100%);
-      border-color: #bccbe3;
-    }
-
-    .ai-icon-btn.is-off {
-      opacity: 0.55;
-    }
-
-    .ai-icon-btn svg {
-      width: 18px;
-      height: 18px;
-      display: block;
-      stroke: currentColor;
-    }
-
-    .ai-summary-row {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    .ai-summary-card {
-      background: rgba(255, 255, 255, 0.82);
-      border: 1px solid #e4edf8;
-      border-radius: 18px;
-      padding: 14px 16px;
-      box-shadow: 0 10px 20px rgba(84, 108, 150, 0.05);
-    }
-
-    .ai-summary-label {
-      font-size: 12px;
-      font-weight: 700;
-      color: var(--muted);
-      margin-bottom: 6px;
-    }
-
-    .ai-summary-value {
-      font-size: 15px;
-      font-weight: 800;
-      color: #28416d;
-    }
-
-    .ai-error-box {
-      display: none;
-      margin-bottom: 14px;
-      padding: 14px 16px;
-      border-radius: 16px;
-      background: var(--danger-2);
-      border: 1px solid #fecaca;
-      color: #b91c1c;
-      font-size: 14px;
-      font-weight: 700;
-    }
-
-    .ai-subject-row,
-    .ai-quick-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 0 0 14px 0;
-    }
-
-    .ai-subject-chip {
-      min-height: 38px;
-      padding: 0 14px;
-      border: 1px solid #d7e5ff;
-      border-radius: 999px;
-      background: #ffffff;
-      color: #3460b8;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .ai-subject-chip:hover {
-      background: #eff6ff;
-      transform: translateY(-1px);
-    }
-
-    .ai-subject-chip.active {
-      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
-      color: #fff;
-      border-color: transparent;
-      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.16);
-    }
-
-    .ai-quick-pill {
-      min-height: 42px;
-      padding: 0 16px;
-      border: 1px solid #7fa3dc;
-      border-radius: 13px;
-      background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-      color: #ffffff;
-      font-size: 14px;
-      font-weight: 700;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 8px 18px rgba(90, 125, 191, 0.16);
-      transition: 0.2s ease;
-    }
-
-    .ai-quick-pill:hover {
-      transform: translateY(-1px);
-      background: linear-gradient(135deg, #2f76f0 0%, #5298fb 100%);
-    }
-
-    .ai-chat-window {
-      min-height: 520px;
-      max-height: 68vh;
-      overflow-y: auto;
-      padding: 22px 18px;
-      border-radius: 24px;
-      background: linear-gradient(180deg, #fcfdff 0%, #f4f8ff 100%);
-      border: 1px solid #e6edf5;
+    .quiz-hero-card {
+      padding: 24px;
+      overflow: hidden;
       position: relative;
-      scroll-behavior: smooth;
+      background:
+        radial-gradient(circle at top right, rgba(96,165,250,.20), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(52,211,153,.14), transparent 28%),
+        linear-gradient(135deg, rgba(255,255,255,.96), rgba(238,245,255,.92));
     }
 
-    .ai-chat-day {
-      width: fit-content;
-      margin: 0 auto 18px;
-      padding: 8px 14px;
-      border-radius: 999px;
-      background: #eef4ff;
-      color: #6f84a7;
-      font-size: 12px;
-      font-weight: 700;
-    }
-
-    .ai-empty-state {
-      min-height: 340px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 20px;
-    }
-
-    .ai-empty-card {
-      max-width: 420px;
-      padding: 28px 22px;
-      border-radius: 24px;
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid #e5edf9;
-      box-shadow: 0 14px 32px rgba(76, 95, 132, 0.08);
-    }
-
-    .ai-empty-emoji {
-      font-size: 42px;
-      margin-bottom: 12px;
-    }
-
-    .ai-empty-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: #29406a;
-      margin-bottom: 8px;
-    }
-
-    .ai-empty-text {
-      font-size: 14px;
-      line-height: 1.6;
-      color: var(--muted);
-    }
-
-    .ai-msg {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .ai-msg-user {
-      justify-content: flex-end;
-    }
-
-    .ai-msg-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 13px;
-      flex-shrink: 0;
-      font-size: 12px;
-      margin-top: 2px;
-      box-shadow: 0 8px 16px rgba(37, 99, 235, 0.14);
-    }
-
-    .ai-msg-body {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      max-width: min(78%, 720px);
-    }
-
-    .ai-msg-user .ai-msg-body {
-      align-items: flex-end;
-    }
-
-    .ai-bubble {
-      padding: 14px 16px;
-      border-radius: 20px;
-      font-size: 15px;
-      line-height: 1.65;
-      word-break: break-word;
-      box-shadow: 0 8px 18px rgba(75, 95, 128, 0.05);
-      white-space: pre-wrap;
-    }
-
-    .ai-bubble-bot {
-      background: #edf3ff;
-      color: #395072;
-      border: 1px solid #dce8fb;
-      border-top-left-radius: 8px;
-    }
-
-    .ai-bubble-user {
-      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-top-right-radius: 8px;
-    }
-
-    .ai-msg-meta {
-      font-size: 12px;
-      color: #8a99b0;
-      padding: 0 4px;
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-    }
-
-    .ai-msg-actions {
-      display: flex;
-      gap: 8px;
-      margin-top: 4px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .ai-mini-btn,
-    .speak-btn {
-      min-height: 28px;
-      padding: 0 10px;
-      border: 1px solid #d8e3f3;
-      border-radius: 10px;
-      background: #fff;
-      color: #5372a6;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-    }
-
-    .speak-btn {
-      width: 28px;
-      height: 28px;
-      padding: 0;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .speak-btn svg {
-      width: 15px;
-      height: 15px;
-      stroke: currentColor;
-    }
-
-    .ai-chat-form {
-      margin-top: 14px;
-      display: grid;
-      grid-template-columns: 56px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 14px;
-      border-radius: 22px;
-      background: linear-gradient(180deg, #f9fbff 0%, #edf4ff 100%);
-      border: 1px solid #e2eaf3;
-    }
-
-    .ai-input-box {
-      position: relative;
-      padding-bottom: 18px;
-    }
-
-    .ai-input-box input {
-      width: 100%;
-      height: 56px;
-      border: 1px solid #d9e2ee;
-      outline: none;
-      border-radius: 18px;
-      padding: 0 18px;
-      background: #ffffff;
-      color: #2b3e63;
-      font-size: 15px;
-    }
-
-    .ai-input-tip {
+    .quiz-hero-card::before {
+      content: "";
       position: absolute;
-      right: 14px;
-      top: 18px;
-      color: #9baabe;
-      font-size: 12px;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.12), rgba(255,255,255,0)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,.18) 0,
+          rgba(255,255,255,.18) 1px,
+          transparent 1px,
+          transparent 32px
+        );
+      opacity: .35;
       pointer-events: none;
     }
 
-    .ai-char-count {
-      position: absolute;
-      right: 14px;
-      bottom: -2px;
-      font-size: 12px;
-      color: #94a3ba;
+    .quiz-hero-top {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 18px;
     }
 
-    .ai-voice-btn {
-      width: 56px;
-      height: 56px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
-      color: #fff;
-      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.20);
-      border: 0;
-      cursor: pointer;
-      transition: 0.25s ease;
-      font-size: 20px;
-    }
-
-    .ai-voice-btn.is-listening {
-      background: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
-      animation: aiPulse 1s infinite;
-    }
-
-    .ai-send-btn {
-      height: 56px;
-      padding: 0 22px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%);
-      color: #fff;
-      font-weight: 800;
-      border: 0;
-      cursor: pointer;
-    }
-
-    .ai-typing {
+    .quiz-badge {
+      width: fit-content;
+      min-height: 34px;
+      padding: 0 14px;
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      min-width: 70px;
+      justify-content: center;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dcecff 100%);
+      color: #2351b0;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      border: 1px solid #d4e4ff;
     }
 
-    .ai-typing span {
-      width: 8px;
-      height: 8px;
+    .quiz-live-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .quiz-live-pill,
+    .quiz-motivation-pill {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+
+    .quiz-live-pill {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+
+    .quiz-motivation-pill {
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      color: #c2410c;
+      border-color: #fed7aa;
+    }
+
+    #subjectTitle {
+      margin: 0;
+      font-size: 36px;
+      line-height: 1.12;
+      color: #233454;
+      letter-spacing: -0.02em;
+    }
+
+    #subjectDesc {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 650px;
+    }
+
+    .quiz-hero-right {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: stretch;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quiz-stat-chip {
+      min-height: 68px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, var(--blue-1) 0%, var(--blue-2) 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: 0 16px 30px rgba(37, 99, 235, 0.22);
+    }
+
+    .quiz-mini-stats {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .quiz-mini-card {
+      border-radius: 18px;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid #e3edf8;
+      padding: 14px;
+    }
+
+    .quiz-mini-label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .quiz-mini-value {
+      font-size: 16px;
+      color: #29406a;
+      font-weight: 800;
+    }
+
+    .quiz-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .quiz-metric-card {
+      border-radius: 20px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid #e1ebf8;
+      padding: 16px;
+      box-shadow: 0 8px 20px rgba(79, 98, 136, 0.05);
+    }
+
+    .quiz-metric-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .quiz-metric-value {
+      color: #24406f;
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .quiz-progress {
+      height: 12px;
+      background: #e8f0fb;
+      border-radius: 999px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 18px;
+      z-index: 1;
+    }
+
+    .quiz-progress span {
+      display: block;
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--blue-1), var(--green-2));
+      transition: width 0.3s ease;
+      position: relative;
+    }
+
+    .quiz-progress span::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.5), transparent);
+      animation: shimmer 2.2s linear infinite;
+    }
+
+    .quiz-card {
+      padding: 20px;
+    }
+
+    .quiz-top-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .quiz-top-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-chip {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #f7fbff;
+      border: 1px solid #dce8f8;
+      color: #43618f;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .quiz-chip.timer {
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      color: #b45309;
+      border-color: #fed7aa;
+    }
+
+    .quiz-step-nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .quiz-step-dot {
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid #dbe8f9;
+      background: #fff;
+      color: #4a678f;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .quiz-step-dot:hover {
+      transform: translateY(-1px);
+      background: #f5f9ff;
+    }
+
+    .quiz-step-dot.active {
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 12px 22px rgba(37, 99, 235, 0.16);
+    }
+
+    .quiz-step-dot.done {
+      background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+
+    .quiz-modern-form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .quiz-question-step {
+      display: none;
+      animation: fadeSlide 0.25s ease;
+    }
+
+    .quiz-question-step.active {
+      display: block;
+    }
+
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .quiz-question-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-question-label {
+      font-size: 13px;
+      font-weight: 800;
+      color: #3560b0;
+      background: #eef5ff;
+      border: 1px solid #d8e7ff;
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .quiz-question-points {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f766e;
+      background: #ecfeff;
+      border: 1px solid #bae6fd;
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .quiz-question-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, 0.48fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .quiz-question-box {
+      background: linear-gradient(180deg, #fcfeff 0%, #f5f9ff 100%);
+      border: 1px solid #e4edf8;
+      border-radius: 24px;
+      padding: 22px;
+    }
+
+    .quiz-question-title {
+      margin: 0 0 18px;
+      font-size: 26px;
+      line-height: 1.35;
+      color: #243755;
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .quiz-option {
+      position: relative;
+      display: flex;
+      align-items: stretch;
+      cursor: pointer;
+    }
+
+    .quiz-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .quiz-option span {
+      width: 100%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: white;
+      border: 1px solid #dce7f5;
+      color: #314865;
+      font-size: 15px;
+      font-weight: 700;
+      line-height: 1.5;
+      transition: 0.2s ease;
+      box-shadow: 0 8px 18px rgba(65, 88, 130, 0.04);
+    }
+
+    .quiz-option:hover span {
+      transform: translateY(-1px);
+      border-color: #bfd6fb;
+      background: #f7fbff;
+    }
+
+    .quiz-option input:checked + span {
+      border-color: #3b82f6;
+      background: #edf5ff;
+      color: #1f4fae;
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.10);
+    }
+
+    .quiz-option.correct span {
+      background: #ecfdf5 !important;
+      border-color: #86efac !important;
+      color: #166534 !important;
+    }
+
+    .quiz-option.wrong span {
+      background: #fef2f2 !important;
+      border-color: #fca5a5 !important;
+      color: #b91c1c !important;
+    }
+
+    .quiz-help-panel {
+      border-radius: 24px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #d7e5ff;
+      padding: 18px;
+      display: grid;
+      gap: 14px;
+      position: sticky;
+      top: 110px;
+    }
+
+    .quiz-help-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #2951a8;
+    }
+
+    .quiz-help-text {
+      font-size: 14px;
+      line-height: 1.65;
+      color: #52709d;
+    }
+
+    .quiz-help-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .quiz-help-item {
+      border-radius: 16px;
+      background: rgba(255,255,255,0.64);
+      border: 1px solid rgba(255,255,255,0.7);
+      padding: 12px 14px;
+      color: #45678f;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .quiz-actions-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-btn {
+      min-height: 50px;
+      padding: 0 20px;
+      border-radius: 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 800;
+      transition: 0.22s ease;
+    }
+
+    .quiz-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .quiz-btn.secondary {
+      background: #f7fbff;
+      color: #40608e;
+      border: 1px solid #dbe7f6;
+    }
+
+    .quiz-btn.primary {
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+    }
+
+    .quiz-btn.success {
+      background: linear-gradient(135deg, var(--green-1), var(--green-2));
+      color: white;
+      box-shadow: 0 12px 24px rgba(16, 185, 129, 0.18);
+    }
+
+    .quiz-btn.ai {
+      background: linear-gradient(135deg, var(--purple-2), var(--purple-1));
+      color: white;
+      box-shadow: 0 12px 24px rgba(99, 102, 241, 0.18);
+    }
+
+    .quiz-btn:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .quiz-result-card {
+      margin-top: 8px;
+      background: linear-gradient(180deg, #fcfeff 0%, #f5f9ff 100%);
+      border: 1px solid #e4edf8;
+      border-radius: 24px;
+      padding: 22px;
+      animation: fadeRise .35s ease;
+    }
+
+    .quiz-result-top {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .quiz-result-badge {
+      width: fit-content;
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      background: #eef5ff;
+      border: 1px solid #d8e7ff;
+      color: #2951a8;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .quiz-result-top h3 {
+      margin: 0;
+      font-size: 28px;
+      color: #223454;
+    }
+
+    .quiz-result-grid {
+      display: grid;
+      grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+
+    .quiz-score-circle {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto;
       border-radius: 50%;
-      background: #91a3be;
-      display: inline-block;
-      animation: aiDots 1.2s infinite ease-in-out;
+      background: conic-gradient(#2563eb 0deg, #60a5fa 220deg, #e5eefc 220deg 360deg);
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: 0 16px 30px rgba(37, 99, 235, 0.14);
     }
 
-    .ai-typing span:nth-child(2) { animation-delay: 0.15s; }
-    .ai-typing span:nth-child(3) { animation-delay: 0.3s; }
-
-    @keyframes aiDots {
-      0%, 80%, 100% { opacity: 0.35; transform: translateY(0); }
-      40% { opacity: 1; transform: translateY(-3px); }
+    .quiz-score-circle::before {
+      content: "";
+      position: absolute;
+      inset: 16px;
+      border-radius: 50%;
+      background: white;
     }
 
-    @keyframes aiPulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.04); }
-      100% { transform: scale(1); }
+    .quiz-score-circle span {
+      position: relative;
+      z-index: 2;
+      font-size: 24px;
+      font-weight: 900;
+      color: #24406f;
+      text-align: center;
     }
 
-    /* DARK MODE */
+    .quiz-result-summary {
+      background: white;
+      border: 1px solid #e4edf8;
+      border-radius: 20px;
+      padding: 16px;
+      color: #456384;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .quiz-review-list {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .quiz-review-item {
+      border-radius: 18px;
+      padding: 15px 16px;
+      border: 1px solid #e3edf8;
+      background: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .quiz-review-item.good {
+      background: #ecfdf5;
+      border-color: #bbf7d0;
+    }
+
+    .quiz-review-item.bad {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    .quiz-review-question {
+      font-weight: 800;
+      color: #29406a;
+    }
+
+    .quiz-review-answer {
+      font-weight: 700;
+      color: #5a7396;
+    }
+
+    .quiz-result-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .quiz-side-card {
+      padding: 18px;
+    }
+
+    .quiz-side-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #27406a;
+      margin-bottom: 14px;
+    }
+
+    .quiz-subject-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .quiz-subject-pill {
+      min-height: 42px;
+      padding: 0 14px;
+      border-radius: 14px;
+      background: #f7fbff;
+      border: 1px solid #dce8f8;
+      color: #47648e;
+      font-size: 14px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-subject-pill:hover {
+      transform: translateY(-1px);
+      background: #eef6ff;
+      color: #2951a8;
+    }
+
+    .quiz-subject-pill.active {
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.16);
+    }
+
+    .quiz-subject-pill.active::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+      animation: shine 2.4s linear infinite;
+    }
+
+    .quiz-side-text {
+      color: #6c80a0;
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .quiz-tip-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .quiz-tip-item {
+      border-radius: 16px;
+      background: #f9fbff;
+      border: 1px solid #e2edf8;
+      padding: 12px 14px;
+      color: #587293;
+      font-size: 14px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .quiz-status-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      border: 1px solid #fed7aa;
+      box-shadow: var(--shadow);
+    }
+
+    .quiz-status-card h3 {
+      font-size: 18px;
+      color: #9a3412;
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .quiz-status-card p {
+      color: #9a3412;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .quiz-streak-card {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #bfdbfe;
+      box-shadow: var(--shadow);
+    }
+
+    .quiz-streak-card h3 {
+      font-size: 18px;
+      color: #1d4ed8;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .quiz-streak-card p {
+      color: #3f6394;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .ai-chat-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 45;
+      min-height: 56px;
+      padding: 0 18px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2563eb, #60a5fa);
+      color: white;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 16px 30px rgba(37, 99, 235, 0.22);
+      transition: 0.2s ease;
+    }
+
+    .ai-chat-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    .is-hidden {
+      display: none !important;
+    }
+
+    body[data-show-timer="false"] .timer-card,
+    body[data-show-timer="false"] .quiz-chip.timer,
+    body[data-ai-explanation="false"] #btnExplainByAI {
+      display: none !important;
+    }
+
     body.theme-dark {
       --bg-1: #0f172a;
       --bg-2: #111827;
       --bg-3: #172033;
       --text: #e5eefc;
       --muted: #9fb0cc;
-      --line: #2d3b55;
-      --line-strong: #334155;
-      --card: rgba(17, 24, 39, 0.92);
-      --card-solid: #111827;
-      --danger-2: rgba(127, 29, 29, 0.28);
-      --shadow: 0 18px 46px rgba(0, 0, 0, 0.32);
-      --shadow-soft: 0 8px 20px rgba(0, 0, 0, 0.22);
+      --line: #263248;
+      --card: rgba(17, 24, 39, 0.90);
+      --blue-soft: #17345f;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.30);
     }
 
-    body.theme-dark .topbar,
-    body.theme-dark .ai-chat-shell,
-    body.theme-dark .ai-summary-card,
-    body.theme-dark .ai-empty-card {
+    body.theme-dark .main-header {
+      background: rgba(15, 23, 42, 0.88);
+      border-bottom-color: rgba(148, 163, 184, 0.16);
+    }
+
+    body.theme-dark .lang-switch,
+    body.theme-dark .header-profile-link,
+    body.theme-dark .main-login-btn.ghost,
+    body.theme-dark .quiz-mini-card,
+    body.theme-dark .quiz-metric-card,
+    body.theme-dark .quiz-question-box,
+    body.theme-dark .quiz-result-summary,
+    body.theme-dark .quiz-review-item,
+    body.theme-dark .quiz-option span,
+    body.theme-dark .quiz-chip,
+    body.theme-dark .quiz-step-dot,
+    body.theme-dark .quiz-side-card,
+    body.theme-dark .quiz-card,
+    body.theme-dark .quiz-result-card {
       background: rgba(17, 24, 39, 0.92) !important;
       border-color: #2d3b55 !important;
+      color: var(--text);
     }
 
-    body.theme-dark .ai-chat-head,
-    body.theme-dark .ai-chat-form,
-    body.theme-dark .ai-chat-window {
-      background: linear-gradient(180deg, #111827 0%, #1e293b 100%) !important;
+    body.theme-dark .quiz-hero-card {
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,.18), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(34,197,94,.12), transparent 28%),
+        linear-gradient(135deg, rgba(17,24,39,.96), rgba(24,35,54,.94)) !important;
       border-color: #2d3b55 !important;
     }
 
-    body.theme-dark .brand-title,
-    body.theme-dark .ai-chat-title,
-    body.theme-dark .ai-summary-value,
-    body.theme-dark .ai-empty-title {
+    body.theme-dark .quiz-help-panel {
+      background: linear-gradient(135deg, #14284b 0%, #17345f 100%) !important;
+      border-color: #2951a8 !important;
+    }
+
+    body.theme-dark .quiz-streak-card {
+      background: linear-gradient(135deg, #132845 0%, #17345f 100%) !important;
+      border-color: #2951a8 !important;
+    }
+
+    body.theme-dark .quiz-status-card {
+      background: linear-gradient(135deg, #3d2717 0%, #4f2f18 100%) !important;
+      border-color: #9a3412 !important;
+    }
+
+    body.theme-dark .quiz-help-item,
+    body.theme-dark .quiz-tip-item {
+      background: rgba(17, 24, 39, 0.64) !important;
+      border-color: #2d3b55 !important;
+      color: #c8d6ec !important;
+    }
+
+    body.theme-dark .main-brand-title,
+    body.theme-dark .header-profile-text,
+    body.theme-dark .quiz-question-title,
+    body.theme-dark .quiz-side-title,
+    body.theme-dark .quiz-result-top h3,
+    body.theme-dark #subjectTitle,
+    body.theme-dark .quiz-mini-value,
+    body.theme-dark .quiz-metric-value,
+    body.theme-dark .quiz-score-circle span,
+    body.theme-dark .quiz-review-question,
+    body.theme-dark .quiz-help-title {
       color: #f3f7ff !important;
     }
 
-    body.theme-dark .brand-subtitle,
-    body.theme-dark .ai-chat-status,
-    body.theme-dark .ai-summary-label,
-    body.theme-dark .ai-empty-text,
-    body.theme-dark .ai-msg-meta,
-    body.theme-dark .ai-char-count,
-    body.theme-dark .ai-input-tip {
+    body.theme-dark .main-brand-sub,
+    body.theme-dark #subjectDesc,
+    body.theme-dark .quiz-side-text,
+    body.theme-dark .quiz-help-text,
+    body.theme-dark .quiz-mini-label,
+    body.theme-dark .quiz-metric-label,
+    body.theme-dark .quiz-review-answer,
+    body.theme-dark .quiz-result-summary,
+    body.theme-dark .quiz-chip,
+    body.theme-dark .main-site-nav a {
       color: #9fb0cc !important;
     }
 
-    body.theme-dark .chip,
-    body.theme-dark .ai-subject-chip,
-    body.theme-dark .ai-mini-btn,
-    body.theme-dark .speak-btn,
-    body.theme-dark .ai-chat-day {
+    body.theme-dark .quiz-status-card h3,
+    body.theme-dark .quiz-status-card p {
+      color: #fdba74 !important;
+    }
+
+    body.theme-dark .quiz-streak-card h3 {
+      color: #93c5fd !important;
+    }
+
+    body.theme-dark .quiz-streak-card p {
+      color: #c9dcff !important;
+    }
+
+    body.theme-dark .main-site-nav a.active,
+    body.theme-dark .main-site-nav a:hover,
+    body.theme-dark .lang-switch:hover,
+    body.theme-dark .header-profile-link:hover,
+    body.theme-dark .main-login-btn.ghost:hover,
+    body.theme-dark .quiz-step-dot:hover,
+    body.theme-dark .quiz-option:hover span {
       background: #1b2a44 !important;
-      border-color: #2d3b55 !important;
       color: #dbe7ff !important;
     }
 
-    body.theme-dark .ai-subject-chip.active {
-      background: linear-gradient(135deg, #2563eb 0%, #60a5fa 100%) !important;
-      color: white !important;
+    body.theme-dark .quiz-option input:checked + span {
+      background: #17345f !important;
+      color: #dbe7ff !important;
+      border-color: #3b82f6 !important;
     }
 
-    body.theme-dark .ai-bubble-bot {
-      background: #1e293b !important;
-      color: #e5eefc !important;
-      border-color: #2d3b55 !important;
+    body.theme-dark .quiz-chip.timer,
+    body.theme-dark .quiz-motivation-pill,
+    body.theme-dark .quiz-live-pill,
+    body.theme-dark .quiz-question-label,
+    body.theme-dark .quiz-question-points,
+    body.theme-dark .quiz-result-badge,
+    body.theme-dark .quiz-badge {
+      color: #dbe7ff !important;
+      border-color: #3b82f6 !important;
+      background: #17345f !important;
     }
 
-    body.theme-dark .ai-input-box input {
-      background: #111827 !important;
-      border-color: #2d3b55 !important;
-      color: #f3f7ff !important;
+    body.theme-dark .quiz-progress {
+      background: #1f2b3d;
     }
 
-    body.theme-dark .ai-input-box input::placeholder {
-      color: #8fa3c2 !important;
+    body.theme-dark .quiz-progress span {
+      background: linear-gradient(90deg, #3b82f6, #22c55e);
     }
 
-    @media (max-width: 900px) {
-      .ai-summary-row { grid-template-columns: 1fr; }
+    body.theme-dark .quiz-score-circle::before {
+      background: #0f172a;
     }
 
-    @media (max-width: 700px) {
-      .topbar { padding: 0 12px; }
-      .brand-subtitle { display: none; }
-      .ai-wrap { width: min(100% - 18px, 1000px); padding-top: 18px; }
-      .ai-chat-shell { border-radius: 22px; padding: 12px; }
-      .ai-chat-head { flex-direction: column; align-items: flex-start; }
-      .ai-head-actions { width: 100%; }
-      .ai-icon-btn { flex: 1; }
-      .ai-chat-window { min-height: 380px; max-height: 55vh; padding: 14px; }
-      .ai-msg-body { max-width: 92%; }
-      .ai-chat-form { grid-template-columns: 52px 1fr; }
-      .ai-send-btn { grid-column: 1 / -1; width: 100%; height: 52px; }
-      .ai-voice-btn,
-      .ai-input-box input { height: 52px; }
-      .ai-input-tip { display: none; }
-      .ai-empty-card { padding: 22px 16px; }
-      .ai-char-count { right: 10px; bottom: -2px; }
+    body.theme-dark .quiz-step-dot.done {
+      background: #12324a !important;
+      color: #86efac !important;
+      border-color: #1f5b42 !important;
+    }
+
+    body.theme-dark .header-avatar {
+      border-color: #2d3b55;
+    }
+
+    @keyframes shimmer {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(100%); }
+    }
+
+    @keyframes shine {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(100%); }
+    }
+
+    @keyframes fadeRise {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .quiz-modern-shell {
+        grid-template-columns: 1fr;
+      }
+
+      .quiz-side-col {
+        order: -1;
+      }
+
+      .main-nav-wrap {
+        grid-template-columns: 1fr;
+      }
+
+      .main-site-nav {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        gap: 18px;
+      }
+
+      .profile-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .quiz-hero-top,
+      .quiz-result-grid,
+      .quiz-question-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .quiz-help-panel {
+        position: static;
+      }
+
+      .quiz-metrics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 820px) {
+      #subjectTitle {
+        font-size: 28px;
+      }
+
+      .quiz-question-title {
+        font-size: 22px;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap {
+        width: min(100% - 18px, 1000px);
+        margin-top: 18px;
+      }
+
+      .top-mini-bar {
+        padding-right: 10px;
+      }
+
+      .main-nav-wrap {
+        padding: 12px 14px 18px;
+        gap: 14px;
+      }
+
+      .main-brand-logo {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+      }
+
+      .main-site-nav {
+        gap: 8px;
+      }
+
+      .main-site-nav a,
+      .main-login-btn {
+        min-height: 44px;
+        padding: 0 14px;
+        font-size: 14px;
+        border-radius: 15px;
+      }
+
+      .quiz-card,
+      .quiz-hero-card,
+      .quiz-side-card,
+      .quiz-status-card,
+      .quiz-streak-card {
+        border-radius: 22px;
+      }
+
+      .quiz-step-dot {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+      }
+
+      .quiz-actions-row,
+      .quiz-result-actions {
+        flex-direction: column;
+      }
+
+      .quiz-btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-profile-text {
+        display: none;
+      }
+
+      .header-profile-link {
+        padding-right: 6px;
+      }
+
+      .header-avatar {
+        width: 42px;
+        height: 42px;
+      }
     }
   </style>
 </head>
+<body
+  class="quiz-modern-page {% if dark_mode %}theme-dark{% endif %}"
+  data-site-language="{{ site_language|default:'kk' }}"
+  data-show-timer="{% if show_timer %}true{% else %}false{% endif %}"
+  data-shuffle-questions="{% if shuffle_questions %}true{% else %}false{% endif %}"
+  data-ai-explanation="{% if ai_explanation %}true{% else %}false{% endif %}"
+>
 
-<body class="ai-page {% if dark_mode %}theme-dark{% endif %}">
-
-<header class="topbar">
-  <div class="brand">
-    <div class="logo">EM</div>
-    <div>
-      <div class="brand-title">AI Chat</div>
-      <div class="brand-subtitle">Ақылды көмекші чат</div>
+  <header class="main-header">
+    <div class="top-mini-bar">
+      <div class="top-mini-right">
+        <button class="lang-switch" id="langSwitch" type="button">🌐 Қазақша</button>
+      </div>
     </div>
-  </div>
 
-  <div class="top-actions">
-    <a class="chip" href="{% url 'home' %}">Басты бет</a>
-  </div>
-</header>
-
-<main class="ai-wrap">
-  <section class="ai-chat-shell">
-    <div class="ai-chat-head">
-      <div class="ai-chat-head-left">
-        <div class="ai-avatar">AI</div>
+    <div class="main-nav-wrap">
+      <div class="main-brand">
+        <div class="main-brand-logo">EM</div>
         <div>
-          <div class="ai-chat-title">EduMentor AI Chat</div>
-          <div class="ai-chat-status" id="assistantStatus">Онлайн • жауап беруге дайын</div>
+          <div class="main-brand-title">EduMentor AI</div>
+          <div class="main-brand-sub" data-i18n="brand_sub">Ақылды оқу платформасы</div>
         </div>
       </div>
 
-      <div class="ai-head-actions">
-        <button type="button" class="ai-icon-btn" id="clearChatBtn" aria-label="Чатты тазалау">
-          🧹 <span>Тазалау</span>
-        </button>
+      <nav class="main-site-nav">
+        <a href="{% url 'home' %}" data-i18n="nav_home">Басты бет</a>
+        <a href="{% url 'courses' %}" data-i18n="nav_courses">Курстар</a>
+        <a href="{% url 'guide' %}" data-i18n="nav_guide">Нұсқаулық</a>
+        <a href="{% url 'contact' %}" data-i18n="nav_contact">Байланыс</a>
+        <a href="{% url 'quiz' %}" class="active" data-i18n="nav_quiz">Quiz</a>
+      </nav>
 
-        <button type="button" class="ai-icon-btn" id="toggleVoiceReadBtn" aria-label="Дауыстап оқу">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-            <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          <span>Дауыс</span>
-        </button>
+      <div class="profile-actions">
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'profile' %}" class="header-profile-link">
+            {% if request.user.profile_image %}
+              <img src="{{ request.user.profile_image.url }}" alt="Profile" class="header-avatar">
+            {% else %}
+              <div class="header-avatar header-avatar-fallback">
+                {{ request.user.username|default:"U"|first|upper }}
+              </div>
+            {% endif %}
+            <span class="header-profile-text">{{ request.user.username }}</span>
+          </a>
+          <a href="{% url 'logout' %}" class="main-login-btn" data-i18n="logout_btn">Шығу</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="main-login-btn ghost" data-i18n="login_btn">Кіру</a>
+          <a href="{% url 'register' %}" class="main-login-btn" data-i18n="register_btn">Тіркелу</a>
+        {% endif %}
       </div>
     </div>
-        <div class="ai-summary-row">
-      <div class="ai-summary-card">
-        <div class="ai-summary-label">Қалай қолдану керек</div>
-        <div class="ai-summary-value">Сұрақ жаз немесе микрофонды бас</div>
-      </div>
-      <div class="ai-summary-card">
-        <div class="ai-summary-label">Ұсыныс</div>
-        <div class="ai-summary-value">Нақты пән мен тақырыпты көрсет</div>
-      </div>
-      <div class="ai-summary-card">
-        <div class="ai-summary-label">Жылдам әрекет</div>
-        <div class="ai-summary-value">Төмендегі көк батырмаларды қолдан</div>
-      </div>
-    </div>
+  </header>
 
-    <div class="ai-error-box" id="errorBox"></div>
+  <main class="wrap">
+    <section class="quiz-modern-shell">
+      <div class="quiz-main-col">
+        <div class="quiz-hero-card">
+          <div class="quiz-hero-top">
+            <div>
+              <div class="quiz-badge" data-i18n="badge_title">ҰБТ Mini-тест</div>
+              <h1 id="subjectTitle">Информатика</h1>
+              <p id="subjectDesc">Қысқа форматтағы тест. Әр сұраққа жауап беріп, соңында нәтижені көр.</p>
 
-    <div class="ai-subject-row">
-      <button type="button" class="ai-subject-chip active" data-subject="">Барлығы</button>
-      <button type="button" class="ai-subject-chip" data-subject="Математика">Математика</button>
-      <button type="button" class="ai-subject-chip" data-subject="Қазақстан тарихы">Тарих</button>
-      <button type="button" class="ai-subject-chip" data-subject="Биология">Биология</button>
-      <button type="button" class="ai-subject-chip" data-subject="Физика">Физика</button>
-    </div>
+              <div class="quiz-live-line">
+                <div class="quiz-live-pill" data-i18n="hero_live">Тікелей тест режимі</div>
+                <div class="quiz-motivation-pill" id="motivationText">Жарайсың, жалғастыр</div>
+              </div>
+            </div>
 
-    <div class="ai-quick-row">
-      <button type="button" class="ai-quick-pill" data-text="Маған оқу жоспарын жасап бер">Оқу жоспары</button>
-      <button type="button" class="ai-quick-pill" data-text="Қазақстан тарихын қарапайым тілмен түсіндір">Тарих</button>
-      <button type="button" class="ai-quick-pill" data-text="Математикадан көмек керек">Математика</button>
-      <button type="button" class="ai-quick-pill" data-text="Биологиядан тестке дайындалуға көмектес">Биология</button>
-    </div>
+            <div class="quiz-hero-right">
+              <div class="quiz-stat-chip">
+                <span id="quizCurrentNum">1</span>&nbsp;/&nbsp;<span id="quizTotalNum">5</span>
+              </div>
 
-    <div class="ai-chat-window" id="chatWindow">
-      <div class="ai-chat-day">Бүгін</div>
+              <div class="quiz-mini-stats">
+                <div class="quiz-mini-card timer-card">
+                  <div class="quiz-mini-label" data-i18n="time_label">Уақыт</div>
+                  <div class="quiz-mini-value" id="timerText">05:00</div>
+                </div>
+                <div class="quiz-mini-card">
+                  <div class="quiz-mini-label" data-i18n="progress_label">Прогресс</div>
+                  <div class="quiz-mini-value" id="progressText">20%</div>
+                </div>
+              </div>
+            </div>
+          </div>
 
-      <div class="ai-empty-state" id="emptyState">
-        <div class="ai-empty-card">
-          <div class="ai-empty-emoji">🤖</div>
-          <div class="ai-empty-title">Сұрағыңды қой</div>
-          <div class="ai-empty-text">
-            Мысалы: «ҰБТ-ға 7 күндік оқу жоспарын құр», «Математика формулаларын түсіндір» немесе «Қазақстан тарихынан тестке көмектес».
+          <div class="quiz-metrics-grid">
+            <div class="quiz-metric-card">
+              <div class="quiz-metric-label" data-i18n="answered_label">Жауап берілді</div>
+              <div class="quiz-metric-value" id="answeredCountText">0 / 5</div>
+            </div>
+            <div class="quiz-metric-card">
+              <div class="quiz-metric-label" data-i18n="accuracy_label">Дәлдік</div>
+              <div class="quiz-metric-value" id="accuracyText">0%</div>
+            </div>
+            <div class="quiz-metric-card">
+              <div class="quiz-metric-label" data-i18n="focus_label">Режим</div>
+              <div class="quiz-metric-value" data-i18n="focus_value">Фокус</div>
+            </div>
+          </div>
+
+          <div class="quiz-progress">
+            <span id="quizProgressBar" style="width:20%"></span>
           </div>
         </div>
-      </div>
-    </div>
 
-    <form class="ai-chat-form" id="chatForm">
-      <button type="button" class="ai-voice-btn" id="voiceBtn" aria-label="Voice">
-        🎤
-      </button>
+        <div class="quiz-card">
+          <div class="quiz-top-tools">
+            <div class="quiz-top-left">
+              <div class="quiz-chip"><span data-i18n="subject_chip">Пән:</span><span id="subjectChipText" style="margin-left:6px;">Информатика</span></div>
+              <div class="quiz-chip timer">⏱ <span id="timerTextTop" style="margin-left:6px;">05:00</span></div>
+            </div>
+          </div>
 
-      <div class="ai-input-box">
-        <input
-          type="text"
-          id="chatInput"
-          placeholder="Сұрағыңды нақты жаз... Мысалы: ҰБТ математика формулалары"
-          autocomplete="off"
-          required
-        />
-        <div class="ai-input-tip" id="voiceHint">Enter — жіберу</div>
-        <div class="ai-char-count" id="charCount">0 / 500</div>
-      </div>
+          <div class="quiz-step-nav" id="quizStepNav"></div>
 
-      <button type="submit" class="ai-send-btn" id="sendBtn">Жіберу</button>
-    </form>
-  </section>
-</main>
+          <form id="quizForm" class="quiz-modern-form">
+            <div id="quizStepsContainer"></div>
 
-<script>
-  const chatForm = document.getElementById("chatForm");
-  const chatInput = document.getElementById("chatInput");
-  const chatWindow = document.getElementById("chatWindow");
-  const voiceBtn = document.getElementById("voiceBtn");
-  const assistantStatus = document.getElementById("assistantStatus");
-  const voiceHint = document.getElementById("voiceHint");
-  const toggleVoiceReadBtn = document.getElementById("toggleVoiceReadBtn");
-  const quickPills = document.querySelectorAll(".ai-quick-pill");
-  const sendBtn = document.getElementById("sendBtn");
-  const errorBox = document.getElementById("errorBox");
-  const clearChatBtn = document.getElementById("clearChatBtn");
-  const charCount = document.getElementById("charCount");
-  const subjectChips = document.querySelectorAll(".ai-subject-chip");
+            <div class="quiz-actions-row">
+              <button type="button" class="quiz-btn secondary" id="btnPrev" data-i18n="btn_prev">Артқа</button>
+              <button type="button" class="quiz-btn primary" id="btnNext" data-i18n="btn_next">Келесі</button>
+              <button type="submit" class="quiz-btn success" id="btnFinish" hidden data-i18n="btn_finish">Аяқтау</button>
+            </div>
 
-  let recognition = null;
-  let isRecognizing = false;
+            <div class="quiz-result-card" id="quizResult" hidden>
+              <div class="quiz-result-top">
+                <div class="quiz-result-badge" data-i18n="result_badge">Нәтиже</div>
+                <h3 id="quizResultTitle">Тест аяқталды</h3>
+              </div>
 
-  let mediaRecorder = null;
-  let audioChunks = [];
-  let mediaStream = null;
-  let isRecording = false;
+              <div class="quiz-result-grid">
+                <div class="quiz-score-circle" id="quizScoreCircle">
+                  <span id="quizScoreText">0 / 5</span>
+                </div>
 
-  let autoSpeakEnabled = true;
-  let isSending = false;
-  let selectedSubject = "";
-  let lastUserMessage = "";
+                <div class="quiz-result-summary" id="quizResultSummary"></div>
+              </div>
 
-  function getCookie(name) {
-    const value = "; " + document.cookie;
-    const parts = value.split("; " + name + "=");
-    if (parts.length === 2) return parts.pop().split(";").shift();
-    return "";
-  }
+              <div class="quiz-review-list" id="quizReviewList"></div>
 
-  function scrollChatBottom() {
-    chatWindow.scrollTop = chatWindow.scrollHeight;
-  }
-
-  function getCurrentTime() {
-    const now = new Date();
-    return now.toLocaleTimeString("kk-KZ", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-  }
-
-  function showError(text) {
-    if (!errorBox) return;
-    errorBox.textContent = text;
-    errorBox.style.display = "block";
-    setTimeout(() => {
-      errorBox.style.display = "none";
-      errorBox.textContent = "";
-    }, 3500);
-  }
-
-  function updateCharCount() {
-    const len = chatInput.value.length;
-    charCount.textContent = `${len} / 500`;
-    charCount.style.color = len > 500 ? "#ef4444" : "#94a3ba";
-  }
-
-  function hideEmptyState() {
-    const emptyState = document.getElementById("emptyState");
-    if (emptyState) emptyState.remove();
-  }
-
-  function renderEmptyState(message = "Жаңа чат басталды. Сұрағыңды жаз.") {
-    chatWindow.innerHTML = `
-      <div class="ai-chat-day">Бүгін</div>
-      <div class="ai-empty-state" id="emptyState">
-        <div class="ai-empty-card">
-          <div class="ai-empty-emoji">✨</div>
-          <div class="ai-empty-title">Жаңа чат</div>
-          <div class="ai-empty-text">${message}</div>
+              <div class="quiz-result-actions">
+                <button type="button" class="quiz-btn primary" id="btnRestart" data-i18n="btn_restart">Қайта бастау</button>
+                <a href="{% url 'ai_chat' %}" class="quiz-btn ai" id="btnExplainByAI" data-i18n="btn_ai">AI-дан түсіндіру</a>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
-    `;
-    scrollChatBottom();
-  }
 
-  function speakText(text) {
-    if (!("speechSynthesis" in window) || !text) return;
+      <aside class="quiz-side-col">
+        <div class="quiz-side-card">
+          <div class="quiz-side-title" data-i18n="subjects_title">Пәндер</div>
 
-    window.speechSynthesis.cancel();
-
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "kk-KZ";
-    utterance.rate = 1;
-    utterance.pitch = 1;
-    window.speechSynthesis.speak(utterance);
-  }
-
-  function appendBotMessage(text) {
-    hideEmptyState();
-
-    const div = document.createElement("div");
-    div.className = "ai-msg ai-msg-bot";
-    div.innerHTML = `
-      <div class="ai-msg-avatar">AI</div>
-      <div class="ai-msg-body">
-        <div class="ai-bubble ai-bubble-bot"></div>
-        <div class="ai-msg-meta">
-          <span>EduMentor AI</span>
-          <span class="ai-msg-time">${getCurrentTime()}</span>
+          <div class="quiz-subject-list">
+            <a href="{% url 'quiz' %}?subject=informatika" class="quiz-subject-pill" data-subject="informatika" data-i18n="sub_informatika">Информатика</a>
+            <a href="{% url 'quiz' %}?subject=math" class="quiz-subject-pill" data-subject="math" data-i18n="sub_math">Математикалық сауаттылық</a>
+            <a href="{% url 'quiz' %}?subject=reading" class="quiz-subject-pill" data-subject="reading" data-i18n="sub_reading">Оқу сауаттылығы</a>
+            <a href="{% url 'quiz' %}?subject=history" class="quiz-subject-pill" data-subject="history" data-i18n="sub_history">Қазақстан тарихы</a>
+            <a href="{% url 'quiz' %}?subject=biology" class="quiz-subject-pill" data-subject="biology" data-i18n="sub_biology">Биология</a>
+            <a href="{% url 'quiz' %}?subject=chemistry" class="quiz-subject-pill" data-subject="chemistry" data-i18n="sub_chemistry">Химия</a>
+            <a href="{% url 'quiz' %}?subject=physics" class="quiz-subject-pill" data-subject="physics" data-i18n="sub_physics">Физика</a>
+            <a href="{% url 'quiz' %}?subject=geography" class="quiz-subject-pill" data-subject="geography" data-i18n="sub_geography">География</a>
+            <a href="{% url 'quiz' %}?subject=kazakh" class="quiz-subject-pill" data-subject="kazakh" data-i18n="sub_kazakh">Қазақ тілі</a>
+          </div>
         </div>
-        <div class="ai-msg-actions">
-          <button type="button" class="ai-mini-btn copy-btn">Көшіру</button>
-          <button type="button" class="ai-mini-btn retry-btn">Қайта сұрау</button>
-          <button type="button" class="speak-btn" aria-label="Оқу">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-              <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-          </button>
+
+        <div class="quiz-side-card">
+          <div class="quiz-side-title" data-i18n="guide_title">Нұсқаулық</div>
+          <div class="quiz-side-text" data-i18n="guide_text">
+            Барлық сұраққа жауап бер. Соңында жүйе дұрыс және қате жауаптарды көрсетеді.
+          </div>
+
+          <div class="quiz-tip-list">
+            <div class="quiz-tip-item" data-i18n="tip_1">Әр сұрақ 1 балл береді.</div>
+            <div class="quiz-tip-item" data-i18n="tip_2">Қаласаң, сұрақтар арасында артқа өте аласың.</div>
+            <div class="quiz-tip-item" data-i18n="tip_3">Нәтижеден кейін AI Chat арқылы түсіндірме аласың.</div>
+          </div>
         </div>
-      </div>
-    `;
-    div.querySelector(".ai-bubble").textContent = text;
-    div.querySelector(".speak-btn").setAttribute("data-speak", text);
-    chatWindow.appendChild(div);
-    scrollChatBottom();
 
-    if (autoSpeakEnabled) {
-      speakText(text);
-    }
-  }
-
-  function appendUserMessage(text) {
-    hideEmptyState();
-
-    const div = document.createElement("div");
-    div.className = "ai-msg ai-msg-user";
-    div.innerHTML = `
-      <div class="ai-msg-body">
-        <div class="ai-bubble ai-bubble-user"></div>
-        <div class="ai-msg-meta">
-          <span>Сіз</span>
-          <span class="ai-msg-time">${getCurrentTime()}</span>
+        <div class="quiz-streak-card">
+          <h3 data-i18n="streak_title">Mini Challenge</h3>
+          <p data-i18n="streak_text">Бүгін кемі 3 пәннен тест өтіп көр. Әр пәннен қысқа қайталау сенің қарқыныңды өсіреді.</p>
         </div>
-      </div>
-    `;
-    div.querySelector(".ai-bubble").textContent = text;
-    chatWindow.appendChild(div);
-    scrollChatBottom();
-  }
 
-  function appendTypingRow() {
-    removeTypingRow();
-    hideEmptyState();
-
-    const div = document.createElement("div");
-    div.className = "ai-msg ai-msg-bot";
-    div.id = "typingRow";
-    div.innerHTML = `
-      <div class="ai-msg-avatar">AI</div>
-      <div class="ai-msg-body">
-        <div class="ai-bubble ai-bubble-bot ai-typing">
-          <span></span><span></span><span></span>
+        <div class="quiz-status-card">
+          <h3 data-i18n="status_title">Ақылды көмек</h3>
+          <p data-i18n="status_text">
+            Егер бір сұрақ қиын болса, тестті аяқтап болған соң AI Chat арқылы сол тақырыпты толық түсіндіріп аласың.
+          </p>
         </div>
-        <div class="ai-msg-meta">EduMentor AI жауап дайындап жатыр...</div>
-      </div>
-    `;
-    chatWindow.appendChild(div);
-    scrollChatBottom();
-  }
+      </aside>
+    </section>
+  </main>
 
-  function removeTypingRow() {
-    const typingRow = document.getElementById("typingRow");
-    if (typingRow) typingRow.remove();
-  }
+  <a href="{% url 'ai_chat' %}" class="ai-chat-btn" id="floatingAiChat" title="AI Chat">
+    <span data-i18n="ai_btn">AI чат</span>
+  </a>
 
-  function setVoiceState({ listening = false, status = "", hint = "" }) {
-    if (voiceBtn) {
-      voiceBtn.classList.toggle("is-listening", listening);
-    }
-    if (status && assistantStatus) assistantStatus.textContent = status;
-    if (hint && voiceHint) voiceHint.textContent = hint;
-  }
+  <script>
+    (function () {
+      function normalizeLang(value) {
+        const mapping = {
+          kk: "kk",
+          ru: "ru",
+          en: "en",
+          "Қазақша": "kk",
+          "Русский": "ru",
+          "English": "en"
+        };
+        return mapping[value] || "kk";
+      }
 
-  function setSendingState(sending) {
-    isSending = sending;
-    if (sendBtn) sendBtn.disabled = sending;
-    if (voiceBtn) voiceBtn.disabled = sending;
-    if (chatInput) chatInput.disabled = sending;
-
-    if (sending) {
-      assistantStatus.textContent = "Жауап дайындап жатыр...";
-      voiceHint.textContent = "Күте тұр";
-    } else {
-      assistantStatus.textContent = "Онлайн • жауап беруге дайын";
-      voiceHint.textContent = "Enter — жіберу";
-      if (chatInput) chatInput.disabled = false;
-    }
-  }
-
-  async function sendMessage(text) {
-    const cleanText = text.trim();
-
-    if (!cleanText) {
-      showError("Сұрақ бос болмауы керек.");
-      return;
-    }
-
-    if (cleanText.length < 2) {
-      showError("Сұрақ тым қысқа. Нақтырақ жаз.");
-      return;
-    }
-
-    if (cleanText.length > 500) {
-      showError("Сұрақ 500 таңбадан аспауы керек.");
-      return;
-    }
-
-    if (isSending) return;
-
-    lastUserMessage = cleanText;
-
-    let finalMessage = cleanText;
-    if (selectedSubject) {
-      finalMessage = `${selectedSubject} пәні бойынша: ${cleanText}`;
-    }
-
-    appendUserMessage(finalMessage);
-    chatInput.value = "";
-    updateCharCount();
-    chatInput.focus();
-
-    appendTypingRow();
-    setSendingState(true);
-
-    try {
-      const response = await fetch("{% url 'ai_web_chat_api' %}", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": getCookie("csrftoken")
+      const translations = {
+        kk: {
+          lang_btn: "🌐 Қазақша",
+          brand_sub: "Ақылды оқу платформасы",
+          nav_home: "Басты бет",
+          nav_courses: "Курстар",
+          nav_guide: "Нұсқаулық",
+          nav_contact: "Байланыс",
+          nav_quiz: "Quiz",
+          login_btn: "Кіру",
+          register_btn: "Тіркелу",
+          logout_btn: "Шығу",
+          badge_title: "ҰБТ Mini-тест",
+          hero_live: "Тікелей тест режимі",
+          time_label: "Уақыт",
+          progress_label: "Прогресс",
+          answered_label: "Жауап берілді",
+          accuracy_label: "Дәлдік",
+          focus_label: "Режим",
+          focus_value: "Фокус",
+          subject_chip: "Пән:",
+          btn_prev: "Артқа",
+          btn_next: "Келесі",
+          btn_finish: "Аяқтау",
+          result_badge: "Нәтиже",
+          btn_restart: "Қайта бастау",
+          btn_ai: "AI-дан түсіндіру",
+          subjects_title: "Пәндер",
+          guide_title: "Нұсқаулық",
+          guide_text: "Барлық сұраққа жауап бер. Соңында жүйе дұрыс және қате жауаптарды көрсетеді.",
+          tip_1: "Әр сұрақ 1 балл береді.",
+          tip_2: "Қаласаң, сұрақтар арасында артқа өте аласың.",
+          tip_3: "Нәтижеден кейін AI Chat арқылы түсіндірме аласың.",
+          streak_title: "Mini Challenge",
+          streak_text: "Бүгін кемі 3 пәннен тест өтіп көр. Әр пәннен қысқа қайталау сенің қарқыныңды өсіреді.",
+          status_title: "Ақылды көмек",
+          status_text: "Егер бір сұрақ қиын болса, тестті аяқтап болған соң AI Chat арқылы сол тақырыпты толық түсіндіріп аласың.",
+          ai_btn: "AI чат",
+          q_label: "Сұрақ",
+          points: "1 балл",
+          help_title: "Көмек",
+          help_text: "Сұрақты мұқият оқып, ең дұрыс жауапты таңда.",
+          help_1: "Жауапты асықпай таңда.",
+          help_2: "Белгіленген вариант кейін өзгертіле алады.",
+          help_3: "Таймерді бақылап отыр.",
+          result_perfect: "Тамаша нәтиже!",
+          result_good: "Жақсы нәтиже!",
+          result_retry: "Қайта дайындалып көр",
+          result_correct: "Дұрыс жауап берілді",
+          result_wrong: "Қате жауап",
+          result_summary_good: "Өте жақсы. Келесі пәнге өте беруге болады.",
+          result_summary_mid: "Жақсы нәтиже. Қате кеткен сұрақтарды қайталап шық.",
+          result_summary_low: "Бұл тақырыпты тағы қайталап, AI Chat арқылы түсіндірме алғаның дұрыс.",
+          result_total: "Жалпы нәтиже",
+          result_correct_count: "Дұрыс жауап саны",
+          result_wrong_count: "Қате жауап саны",
+          result_recommend: "Ұсыныс",
+          motivation_start: "Жарайсың, бастайық",
+          motivation_mid: "Қарқын жақсы",
+          motivation_end: "Соңына жақындадың",
+          sub_informatika: "Информатика",
+          sub_math: "Математикалық сауаттылық",
+          sub_reading: "Оқу сауаттылығы",
+          sub_history: "Қазақстан тарихы",
+          sub_biology: "Биология",
+          sub_chemistry: "Химия",
+          sub_physics: "Физика",
+          sub_geography: "География",
+          sub_kazakh: "Қазақ тілі"
         },
-        body: JSON.stringify({
-          message: finalMessage
-        })
-      });
+        ru: {
+          lang_btn: "🌐 Русский",
+          brand_sub: "Умная образовательная платформа",
+          nav_home: "Главная",
+          nav_courses: "Курсы",
+          nav_guide: "Руководство",
+          nav_contact: "Контакты",
+          nav_quiz: "Quiz",
+          login_btn: "Войти",
+          register_btn: "Регистрация",
+          logout_btn: "Выйти",
+          badge_title: "ЕНТ Mini-тест",
+          hero_live: "Режим живого теста",
+          time_label: "Время",
+          progress_label: "Прогресс",
+          answered_label: "Отвечено",
+          accuracy_label: "Точность",
+          focus_label: "Режим",
+          focus_value: "Фокус",
+          subject_chip: "Предмет:",
+          btn_prev: "Назад",
+          btn_next: "Далее",
+          btn_finish: "Завершить",
+          result_badge: "Результат",
+          btn_restart: "Начать заново",
+          btn_ai: "Объяснить через AI",
+          subjects_title: "Предметы",
+          guide_title: "Инструкция",
+          guide_text: "Ответьте на все вопросы. В конце система покажет правильные и неправильные ответы.",
+          tip_1: "Каждый вопрос даёт 1 балл.",
+          tip_2: "При желании можно вернуться к предыдущим вопросам.",
+          tip_3: "После результата можно получить объяснение через AI Chat.",
+          streak_title: "Mini Challenge",
+          streak_text: "Попробуйте сегодня пройти хотя бы 3 предмета. Короткие тесты хорошо разгоняют темп подготовки.",
+          status_title: "Умная помощь",
+          status_text: "Если вопрос сложный, после завершения теста можно получить полное объяснение через AI Chat.",
+          ai_btn: "AI чат",
+          q_label: "Вопрос",
+          points: "1 балл",
+          help_title: "Подсказка",
+          help_text: "Внимательно прочитайте вопрос и выберите самый правильный ответ.",
+          help_1: "Не спешите с выбором.",
+          help_2: "Ответ можно изменить позже.",
+          help_3: "Следите за таймером.",
+          result_perfect: "Отличный результат!",
+          result_good: "Хороший результат!",
+          result_retry: "Попробуйте подготовиться ещё",
+          result_correct: "Правильный ответ",
+          result_wrong: "Неправильный ответ",
+          result_summary_good: "Очень хорошо. Можно переходить к следующему предмету.",
+          result_summary_mid: "Хороший результат. Повторите вопросы, где были ошибки.",
+          result_summary_low: "Лучше повторить тему и запросить объяснение через AI Chat.",
+          result_total: "Общий результат",
+          result_correct_count: "Количество правильных ответов",
+          result_wrong_count: "Количество ошибок",
+          result_recommend: "Рекомендация",
+          motivation_start: "Отличный старт",
+          motivation_mid: "Хороший темп",
+          motivation_end: "Финиш уже близко",
+          sub_informatika: "Информатика",
+          sub_math: "Математическая грамотность",
+          sub_reading: "Читательская грамотность",
+          sub_history: "История Казахстана",
+          sub_biology: "Биология",
+          sub_chemistry: "Химия",
+          sub_physics: "Физика",
+          sub_geography: "География",
+          sub_kazakh: "Казахский язык"
+        },
+        en: {
+          lang_btn: "🌐 English",
+          brand_sub: "Smart learning platform",
+          nav_home: "Home",
+          nav_courses: "Courses",
+          nav_guide: "Guide",
+          nav_contact: "Contact",
+          nav_quiz: "Quiz",
+          login_btn: "Login",
+          register_btn: "Register",
+          logout_btn: "Logout",
+          badge_title: "UNT Mini-test",
+          hero_live: "Live test mode",
+          time_label: "Time",
+          progress_label: "Progress",
+          answered_label: "Answered",
+          accuracy_label: "Accuracy",
+          focus_label: "Mode",
+          focus_value: "Focus",
+          subject_chip: "Subject:",
+          btn_prev: "Back",
+          btn_next: "Next",
+          btn_finish: "Finish",
+          result_badge: "Result",
+          btn_restart: "Restart",
+          btn_ai: "Explain with AI",
+          subjects_title: "Subjects",
+          guide_title: "Guide",
+          guide_text: "Answer all questions. At the end, the system will show correct and incorrect answers.",
+          tip_1: "Each question gives 1 point.",
+          tip_2: "You can move back between questions.",
+          tip_3: "After the result, you can get an explanation through AI Chat.",
+          streak_title: "Mini Challenge",
+          streak_text: "Try to complete at least 3 subjects today. Short quizzes build great momentum.",
+          status_title: "Smart help",
+          status_text: "If a question feels difficult, you can get a full explanation through AI Chat after finishing the test.",
+          ai_btn: "AI chat",
+          q_label: "Question",
+          points: "1 point",
+          help_title: "Help",
+          help_text: "Read the question carefully and choose the best answer.",
+          help_1: "Do not rush your choice.",
+          help_2: "You can change the selected option later.",
+          help_3: "Keep an eye on the timer.",
+          result_perfect: "Excellent result!",
+          result_good: "Good result!",
+          result_retry: "Try preparing again",
+          result_correct: "Correct answer",
+          result_wrong: "Wrong answer",
+          result_summary_good: "Excellent. You can move on to the next subject.",
+          result_summary_mid: "Good result. Review the questions where you made mistakes.",
+          result_summary_low: "It is better to review this topic again and ask AI Chat for an explanation.",
+          result_total: "Overall result",
+          result_correct_count: "Correct answers",
+          result_wrong_count: "Wrong answers",
+          result_recommend: "Recommendation",
+          motivation_start: "Strong start",
+          motivation_mid: "Nice momentum",
+          motivation_end: "You are close to the finish",
+          sub_informatika: "Computer Science",
+          sub_math: "Mathematical Literacy",
+          sub_reading: "Reading Literacy",
+          sub_history: "History of Kazakhstan",
+          sub_biology: "Biology",
+          sub_chemistry: "Chemistry",
+          sub_physics: "Physics",
+          sub_geography: "Geography",
+          sub_kazakh: "Kazakh Language"
+        }
+      };
 
-      const data = await response.json();
-      removeTypingRow();
+      const quizData = {
+        informatika: {
+          title: { kk: "Информатика", ru: "Информатика", en: "Computer Science" },
+          description: {
+            kk: "Информатика пәні бойынша қысқа тест.",
+            ru: "Короткий тест по информатике.",
+            en: "A short quiz on computer science."
+          },
+          questions: [
+            { question: {kk:"Компьютердің ең негізгі құрылғысы қайсысы?", ru:"Какое устройство является основным в компьютере?", en:"Which device is the main part of a computer?"}, options: {kk:["Монитор","Процессор","Пернетақта","Принтер"], ru:["Монитор","Процессор","Клавиатура","Принтер"], en:["Monitor","Processor","Keyboard","Printer"]}, answer: "B" },
+            { question: {kk:"Ақпаратты енгізу құрылғысын таңда.", ru:"Выберите устройство ввода информации.", en:"Choose an input device."}, options: {kk:["Тінтуір","Баған","Монитор","Проектор"], ru:["Мышь","Колонка","Монитор","Проектор"], en:["Mouse","Speaker","Monitor","Projector"]}, answer: "A" },
+            { question: {kk:"1 байт неше биттен тұрады?", ru:"Сколько бит в 1 байте?", en:"How many bits are in 1 byte?"}, options: {kk:["2 бит","4 бит","8 бит","16 бит"], ru:["2 бита","4 бита","8 бит","16 бит"], en:["2 bits","4 bits","8 bits","16 bits"]}, answer: "C" },
+            { question: {kk:"MS Word қандай бағдарламалар тобына жатады?", ru:"К какой группе программ относится MS Word?", en:"What type of software is MS Word?"}, options: {kk:["Мәтіндік редактор","Графикалық редактор","Операциялық жүйе","Браузер"], ru:["Текстовый редактор","Графический редактор","Операционная система","Браузер"], en:["Text editor","Graphic editor","Operating system","Browser"]}, answer: "A" },
+            { question: {kk:"Интернеттегі сайт адресі қалай аталады?", ru:"Как называется адрес сайта в интернете?", en:"What is a website address on the internet called?"}, options: {kk:["Формула","URL","Код","Архив"], ru:["Формула","URL","Код","Архив"], en:["Formula","URL","Code","Archive"]}, answer: "B" }
+          ]
+        },
+        math: {
+          title: { kk: "Математикалық сауаттылық", ru: "Математическая грамотность", en: "Mathematical Literacy" },
+          description: {
+            kk: "Математикалық сауаттылық бойынша қысқа тест.",
+            ru: "Короткий тест по математической грамотности.",
+            en: "A short quiz on mathematical literacy."
+          },
+          questions: [
+            { question: {kk:"25 + 17 мәнін тап.", ru:"Найдите значение 25 + 17.", en:"Find the value of 25 + 17."}, options: {kk:["40","41","42","43"], ru:["40","41","42","43"], en:["40","41","42","43"]}, answer: "C" },
+            { question: {kk:"12 · 3 неге тең?", ru:"Чему равно 12 · 3?", en:"What is 12 × 3?"}, options: {kk:["36","24","30","48"], ru:["36","24","30","48"], en:["36","24","30","48"]}, answer: "A" },
+            { question: {kk:"Егер x = 5 болса, x² нешеге тең?", ru:"Если x = 5, чему равно x²?", en:"If x = 5, what is x²?"}, options: {kk:["10","15","20","25"], ru:["10","15","20","25"], en:["10","15","20","25"]}, answer: "D" },
+            { question: {kk:"Шеңбердің 1/2 бөлігі қалай аталады?", ru:"Как называется половина круга?", en:"What is half of a circle called?"}, options: {kk:["Квадрат","Диаметр","Жарты шеңбер","Үшбұрыш"], ru:["Квадрат","Диаметр","Полукруг","Треугольник"], en:["Square","Diameter","Semicircle","Triangle"]}, answer: "C" },
+            { question: {kk:"60 санының 10%-ы қанша?", ru:"Сколько составляет 10% от 60?", en:"What is 10% of 60?"}, options: {kk:["5","6","7","8"], ru:["5","6","7","8"], en:["5","6","7","8"]}, answer: "B" }
+          ]
+        },
+        reading: {
+          title: { kk: "Оқу сауаттылығы", ru: "Читательская грамотность", en: "Reading Literacy" },
+          description: {
+            kk: "Оқу сауаттылығы бойынша қысқа тест.",
+            ru: "Короткий тест по читательской грамотности.",
+            en: "A short quiz on reading literacy."
+          },
+          questions: [
+            { question: {kk:"Мәтіннің негізгі ойын табу нені білдіреді?", ru:"Что значит определить основную мысль текста?", en:"What does it mean to identify the main idea of a text?"}, options: {kk:["Әр сөзді жаттау","Автордың басты ойын түсіну","Тек тақырыпты оқу","Суретке қарау"], ru:["Заучить каждое слово","Понять главную мысль автора","Прочитать только заголовок","Смотреть на картинку"], en:["Memorize every word","Understand the author's main idea","Read only the title","Look at the picture"]}, answer: "B" },
+            { question: {kk:"Мәтіндегі деректі ақпарат дегеніміз не?", ru:"Что такое фактическая информация в тексте?", en:"What is factual information in a text?"}, options: {kk:["Дәлелсіз пікір","Қиялдан туған ой","Нақты мәлімет","Мақал-мәтел"], ru:["Мнение без доказательств","Воображаемая мысль","Точная информация","Пословица"], en:["Opinion without proof","Imaginary thought","Accurate information","Proverb"]}, answer: "C" },
+            { question: {kk:"Антоним сөздерді таңда.", ru:"Выберите антонимы.", en:"Choose antonyms."}, options: {kk:["Үлкен – зор","Ақ – қара","Сұлу – әдемі","Жылдам – тез"], ru:["Большой – огромный","Белый – черный","Красивый – прекрасный","Быстрый – скорый"], en:["Big – huge","White – black","Beautiful – pretty","Fast – quick"]}, answer: "B" },
+            { question: {kk:"Мәтіннің тақырыбы нені білдіреді?", ru:"Что означает тема текста?", en:"What does the topic of a text mean?"}, options: {kk:["Мәтінде не туралы айтылғанын","Сөйлем санын","Автордың жасын","Қаріп түрін"], ru:["О чем говорится в тексте","Количество предложений","Возраст автора","Вид шрифта"], en:["What the text is about","The number of sentences","The author's age","The font type"]}, answer: "A" },
+            { question: {kk:"Жоспар құрудың мақсаты қандай?", ru:"Какова цель составления плана?", en:"What is the purpose of making a plan?"}, options: {kk:["Мәтінді қысқарту","Мазмұнын жүйелеу","Сөз санын көбейту","Сөйлемдерді өзгерту"], ru:["Сократить текст","Систематизировать содержание","Увеличить число слов","Изменить предложения"], en:["Shorten the text","Organize the content","Increase the word count","Change the sentences"]}, answer: "B" }
+          ]
+        },
+        history: {
+          title: { kk: "Қазақстан тарихы", ru: "История Казахстана", en: "History of Kazakhstan" },
+          description: {
+            kk: "Қазақстан тарихы бойынша қысқа тест.",
+            ru: "Короткий тест по истории Казахстана.",
+            en: "A short quiz on the history of Kazakhstan."
+          },
+          questions: [
+            { question: {kk:"Қазақ хандығы қай ғасырда құрылды?", ru:"В каком веке было основано Казахское ханство?", en:"In which century was the Kazakh Khanate founded?"}, options: {kk:["XIII ғасыр","XIV ғасыр","XV ғасыр","XVI ғасыр"], ru:["XIII век","XIV век","XV век","XVI век"], en:["13th century","14th century","15th century","16th century"]}, answer: "C" },
+            { question: {kk:"Қазақ хандығын құрған хандар кімдер?", ru:"Какие ханы основали Казахское ханство?", en:"Which khans founded the Kazakh Khanate?"}, options: {kk:["Тәуке мен Абылай","Керей мен Жәнібек","Есім мен Қасым","Абылай мен Кенесары"], ru:["Тауке и Абылай","Керей и Жанибек","Есим и Касым","Абылай и Кенесары"], en:["Tauke and Abylai","Kerei and Zhanibek","Esim and Kasym","Abylai and Kenesary"]}, answer: "B" },
+            { question: {kk:"Қазақстан тәуелсіздігін қашан алды?", ru:"Когда Казахстан получил независимость?", en:"When did Kazakhstan gain independence?"}, options: {kk:["1990","1991","1992","1993"], ru:["1990","1991","1992","1993"], en:["1990","1991","1992","1993"]}, answer: "B" },
+            { question: {kk:"Алтын Орда қай мемлекеттен бөлініп шықты?", ru:"От какого государства отделилась Золотая Орда?", en:"From which state did the Golden Horde separate?"}, options: {kk:["Түрік қағанаты","Моңғол империясы","Қарахан мемлекеті","Ноғай Ордасы"], ru:["Тюркский каганат","Монгольская империя","Караханидское государство","Ногайская Орда"], en:["Turkic Khaganate","Mongol Empire","Karakhanid state","Nogai Horde"]}, answer: "B" },
+            { question: {kk:"Қасым ханның қасқа жолы нені білдіреді?", ru:"Что означает 'Қасым ханның қасқа жолы'?", en:"What does 'Kasym Khan's Bright Path' refer to?"}, options: {kk:["Заңдар жинағы","Салық түрі","Әскери жорық","Жер атауы"], ru:["Свод законов","Вид налога","Военный поход","Название земли"], en:["Code of laws","Type of tax","Military campaign","Place name"]}, answer: "A" }
+          ]
+        },
+        biology: {
+          title: { kk: "Биология", ru: "Биология", en: "Biology" },
+          description: {
+            kk: "Биология пәні бойынша қысқа тест.",
+            ru: "Короткий тест по биологии.",
+            en: "A short quiz on biology."
+          },
+          questions: [
+            { question: {kk:"Жасушаның негізгі бөлігі қайсысы?", ru:"Какая часть клетки является основной?", en:"Which is the main part of a cell?"}, options: {kk:["Ядро","Бұлшықет","Сүйек","Қан"], ru:["Ядро","Мышца","Кость","Кровь"], en:["Nucleus","Muscle","Bone","Blood"]}, answer: "A" },
+            { question: {kk:"Фотосинтез қайда жүреді?", ru:"Где происходит фотосинтез?", en:"Where does photosynthesis take place?"}, options: {kk:["Тамырда","Жапырақта","Гүлде","Тұқымда"], ru:["В корне","В листе","В цветке","В семени"], en:["In the root","In the leaf","In the flower","In the seed"]}, answer: "B" },
+            { question: {kk:"Адамда қанша жүрек бар?", ru:"Сколько сердец у человека?", en:"How many hearts does a human have?"}, options: {kk:["1","2","3","4"], ru:["1","2","3","4"], en:["1","2","3","4"]}, answer: "A" },
+            { question: {kk:"Тыныс алу мүшесін белгіле.", ru:"Укажите орган дыхания.", en:"Choose the respiratory organ."}, options: {kk:["Бауыр","Өкпе","Асқазан","Бүйрек"], ru:["Печень","Легкое","Желудок","Почка"], en:["Liver","Lung","Stomach","Kidney"]}, answer: "B" },
+            { question: {kk:"ДНҚ нені сақтайды?", ru:"Что хранит ДНК?", en:"What does DNA store?"}, options: {kk:["Энергияны","Генетикалық ақпаратты","Суды","Минералды"], ru:["Энергию","Генетическую информацию","Воду","Минералы"], en:["Energy","Genetic information","Water","Minerals"]}, answer: "B" }
+          ]
+        },
+        chemistry: {
+          title: { kk: "Химия", ru: "Химия", en: "Chemistry" },
+          description: {
+            kk: "Химия пәні бойынша қысқа тест.",
+            ru: "Короткий тест по химии.",
+            en: "A short quiz on chemistry."
+          },
+          questions: [
+            { question: {kk:"H2O қандай зат?", ru:"Что такое H2O?", en:"What is H2O?"}, options: {kk:["Оттек","Сутек","Су","Тұз"], ru:["Кислород","Водород","Вода","Соль"], en:["Oxygen","Hydrogen","Water","Salt"]}, answer: "C" },
+            { question: {kk:"Химиялық элементтердің кестесі қалай аталады?", ru:"Как называется таблица химических элементов?", en:"What is the table of chemical elements called?"}, options: {kk:["Менделеев кестесі","Көбейту кестесі","Тарих картасы","Физика заңы"], ru:["Таблица Менделеева","Таблица умножения","Историческая карта","Закон физики"], en:["Mendeleev table","Multiplication table","History map","Physics law"]}, answer: "A" },
+            { question: {kk:"NaCl қандай зат?", ru:"Что такое NaCl?", en:"What is NaCl?"}, options: {kk:["Қант","Ас тұзы","Су","Көмірқышқыл газы"], ru:["Сахар","Поваренная соль","Вода","Углекислый газ"], en:["Sugar","Table salt","Water","Carbon dioxide"]}, answer: "B" },
+            { question: {kk:"Оттектің химиялық таңбасы:", ru:"Химический символ кислорода:", en:"The chemical symbol for oxygen is:"}, options: {kk:["O","H","N","C"], ru:["O","H","N","C"], en:["O","H","N","C"]}, answer: "A" },
+            { question: {kk:"Қышқылдың дәмі қандай болады?", ru:"Какой вкус у кислоты?", en:"What taste does acid have?"}, options: {kk:["Ащы","Қышқыл","Тәтті","Тұзды"], ru:["Горький","Кислый","Сладкий","Солёный"], en:["Bitter","Sour","Sweet","Salty"]}, answer: "B" }
+          ]
+        },
+        physics: {
+          title: { kk: "Физика", ru: "Физика", en: "Physics" },
+          description: {
+            kk: "Физика пәні бойынша қысқа тест.",
+            ru: "Короткий тест по физике.",
+            en: "A short quiz on physics."
+          },
+          questions: [
+            { question: {kk:"Күштің өлшем бірлігі қандай?", ru:"Какова единица измерения силы?", en:"What is the unit of force?"}, options: {kk:["Вт","Ньютон","Паскаль","Метр"], ru:["Вт","Ньютон","Паскаль","Метр"], en:["Watt","Newton","Pascal","Meter"]}, answer: "B" },
+            { question: {kk:"Жылдамдықтың формуласы:", ru:"Формула скорости:", en:"The formula of speed is:"}, options: {kk:["v = s / t","v = m / t","v = F / s","v = p / t"], ru:["v = s / t","v = m / t","v = F / s","v = p / t"], en:["v = s / t","v = m / t","v = F / s","v = p / t"]}, answer: "A" },
+            { question: {kk:"Жерге денелердің құлау себебі:", ru:"Почему тела падают на Землю?", en:"Why do bodies fall to Earth?"}, options: {kk:["Үйкеліс","Қысым","Ауырлық күші","Жылу"], ru:["Трение","Давление","Сила тяжести","Тепло"], en:["Friction","Pressure","Gravity","Heat"]}, answer: "C" },
+            { question: {kk:"Температураны өлшейтін құрал:", ru:"Прибор для измерения температуры:", en:"An instrument for measuring temperature is:"}, options: {kk:["Сызғыш","Термометр","Таразы","Секундомер"], ru:["Линейка","Термометр","Весы","Секундомер"], en:["Ruler","Thermometer","Scale","Stopwatch"]}, answer: "B" },
+            { question: {kk:"Электр тогының өлшем бірлігі:", ru:"Единица электрического тока:", en:"The unit of electric current is:"}, options: {kk:["Ампер","Метр","Литр","Кельвин"], ru:["Ампер","Метр","Литр","Кельвин"], en:["Ampere","Meter","Liter","Kelvin"]}, answer: "A" }
+          ]
+        },
+        geography: {
+          title: { kk: "География", ru: "География", en: "Geography" },
+          description: {
+            kk: "География пәні бойынша қысқа тест.",
+            ru: "Короткий тест по географии.",
+            en: "A short quiz on geography."
+          },
+          questions: [
+            { question: {kk:"Қазақстанның астанасы қай қала?", ru:"Какой город является столицей Казахстана?", en:"Which city is the capital of Kazakhstan?"}, options: {kk:["Алматы","Шымкент","Астана","Тараз"], ru:["Алматы","Шымкент","Астана","Тараз"], en:["Almaty","Shymkent","Astana","Taraz"]}, answer: "C" },
+            { question: {kk:"Ең үлкен мұхит:", ru:"Самый большой океан:", en:"The largest ocean is:"}, options: {kk:["Атлант","Үнді","Солтүстік Мұзды","Тынық"], ru:["Атлантический","Индийский","Северный Ледовитый","Тихий"], en:["Atlantic","Indian","Arctic","Pacific"]}, answer: "D" },
+            { question: {kk:"Картадағы көк түс нені білдіреді?", ru:"Что означает синий цвет на карте?", en:"What does the blue color on a map indicate?"}, options: {kk:["Тауларды","Өзен-көлдерді","Ормандарды","Жолдарды"], ru:["Горы","Реки и озера","Леса","Дороги"], en:["Mountains","Rivers and lakes","Forests","Roads"]}, answer: "B" },
+            { question: {kk:"Экватор дегеніміз не?", ru:"Что такое экватор?", en:"What is the equator?"}, options: {kk:["Ең ұзын өзен","Жерді екіге бөлетін сызық","Таудың түрі","Климат атауы"], ru:["Самая длинная река","Линия, делящая Землю пополам","Вид горы","Название климата"], en:["The longest river","A line dividing Earth into two halves","A type of mountain","A climate name"]}, answer: "B" },
+            { question: {kk:"Қазақстан қай материкте орналасқан?", ru:"На каком материке расположен Казахстан?", en:"On which continent is Kazakhstan located?"}, options: {kk:["Африка","Еуразия","Аустралия","Оңтүстік Америка"], ru:["Африка","Евразия","Австралия","Южная Америка"], en:["Africa","Eurasia","Australia","South America"]}, answer: "B" }
+          ]
+        },
+        kazakh: {
+          title: { kk: "Қазақ тілі", ru: "Казахский язык", en: "Kazakh Language" },
+          description: {
+            kk: "Қазақ тілі пәні бойынша қысқа тест.",
+            ru: "Короткий тест по казахскому языку.",
+            en: "A short quiz on Kazakh language."
+          },
+          questions: [
+            { question: {kk:"Зат есімді таңда.", ru:"Выберите существительное.", en:"Choose the noun."}, options: {kk:["Жүгіру","Әдемі","Кітап","Бес"], ru:["Бегать","Красивый","Книга","Пять"], en:["Run","Beautiful","Book","Five"]}, answer: "C" },
+            { question: {kk:"Етістікті белгіле.", ru:"Укажите глагол.", en:"Choose the verb."}, options: {kk:["Мектеп","Оқу","Жасыл","Биік"], ru:["Школа","Учиться","Зелёный","Высокий"], en:["School","Study","Green","Tall"]}, answer: "B" },
+            { question: {kk:"Көптік жалғауын көрсет.", ru:"Укажите множественное окончание.", en:"Choose the plural ending."}, options: {kk:["-лар, -лер","-ның, -нің","-ға, -ге","-мен"], ru:["-лар, -лер","-ның, -нің","-ға, -ге","-мен"], en:["-lar, -ler","-nyng, -ning","-ga, -ge","-men"]}, answer: "A" },
+            { question: {kk:"Сын есім нені білдіреді?", ru:"Что обозначает прилагательное?", en:"What does an adjective describe?"}, options: {kk:["Қимылды","Заттың санын","Заттың сынын","Мезгілді"], ru:["Действие","Количество","Признак предмета","Время"], en:["Action","Quantity","A quality of an object","Time"]}, answer: "C" },
+            { question: {kk:"Бастауыш пен баяндауыштан тұратын сөйлем түрі:", ru:"Тип предложения, состоящего из подлежащего и сказуемого:", en:"A sentence consisting of a subject and predicate is called:"}, options: {kk:["Жалаң сөйлем","Құрмалас сөйлем","Лепті сөйлем","Сұраулы сөйлем"], ru:["Простое предложение","Сложное предложение","Восклицательное предложение","Вопросительное предложение"], en:["Simple sentence","Compound sentence","Exclamatory sentence","Interrogative sentence"]}, answer: "A" }
+          ]
+        }
+      };
 
-      if (!response.ok || !data.ok) {
-        const msg = data.error || "Қате шықты. Кейінірек қайта байқап көр.";
-        appendBotMessage(msg);
-        showError(msg);
-      } else {
-        appendBotMessage(data.answer || "Жауап бос қайтты.");
+      const pagePrefs = {
+        lang: normalizeLang(document.body.dataset.siteLanguage || "kk"),
+        showTimer: document.body.dataset.showTimer === "true",
+        shuffleQuestions: document.body.dataset.shuffleQuestions === "true",
+        aiExplanation: document.body.dataset.aiExplanation === "true"
+      };
+
+      function shuffleArray(list) {
+        const copy = [...list];
+        for (let i = copy.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [copy[i], copy[j]] = [copy[j], copy[i]];
+        }
+        return copy;
       }
-    } catch (error) {
-      removeTypingRow();
-      appendBotMessage("Сервермен байланыс кезінде қате шықты.");
-      showError("Сервермен байланыс кезінде қате шықты.");
-    } finally {
-      setSendingState(false);
-    }
-  }
 
-  function detectSpeechRecognition() {
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-  }
+      function cloneQuestions(list) {
+        return list.map((q) => ({
+          question: { ...q.question },
+          options: {
+            kk: [...(q.options.kk || [])],
+            ru: [...(q.options.ru || [])],
+            en: [...(q.options.en || [])]
+          },
+          answer: q.answer
+        }));
+      }
 
-  function initSpeechRecognition() {
-    const SR = detectSpeechRecognition();
-    if (!SR) return false;
+      const params = new URLSearchParams(window.location.search);
+      const currentSubjectKey = params.get("subject") || "informatika";
+      const currentSubject = quizData[currentSubjectKey] || quizData.informatika;
+      const aiChatBaseUrl = "{% url 'ai_chat' %}";
 
-    recognition = new SR();
-    recognition.lang = "kk-KZ";
-    recognition.interimResults = true;
-    recognition.continuous = false;
+      function buildQuestionsSet() {
+        let nextQuestions = cloneQuestions(currentSubject.questions);
+        if (pagePrefs.shuffleQuestions) {
+          nextQuestions = shuffleArray(nextQuestions);
+        }
+        return nextQuestions;
+      }
 
-    let finalTranscript = "";
+      const subjectTitle = document.getElementById("subjectTitle");
+      const subjectDesc = document.getElementById("subjectDesc");
+      const subjectChipText = document.getElementById("subjectChipText");
+      const motivationText = document.getElementById("motivationText");
+      const answeredCountText = document.getElementById("answeredCountText");
+      const accuracyText = document.getElementById("accuracyText");
+      const quizStepsContainer = document.getElementById("quizStepsContainer");
+      const quizStepNav = document.getElementById("quizStepNav");
 
-    recognition.onstart = () => {
-      isRecognizing = true;
-      finalTranscript = "";
-      setVoiceState({
-        listening: true,
-        status: "Тыңдап тұр...",
-        hint: "Сөйлей бер"
-      });
-    };
+      const form = document.getElementById("quizForm");
+      const btnPrev = document.getElementById("btnPrev");
+      const btnNext = document.getElementById("btnNext");
+      const btnFinish = document.getElementById("btnFinish");
+      const btnRestart = document.getElementById("btnRestart");
+      const currentNum = document.getElementById("quizCurrentNum");
+      const totalNum = document.getElementById("quizTotalNum");
+      const progressBar = document.getElementById("quizProgressBar");
+      const progressText = document.getElementById("progressText");
+      const resultCard = document.getElementById("quizResult");
+      const resultTitle = document.getElementById("quizResultTitle");
+      const scoreText = document.getElementById("quizScoreText");
+      const resultSummary = document.getElementById("quizResultSummary");
+      const reviewList = document.getElementById("quizReviewList");
+      const timerText = document.getElementById("timerText");
+      const timerTextTop = document.getElementById("timerTextTop");
+      const quizScoreCircle = document.getElementById("quizScoreCircle");
+      const btnExplainByAI = document.getElementById("btnExplainByAI");
+      const langSwitch = document.getElementById("langSwitch");
 
-    recognition.onresult = (event) => {
-      let interimText = "";
+      let currentLang = pagePrefs.lang;
+      let currentStep = 1;
+      let questions = buildQuestionsSet();
+      const totalQuestions = questions.length;
+      let totalSeconds = 5 * 60;
+      let timerInterval = null;
+      let quizFinished = false;
 
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
+      function t(key) {
+        return (translations[currentLang] && translations[currentLang][key]) || key;
+      }
 
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript + " ";
+      function getSubjectTitle() {
+        return currentSubject.title[currentLang] || currentSubject.title.kk;
+      }
+
+      function getSubjectDescription() {
+        return currentSubject.description[currentLang] || currentSubject.description.kk;
+      }
+
+      function getCheckedValue(name) {
+        const checked = form.querySelector(`input[name="${name}"]:checked`);
+        return checked ? checked.value : null;
+      }
+
+      function getSavedAnswers() {
+        const answers = {};
+        questions.forEach((_, index) => {
+          answers[index + 1] = getCheckedValue("q" + (index + 1));
+        });
+        return answers;
+      }
+
+      function restoreAnswers(savedAnswers) {
+        Object.entries(savedAnswers).forEach(([step, value]) => {
+          if (!value) return;
+          const input = form.querySelector(`input[name="q${step}"][value="${value}"]`);
+          if (input) input.checked = true;
+        });
+      }
+
+      function applyPreferenceVisibility() {
+        const timerBlocks = [
+          timerText ? timerText.closest(".quiz-mini-card") : null,
+          timerTextTop ? timerTextTop.closest(".quiz-chip") : null
+        ];
+
+        timerBlocks.forEach((node) => {
+          if (node) node.classList.toggle("is-hidden", !pagePrefs.showTimer);
+        });
+
+        if (btnExplainByAI) {
+          btnExplainByAI.classList.toggle("is-hidden", !pagePrefs.aiExplanation);
+        }
+      }
+
+      function formatTime(seconds) {
+        const min = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const sec = String(seconds % 60).padStart(2, "0");
+        return `${min}:${sec}`;
+      }
+
+      function updateTimerUI() {
+        const time = formatTime(totalSeconds);
+        timerText.textContent = time;
+        timerTextTop.textContent = time;
+      }
+
+      function startTimer() {
+        updateTimerUI();
+        clearInterval(timerInterval);
+
+        if (!pagePrefs.showTimer) {
+          return;
+        }
+
+        timerInterval = setInterval(() => {
+          if (quizFinished) {
+            clearInterval(timerInterval);
+            return;
+          }
+
+          if (totalSeconds > 0) {
+            totalSeconds--;
+            updateTimerUI();
+          } else {
+            clearInterval(timerInterval);
+            form.requestSubmit();
+          }
+        }, 1000);
+      }
+
+      function countAnswered() {
+        let answered = 0;
+        questions.forEach((_, index) => {
+          const checked = form.querySelector(`input[name="q${index + 1}"]:checked`);
+          if (checked) answered++;
+        });
+        return answered;
+      }
+
+      function countCorrectSelected() {
+        let correct = 0;
+        questions.forEach((q, index) => {
+          const checked = form.querySelector(`input[name="q${index + 1}"]:checked`);
+          if (checked && checked.value === q.answer) correct++;
+        });
+        return correct;
+      }
+
+      function updateTopMetrics() {
+        const answered = countAnswered();
+        const accuracy = answered ? Math.round((countCorrectSelected() / answered) * 100) : 0;
+
+        answeredCountText.textContent = `${answered} / ${totalQuestions}`;
+        accuracyText.textContent = `${accuracy}%`;
+
+        if (currentStep <= Math.ceil(totalQuestions / 3)) {
+          motivationText.textContent = t("motivation_start");
+        } else if (currentStep < totalQuestions) {
+          motivationText.textContent = t("motivation_mid");
         } else {
-          interimText += transcript;
+          motivationText.textContent = t("motivation_end");
         }
       }
 
-      chatInput.value = (finalTranscript + interimText).trim();
-      updateCharCount();
-    };
+      function renderQuestionNavigator() {
+        quizStepNav.innerHTML = questions.map((_, index) => {
+          const step = index + 1;
+          return `<button type="button" class="quiz-step-dot" data-step="${step}">${step}</button>`;
+        }).join("");
 
-    recognition.onerror = (event) => {
-      isRecognizing = false;
-      setVoiceState({
-        listening: false,
-        status: "Voice қатесі: " + event.error,
-        hint: "Қайта байқап көр"
-      });
-      showError("Дауысты оқу кезінде қате: " + event.error);
-    };
-
-    recognition.onend = () => {
-      isRecognizing = false;
-      setVoiceState({
-        listening: false,
-        status: "Дауыстық мәтін дайын",
-        hint: "Enter — жіберу"
-      });
-      chatInput.focus();
-    };
-
-    return true;
-  }
-
-  async function startBrowserRecognition() {
-    if (!recognition) {
-      const ok = initSpeechRecognition();
-      if (!ok) return false;
-    }
-
-    if (isRecognizing) {
-      recognition.stop();
-      return true;
-    }
-
-    recognition.start();
-    return true;
-  }
-
-  async function startRecorderFallback() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      appendBotMessage("Бұл браузерде микрофон API қолжетімсіз.");
-      showError("Бұл браузерде микрофон API қолжетімсіз.");
-      return;
-    }
-
-    try {
-      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioChunks = [];
-      mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "audio/webm" });
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        try {
-          setVoiceState({
-            listening: false,
-            status: "Аудио жіберіліп жатыр...",
-            hint: "Күте тұр"
+        quizStepNav.querySelectorAll(".quiz-step-dot").forEach((btn) => {
+          btn.addEventListener("click", function () {
+            if (quizFinished) return;
+            showStep(Number(this.dataset.step));
           });
+        });
+      }
 
-          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-          const formData = new FormData();
-          formData.append("audio", audioBlob, "voice.webm");
+      function renderQuestions() {
+        let html = "";
 
-          const response = await fetch("{% url 'transcribe_audio' %}", {
-            method: "POST",
-            headers: {
-              "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: formData
-          });
+        questions.forEach((q, index) => {
+          const step = index + 1;
+          const letters = ["A", "B", "C", "D"];
+          const qText = q.question[currentLang] || q.question.kk;
+          const options = q.options[currentLang] || q.options.kk;
 
-          const data = await response.json();
+          html += `
+            <div class="quiz-question-step ${step === 1 ? 'active' : ''}" data-step="${step}" id="step${step}">
+              <div class="quiz-question-head">
+                <div class="quiz-question-label">${t("q_label")} ${step}</div>
+                <div class="quiz-question-points">${t("points")}</div>
+              </div>
 
-          if (!response.ok || !data.ok) {
-            throw new Error(data.error || "Transcription failed");
+              <div class="quiz-question-layout">
+                <div class="quiz-question-box">
+                  <h2 class="quiz-question-title">${qText}</h2>
+
+                  <div class="quiz-options">
+                    ${options.map((option, i) => `
+                      <label class="quiz-option">
+                        <input type="radio" name="q${step}" value="${letters[i]}">
+                        <span>${letters[i]}) ${option}</span>
+                      </label>
+                    `).join("")}
+                  </div>
+                </div>
+
+                <div class="quiz-help-panel">
+                  <div class="quiz-help-title">${t("help_title")}</div>
+                  <div class="quiz-help-text">${t("help_text")}</div>
+
+                  <div class="quiz-help-list">
+                    <div class="quiz-help-item">${t("help_1")}</div>
+                    <div class="quiz-help-item">${t("help_2")}</div>
+                    <div class="quiz-help-item ${pagePrefs.showTimer ? '' : 'is-hidden'}">${t("help_3")}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+
+        quizStepsContainer.innerHTML = html;
+      }
+
+      function updateNavigatorState() {
+        const navButtons = document.querySelectorAll(".quiz-step-dot");
+
+        navButtons.forEach((btn, index) => {
+          const step = index + 1;
+          btn.classList.remove("active", "done");
+
+          if (step === currentStep) {
+            btn.classList.add("active");
           }
 
-          chatInput.value = data.text || "";
-          updateCharCount();
-          assistantStatus.textContent = "Дауыстық мәтін дайын";
-          voiceHint.textContent = "Enter — жіберу";
-          chatInput.focus();
-
-        } catch (error) {
-          assistantStatus.textContent = "Қате шықты";
-          voiceHint.textContent = "Қайта байқап көр";
-          appendBotMessage("Voice transcription қатесі: " + error.message);
-          showError("Voice transcription қатесі: " + error.message);
-        } finally {
-          if (mediaStream) {
-            mediaStream.getTracks().forEach((track) => track.stop());
-            mediaStream = null;
+          const checked = form.querySelector(`input[name="q${step}"]:checked`);
+          if (checked && step !== currentStep) {
+            btn.classList.add("done");
           }
-          isRecording = false;
-          if (voiceBtn) voiceBtn.classList.remove("is-listening");
-        }
-      };
-
-      mediaRecorder.start();
-      isRecording = true;
-
-      setVoiceState({
-        listening: true,
-        status: "Жазып жатыр...",
-        hint: "Тоқтату үшін қайта бас"
-      });
-
-    } catch (error) {
-      appendBotMessage("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
-      showError("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
-      setVoiceState({
-        listening: false,
-        status: "Микрофон қолжетімсіз",
-        hint: "Рұқсат беріп қайта байқап көр"
-      });
-    }
-  }
-
-  function stopRecorderFallback() {
-    if (mediaRecorder && isRecording) {
-      mediaRecorder.stop();
-    }
-  }
-
-  async function handleVoiceClick() {
-    if (isSending) return;
-
-    const hasSpeechRecognition = !!detectSpeechRecognition();
-
-    if (hasSpeechRecognition) {
-      await startBrowserRecognition();
-      return;
-    }
-
-    if (isRecording) {
-      stopRecorderFallback();
-    } else {
-      await startRecorderFallback();
-    }
-  }
-
-  chatForm.addEventListener("submit", function (e) {
-    e.preventDefault();
-    sendMessage(chatInput.value);
-  });
-
-  chatInput.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      sendMessage(chatInput.value);
-    }
-  });
-
-  chatInput.addEventListener("input", updateCharCount);
-
-  if (voiceBtn) {
-    voiceBtn.addEventListener("click", handleVoiceClick);
-  }
-
-  if (toggleVoiceReadBtn) {
-    toggleVoiceReadBtn.addEventListener("click", function () {
-      autoSpeakEnabled = !autoSpeakEnabled;
-      this.classList.toggle("is-off", !autoSpeakEnabled);
-
-      if (!autoSpeakEnabled && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
+        });
       }
 
-      assistantStatus.textContent = autoSpeakEnabled
-        ? "Онлайн • дауыспен оқу қосулы"
-        : "Онлайн • дауыспен оқу сөндірулі";
-    });
-  }
+      function showStep(step) {
+        const steps = document.querySelectorAll(".quiz-question-step");
+        steps.forEach((item) => item.classList.remove("active"));
 
-  if (clearChatBtn) {
-    clearChatBtn.addEventListener("click", function () {
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
+        const activeStep = document.getElementById("step" + step);
+        if (activeStep) activeStep.classList.add("active");
+
+        currentStep = step;
+        currentNum.textContent = step;
+
+        const percent = Math.round((step / totalQuestions) * 100);
+        progressBar.style.width = percent + "%";
+        progressText.textContent = percent + "%";
+
+        btnPrev.disabled = step === 1;
+        btnNext.hidden = step === totalQuestions;
+        btnFinish.hidden = step !== totalQuestions;
+
+        updateNavigatorState();
+        updateTopMetrics();
       }
-      removeTypingRow();
-      renderEmptyState("Жаңа чат басталды. Төменге сұрағыңды жаз.");
-      assistantStatus.textContent = "Онлайн • жаңа чат дайын";
-      voiceHint.textContent = "Enter — жіберу";
-      chatInput.value = "";
-      updateCharCount();
-      chatInput.focus();
-    });
-  }
 
-  subjectChips.forEach((chip) => {
-    chip.addEventListener("click", function () {
-      subjectChips.forEach((c) => c.classList.remove("active"));
-      this.classList.add("active");
-      selectedSubject = this.dataset.subject || "";
-      chatInput.focus();
-    });
-  });
+      function clearStates() {
+        document.querySelectorAll(".quiz-option").forEach((opt) => {
+          opt.classList.remove("correct", "wrong");
+        });
+      }
 
-  quickPills.forEach((btn) => {
-    btn.addEventListener("click", function () {
-      chatInput.value = this.dataset.text || "";
-      updateCharCount();
-      chatInput.focus();
-    });
-  });
+      function markAnswers() {
+        clearStates();
 
-  document.addEventListener("click", async function (e) {
-    const copyBtn = e.target.closest(".copy-btn");
-    if (copyBtn) {
-      const msgBody = copyBtn.closest(".ai-msg-body");
-      const bubble = msgBody.querySelector(".ai-bubble");
-      const text = bubble ? bubble.textContent : "";
+        questions.forEach((q, index) => {
+          const key = "q" + (index + 1);
+          const selected = form.querySelector(`input[name="${key}"]:checked`);
+          const correct = form.querySelector(`input[name="${key}"][value="${q.answer}"]`);
 
-      if (text) {
-        try {
-          await navigator.clipboard.writeText(text);
-          copyBtn.textContent = "Көшірілді";
-          setTimeout(() => {
-            copyBtn.textContent = "Көшіру";
-          }, 1200);
-        } catch {
-          showError("Мәтінді көшіру мүмкін болмады.");
+          if (selected) {
+            const option = selected.closest(".quiz-option");
+            if (selected.value === q.answer) {
+              option.classList.add("correct");
+            } else {
+              option.classList.add("wrong");
+            }
+          }
+
+          if (correct) {
+            correct.closest(".quiz-option").classList.add("correct");
+          }
+        });
+      }
+
+      function buildResult() {
+        let score = 0;
+        let reviewHtml = "";
+
+        questions.forEach((q, index) => {
+          const key = "q" + (index + 1);
+          const selectedValue = getCheckedValue(key);
+          const isCorrect = selectedValue === q.answer;
+
+          if (isCorrect) score++;
+
+          reviewHtml += `
+            <div class="quiz-review-item ${isCorrect ? 'good' : 'bad'}">
+              <div class="quiz-review-question">${t("q_label")} ${index + 1}</div>
+              <div class="quiz-review-answer">
+                ${isCorrect ? t("result_correct") : t("result_wrong")}
+              </div>
+            </div>
+          `;
+        });
+
+        const percent = Math.round((score / totalQuestions) * 100);
+        const degree = Math.round((percent / 100) * 360);
+
+        scoreText.textContent = `${score} / ${totalQuestions}`;
+        quizScoreCircle.style.background = `conic-gradient(#2563eb 0deg, #60a5fa ${degree}deg, #e5eefc ${degree}deg 360deg)`;
+
+        resultTitle.textContent =
+          score === totalQuestions
+            ? t("result_perfect")
+            : score >= Math.ceil(totalQuestions * 0.6)
+              ? t("result_good")
+              : t("result_retry");
+
+        const recommendation =
+          percent >= 80
+            ? t("result_summary_good")
+            : percent >= 60
+              ? t("result_summary_mid")
+              : t("result_summary_low");
+
+        resultSummary.innerHTML = `
+          ${t("result_total")}: <strong>${percent}%</strong><br><br>
+          ${t("result_correct_count")}: <strong>${score}</strong><br>
+          ${t("result_wrong_count")}: <strong>${totalQuestions - score}</strong><br>
+          ${t("result_recommend")}: ${recommendation}
+        `;
+
+        reviewList.innerHTML = reviewHtml;
+        resultCard.hidden = false;
+        resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+
+        if (pagePrefs.aiExplanation && btnExplainByAI) {
+          btnExplainByAI.href = `${aiChatBaseUrl}?prompt=${encodeURIComponent(getSubjectTitle() + " бойынша қате кеткен тақырыптарды түсіндір")}`;
         }
       }
-      return;
-    }
 
-    const retryBtn = e.target.closest(".retry-btn");
-    if (retryBtn) {
-      if (lastUserMessage) {
-        sendMessage(lastUserMessage);
-      } else {
-        showError("Қайта жіберетін соңғы сұрақ жоқ.");
+      function applyLanguage() {
+        const savedAnswers = getSavedAnswers();
+
+        document.documentElement.lang = currentLang;
+
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[currentLang][key]) {
+            el.textContent = translations[currentLang][key];
+          }
+        });
+
+        langSwitch.textContent = translations[currentLang].lang_btn;
+        subjectTitle.textContent = getSubjectTitle();
+        subjectDesc.textContent = getSubjectDescription();
+        subjectChipText.textContent = getSubjectTitle();
+
+        renderQuestions();
+        restoreAnswers(savedAnswers);
+        showStep(currentStep);
+        updateTopMetrics();
+        applyPreferenceVisibility();
+
+        if (!resultCard.hidden) {
+          markAnswers();
+          buildResult();
+        }
       }
-      return;
-    }
 
-    const speakBtn = e.target.closest(".speak-btn");
-    if (speakBtn) {
-      const text = speakBtn.dataset.speak || "";
-      if (text) speakText(text);
-    }
-  });
+      if (langSwitch) {
+        langSwitch.addEventListener("click", function () {
+          if (currentLang === "kk") currentLang = "ru";
+          else if (currentLang === "ru") currentLang = "en";
+          else currentLang = "kk";
 
-  window.addEventListener("load", () => {
-    scrollChatBottom();
-    initSpeechRecognition();
-    updateCharCount();
-  });
-</script>
+          applyLanguage();
+        });
+      }
 
+      document.querySelectorAll(".quiz-subject-pill").forEach((pill) => {
+        if (pill.dataset.subject === currentSubjectKey) {
+          pill.classList.add("active");
+        } else {
+          pill.classList.remove("active");
+        }
+      });
+
+      btnNext.addEventListener("click", function () {
+        if (currentStep < totalQuestions) {
+          showStep(currentStep + 1);
+        }
+      });
+
+      btnPrev.addEventListener("click", function () {
+        if (currentStep > 1) {
+          showStep(currentStep - 1);
+        }
+      });
+
+      form.addEventListener("change", function () {
+        updateNavigatorState();
+        updateTopMetrics();
+      });
+
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        quizFinished = true;
+        clearInterval(timerInterval);
+        markAnswers();
+        buildResult();
+        updateTopMetrics();
+      });
+
+      btnRestart.addEventListener("click", function () {
+        clearInterval(timerInterval);
+        quizFinished = false;
+        resultCard.hidden = true;
+        currentStep = 1;
+        totalSeconds = 5 * 60;
+        questions = buildQuestionsSet();
+        renderQuestionNavigator();
+        applyLanguage();
+        startTimer();
+      });
+
+      totalNum.textContent = totalQuestions;
+      renderQuestionNavigator();
+      applyLanguage();
+      startTimer();
+      updateTopMetrics();
+      applyPreferenceVisibility();
+    })();
+  </script>
 </body>
 </html>
