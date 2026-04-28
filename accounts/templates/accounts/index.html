@@ -8,72 +8,1694 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
-</head>
-<body class="home-page">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-  <!-- HEADER -->
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg-1: #eef4ff;
+      --bg-2: #f8fbff;
+      --bg-3: #eefbf5;
+      --text: #22324d;
+      --muted: #7386a6;
+      --line: #dfe8f5;
+      --white: #ffffff;
+      --blue-1: #2563eb;
+      --blue-2: #60a5fa;
+      --blue-3: #1d4ed8;
+      --blue-soft: #eaf2ff;
+      --blue-soft-2: #dbeafe;
+      --green-1: #10b981;
+      --green-2: #34d399;
+      --orange-1: #f97316;
+      --orange-2: #fb923c;
+      --card: rgba(255, 255, 255, 0.86);
+      --shadow: 0 20px 50px rgba(78, 98, 135, 0.10);
+      --shadow-soft: 0 12px 26px rgba(37, 99, 235, 0.12);
+      --radius-xl: 30px;
+      --radius-lg: 24px;
+      --radius-md: 18px;
+      --radius-sm: 14px;
+      --wrap: min(1280px, calc(100% - 28px));
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: "Inter", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
+    }
+
+    body.home-page {
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body.home-page::before,
+    body.home-page::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body.home-page::before {
+      width: 330px;
+      height: 330px;
+      top: -90px;
+      right: -100px;
+      background: rgba(59, 130, 246, 0.14);
+    }
+
+    body.home-page::after {
+      width: 250px;
+      height: 250px;
+      left: -70px;
+      bottom: -70px;
+      background: rgba(16, 185, 129, 0.10);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .65s ease, transform .65s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .main-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.78);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(90, 115, 160, 0.10);
+    }
+
+    .top-mini-bar {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 8px 14px 0;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .top-mini-right {
+      display: flex;
+      justify-content: flex-end;
+      width: 100%;
+    }
+
+    .lang-switch {
+      min-height: 40px;
+      padding: 0 16px;
+      border: 1px solid #dce7f8;
+      border-radius: 999px;
+      background: #f7fbff;
+      color: #3963aa;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    .lang-switch:hover {
+      transform: translateY(-1px);
+      background: #eef6ff;
+    }
+
+    .main-nav-wrap {
+      max-width: 1380px;
+      margin: 0 auto;
+      padding: 14px 28px 20px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .main-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .main-brand-logo {
+      width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #3b82f6, #5b8cff);
+      color: white;
+      font-size: 26px;
+      font-weight: 800;
+      box-shadow: 0 12px 24px rgba(59, 130, 246, 0.22);
+      flex-shrink: 0;
+    }
+
+    .main-brand-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #243755;
+      line-height: 1.2;
+    }
+
+    .main-brand-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 2px;
+      line-height: 1.2;
+    }
+
+    .main-site-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      flex-wrap: nowrap;
+      min-width: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .main-site-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .main-site-nav a {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #49658f;
+      font-size: 15px;
+      font-weight: 800;
+      transition: .2s ease;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .main-site-nav a:hover {
+      background: #edf5ff;
+      color: #2453b3;
+      transform: translateY(-1px);
+    }
+
+    .main-site-nav a.active {
+      background: linear-gradient(135deg, #edf4ff 0%, #dceaff 100%);
+      color: #2453b3;
+      border: 1px solid #d4e2fb;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.6);
+    }
+
+    .profile-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      justify-content: flex-end;
+    }
+
+    .header-profile-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 10px 6px 6px;
+      border-radius: 999px;
+      background: #f8fbff;
+      border: 1px solid #dbe7f6;
+      transition: 0.2s ease;
+    }
+
+    .header-profile-link:hover {
+      background: #edf5ff;
+      transform: translateY(-1px);
+    }
+
+    .header-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      border: 2px solid #dbe7ff;
+      flex-shrink: 0;
+    }
+
+    .header-avatar-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #4b87ff, #2563eb);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    .header-profile-text {
+      font-size: 15px;
+      font-weight: 800;
+      color: #29406a;
+      white-space: nowrap;
+    }
+
+    .main-login-btn {
+      min-height: 46px;
+      padding: 0 18px;
+      border-radius: 16px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      transition: .2s ease;
+      white-space: nowrap;
+      border: none;
+    }
+
+    .main-login-btn.ghost {
+      background: #f5f9ff;
+      border: 1px solid #d9e6fb;
+      color: #2b58b7;
+    }
+
+    .main-login-btn:not(.ghost) {
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .main-login-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .wrap {
+      position: relative;
+      z-index: 1;
+      width: var(--wrap);
+      margin: 22px auto 48px;
+    }
+
+    .home-section {
+      margin-top: 22px;
+    }
+
+    .home-hero,
+    .home-live-item,
+    .modern-course-card,
+    .home-feature-card,
+    .home-faq-item,
+    .home-diagnostic-card,
+    .home-path-card,
+    .home-success-card,
+    .home-cta-card {
+      background: var(--card);
+      border: 1px solid #e3edf8;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+
+    .home-hero {
+      border-radius: 34px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .home-hero::before {
+      content: "";
+      position: absolute;
+      width: 360px;
+      height: 360px;
+      border-radius: 50%;
+      right: -120px;
+      top: -120px;
+      background: radial-gradient(circle, rgba(96,165,250,.20) 0%, rgba(96,165,250,0) 72%);
+      pointer-events: none;
+    }
+
+    .home-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(rgba(255,255,255,.10), rgba(255,255,255,0)),
+        repeating-linear-gradient(
+          90deg,
+          rgba(255,255,255,.14) 0,
+          rgba(255,255,255,.14) 1px,
+          transparent 1px,
+          transparent 36px
+        );
+      opacity: .25;
+      pointer-events: none;
+    }
+
+    .home-hero-inner {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
+      gap: 24px;
+      align-items: center;
+      padding: 34px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .home-hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .home-hero-logo {
+      min-height: 42px;
+      padding: 0 14px 0 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: #2d4d86;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .02em;
+      margin-bottom: 14px;
+    }
+
+    .home-hero-logo-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      box-shadow: 0 12px 24px rgba(37, 99, 235, 0.18);
+    }
+
+    .home-hero-live-pill {
+      min-height: 38px;
+      padding: 0 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #cfe0fb;
+      color: #2553b6;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .home-hero h1 {
+      margin: 0;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: #243655;
+      max-width: 700px;
+    }
+
+    .home-hero h1 span {
+      color: var(--blue-1);
+    }
+
+    .home-hero p {
+      margin: 16px 0 0;
+      font-size: 16px;
+      line-height: 1.8;
+      color: var(--muted);
+      max-width: 620px;
+    }
+
+    .home-hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .home-hero-btn,
+    .home-hero-btn.secondary {
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      transition: .2s ease;
+    }
+
+    .home-hero-btn {
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .home-hero-btn.secondary {
+      background: #f5f9ff;
+      border: 1px solid #d9e6fb;
+      color: #2b58b7;
+    }
+
+    .home-hero-btn:hover,
+    .home-hero-btn.secondary:hover {
+      transform: translateY(-1px);
+    }
+
+    .home-hero-note {
+      margin-top: 18px;
+      font-size: 14px;
+      color: #6f84a7;
+      font-weight: 600;
+    }
+
+    .home-hero-stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 24px;
+      width: 100%;
+      max-width: 650px;
+    }
+
+    .home-hero-stat {
+      background: rgba(255,255,255,.80);
+      border: 1px solid #e3edf8;
+      border-radius: 18px;
+      padding: 16px;
+      box-shadow: 0 10px 22px rgba(77, 96, 130, 0.05);
+    }
+
+    .home-hero-stat-value {
+      font-size: 24px;
+      font-weight: 900;
+      color: #22406f;
+    }
+
+    .home-hero-stat-label {
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+    }
+
+    .home-slider-dots {
+      display: flex;
+      gap: 8px;
+      margin-top: 20px;
+    }
+
+    .home-slider-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: #d6e3f7;
+    }
+
+    .home-slider-dots span.active {
+      width: 28px;
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+    }
+
+    .home-hero-visual {
+      display: flex;
+      justify-content: center;
+    }
+
+    .home-hero-image-box {
+      width: 100%;
+      max-width: 540px;
+      min-height: 390px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #eef5ff 0%, #dbeafe 100%);
+      border: 1px solid #d8e6fb;
+      overflow: hidden;
+      box-shadow: 0 22px 40px rgba(59, 130, 246, 0.10);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .home-hero-image-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-floating-card {
+      position: absolute;
+      z-index: 2;
+      min-width: 190px;
+      padding: 14px 16px;
+      border-radius: 18px;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(219, 232, 248, 0.96);
+      box-shadow: 0 18px 28px rgba(60, 84, 125, .10);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-floating-card strong {
+      display: block;
+      color: #24406f;
+      font-size: 15px;
+      font-weight: 900;
+      margin-bottom: 4px;
+    }
+
+    .hero-floating-card span {
+      color: #6e84a6;
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .hero-floating-top {
+      left: 18px;
+      top: 18px;
+    }
+
+    .hero-floating-side {
+      right: 18px;
+      top: 22px;
+    }
+
+    .hero-floating-bottom {
+      left: 22px;
+      bottom: 18px;
+    }
+
+    .home-live-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .home-live-item {
+      border-radius: 24px;
+      padding: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .home-live-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      flex-shrink: 0;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 1px solid #d8e6fb;
+      color: #2453b3;
+      font-size: 24px;
+      font-weight: 900;
+    }
+
+    .home-live-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #27406a;
+    }
+
+    .home-live-text {
+      margin-top: 8px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .home-diagnostic-card {
+      border-radius: 30px;
+      padding: 26px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, .9fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .home-eyebrow {
+      min-height: 36px;
+      width: fit-content;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      border: 1px solid #fed7aa;
+      color: #c2410c;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .home-diagnostic-content h2,
+    .home-success-content h3,
+    .home-cta-copy h2 {
+      margin: 0;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: #243655;
+    }
+
+    .home-diagnostic-content h2 {
+      font-size: clamp(28px, 4vw, 42px);
+      max-width: 580px;
+    }
+
+    .home-diagnostic-content h2 span,
+    .home-section-head h2 span,
+    .home-success-content h3 span {
+      color: var(--blue-1);
+    }
+
+    .home-diagnostic-content p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+      max-width: 620px;
+    }
+
+    .home-diagnostic-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .home-diagnostic-tag {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #f7fbff;
+      border: 1px solid #dce8f8;
+      color: #52719d;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-diagnostic-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 22px;
+    }
+
+    .home-diagnostic-side {
+      border-radius: 24px;
+      padding: 20px;
+      background: linear-gradient(135deg, #eff6ff 0%, #f8fbff 100%);
+      border: 1px solid #dbeafe;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .home-diagnostic-score {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      background: conic-gradient(var(--blue-1) 0deg, var(--blue-2) 280deg, #dbeafe 280deg 360deg);
+      display: grid;
+      place-items: center;
+      position: relative;
+      box-shadow: 0 16px 28px rgba(37, 99, 235, .14);
+    }
+
+    .home-diagnostic-score::before {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    .home-diagnostic-score span {
+      position: relative;
+      z-index: 1;
+      color: #24406f;
+      font-size: 26px;
+      font-weight: 900;
+    }
+
+    .home-diagnostic-side-top {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .home-diagnostic-side-copy strong {
+      display: block;
+      font-size: 18px;
+      color: #27406a;
+      margin-bottom: 8px;
+    }
+
+    .home-diagnostic-side-copy p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .home-diagnostic-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .home-diagnostic-item {
+      border-radius: 16px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid #e2edf8;
+      padding: 12px 14px;
+      color: #54709b;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.6;
+    }
+
+    .home-section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .home-section-head h2 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 40px);
+      line-height: 1.1;
+      color: #233654;
+    }
+
+    .home-courses {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .modern-course-card {
+      padding: 22px;
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      transition: .22s ease;
+    }
+
+    .modern-course-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 48px rgba(78, 98, 135, 0.14);
+    }
+
+    .modern-course-card::after {
+      content: "";
+      position: absolute;
+      width: 160px;
+      height: 160px;
+      right: -50px;
+      top: -50px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(96,165,250,.13) 0%, rgba(96,165,250,0) 70%);
+      pointer-events: none;
+    }
+
+    .course-top-line {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      max-width: 84%;
+    }
+
+    .course-badge {
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .02em;
+      border: 1px solid transparent;
+    }
+
+    .course-badge.blue {
+      background: linear-gradient(135deg, #edf4ff 0%, #dceaff 100%);
+      color: #2453b3;
+      border-color: #cadcff;
+    }
+
+    .course-badge.orange {
+      background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+      color: #c2410c;
+      border-color: #fed7aa;
+    }
+
+    .course-badge.green {
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      color: #047857;
+      border-color: #a7f3d0;
+    }
+
+    .course-fav {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 40px;
+      height: 40px;
+      border-radius: 14px;
+      border: 1px solid #dbe7f8;
+      background: #f9fbff;
+      color: #4d6ea8;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .course-fav.active {
+      background: #edf4ff;
+      color: #2453b3;
+      border-color: #bfd2ff;
+    }
+
+    .modern-course-title {
+      font-size: 21px;
+      font-weight: 800;
+      line-height: 1.35;
+      color: #243755;
+      max-width: 88%;
+    }
+
+    .modern-course-rating {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .modern-rating-num {
+      font-weight: 900;
+      color: #24406f;
+    }
+
+    .modern-stars {
+      color: #f59e0b;
+      font-weight: 800;
+    }
+
+    .modern-rating-count {
+      color: var(--muted);
+    }
+
+    .modern-course-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .modern-tag {
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: #f6faff;
+      border: 1px solid #dce8f8;
+      color: #53729d;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .modern-course-bottom {
+      margin-top: 22px;
+    }
+
+    .modern-course-btn {
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .home-path-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .home-path-card {
+      border-radius: 24px;
+      padding: 22px;
+      position: relative;
+    }
+
+    .home-path-step {
+      width: 54px;
+      height: 54px;
+      border-radius: 18px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #eff6ff, #dbeafe);
+      border: 1px solid #d7e6fb;
+      color: #2453b3;
+      font-size: 18px;
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+
+    .home-path-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #27406a;
+    }
+
+    .home-path-text {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .home-features-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .home-feature-card {
+      border-radius: 24px;
+      padding: 20px;
+      transition: .2s ease;
+    }
+
+    .home-feature-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .home-feature-image {
+      width: 76px;
+      height: 76px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #eef5ff, #dbeafe);
+      border: 1px solid #d7e6fb;
+      display: grid;
+      place-items: center;
+      margin-bottom: 16px;
+      overflow: hidden;
+    }
+
+    .home-feature-image img {
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .home-feature-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #27406a;
+    }
+
+    .home-feature-text {
+      margin-top: 10px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .home-success-card {
+      border-radius: 30px;
+      padding: 26px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr);
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .home-success-badge {
+      min-height: 36px;
+      width: fit-content;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border: 1px solid #cfe0fb;
+      color: #2453b3;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .home-success-content p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+      max-width: 620px;
+    }
+
+    .home-success-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .home-success-metric {
+      border-radius: 18px;
+      background: rgba(255,255,255,.78);
+      border: 1px solid #e3edf8;
+      padding: 16px;
+    }
+
+    .home-success-metric strong {
+      display: block;
+      color: #22406f;
+      font-size: 24px;
+      font-weight: 900;
+      margin-bottom: 8px;
+    }
+
+    .home-success-metric span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .home-success-quote {
+      border-radius: 24px;
+      background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%);
+      border: 1px solid #dbeafe;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .home-success-quote-mark {
+      font-size: 54px;
+      line-height: 1;
+      color: #8db6ff;
+      font-weight: 900;
+    }
+
+    .home-success-quote p {
+      margin: 0;
+      color: #456384;
+      font-size: 16px;
+      line-height: 1.85;
+      font-weight: 600;
+    }
+
+    .home-success-author {
+      color: #27406a;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .home-faq {
+      display: grid;
+      gap: 14px;
+    }
+
+    .home-faq-item {
+      border-radius: 24px;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .home-faq-q {
+      width: 100%;
+      min-height: 72px;
+      padding: 0 20px;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      color: #29406a;
+      font-size: 16px;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .faq-chevron {
+      transition: transform .2s ease;
+      font-size: 18px;
+      color: #4f6fa4;
+    }
+
+    .home-faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+    }
+
+    .home-faq-a {
+      display: none;
+      padding: 0 20px 20px;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.75;
+    }
+
+    .home-faq-item.open .home-faq-a {
+      display: block;
+    }
+
+    .home-cta-card {
+      border-radius: 30px;
+      padding: 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 22px;
+      flex-wrap: wrap;
+      background:
+        radial-gradient(circle at top right, rgba(96,165,250,.18), transparent 28%),
+        linear-gradient(135deg, rgba(255,255,255,.95), rgba(238,245,255,.94));
+    }
+
+    .home-cta-badge {
+      min-height: 36px;
+      width: fit-content;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+      border: 1px solid #a7f3d0;
+      color: #047857;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .home-cta-copy h2 {
+      font-size: clamp(28px, 4vw, 40px);
+      max-width: 680px;
+    }
+
+    .home-cta-copy p {
+      margin: 14px 0 0;
+      color: var(--muted);
+      line-height: 1.8;
+      font-size: 15px;
+      max-width: 680px;
+    }
+
+    .home-cta-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .home-cta-tag {
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: #f7fbff;
+      border: 1px solid #dce8f8;
+      color: #52719d;
+      font-size: 13px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .home-cta-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .site-footer {
+      margin-top: 28px;
+    }
+
+    .footer {
+      padding: 18px 6px 0;
+      color: #68809f;
+      font-size: 14px;
+    }
+
+    .footer strong {
+      color: #28406a;
+    }
+
+    .ai-chat-btn {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 60;
+      min-height: 66px;
+      padding: 0 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #3b82f6, #5b8cff);
+      color: white;
+      font-size: 17px;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 18px 34px rgba(59, 130, 246, 0.28);
+      transition: .2s ease;
+    }
+
+    .ai-chat-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+    }
+
+    /* ================= DARK MODE FROM SETTINGS ================= */
+    body.theme-dark {
+      --bg-1: #0f172a;
+      --bg-2: #111827;
+      --bg-3: #172033;
+      --text: #e5eefc;
+      --muted: #9fb0cc;
+      --line: #2d3b55;
+      --white: #111827;
+      --card: rgba(17, 24, 39, 0.92);
+      --blue-soft: #17345f;
+      --blue-soft-2: #1e3a5f;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.32);
+      --shadow-soft: 0 12px 26px rgba(37, 99, 235, 0.18);
+    }
+
+    body.theme-dark .main-header {
+      background: rgba(15, 23, 42, 0.9);
+      border-bottom-color: rgba(148, 163, 184, 0.16);
+    }
+
+    body.theme-dark .main-brand-title,
+    body.theme-dark .home-hero h1,
+    body.theme-dark .home-section-head h2,
+    body.theme-dark .modern-course-title,
+    body.theme-dark .home-live-title,
+    body.theme-dark .home-diagnostic-content h2,
+    body.theme-dark .home-diagnostic-side-copy strong,
+    body.theme-dark .home-path-title,
+    body.theme-dark .home-feature-title,
+    body.theme-dark .home-success-content h3,
+    body.theme-dark .home-success-metric strong,
+    body.theme-dark .home-success-author,
+    body.theme-dark .home-faq-q,
+    body.theme-dark .home-cta-copy h2,
+    body.theme-dark .footer strong,
+    body.theme-dark .hero-floating-card strong,
+    body.theme-dark .home-hero-stat-value,
+    body.theme-dark .modern-rating-num,
+    body.theme-dark .home-diagnostic-score span {
+      color: #f3f7ff !important;
+    }
+
+    body.theme-dark .main-brand-sub,
+    body.theme-dark .main-site-nav a,
+    body.theme-dark .home-hero p,
+    body.theme-dark .home-hero-note,
+    body.theme-dark .home-live-text,
+    body.theme-dark .home-diagnostic-content p,
+    body.theme-dark .home-diagnostic-side-copy p,
+    body.theme-dark .home-path-text,
+    body.theme-dark .home-feature-text,
+    body.theme-dark .home-success-content p,
+    body.theme-dark .home-success-metric span,
+    body.theme-dark .home-success-quote p,
+    body.theme-dark .home-faq-a,
+    body.theme-dark .home-cta-copy p,
+    body.theme-dark .footer,
+    body.theme-dark .hero-floating-card span,
+    body.theme-dark .modern-rating-count {
+      color: #9fb0cc !important;
+    }
+
+    body.theme-dark .home-hero,
+    body.theme-dark .home-live-item,
+    body.theme-dark .modern-course-card,
+    body.theme-dark .home-feature-card,
+    body.theme-dark .home-faq-item,
+    body.theme-dark .home-diagnostic-card,
+    body.theme-dark .home-path-card,
+    body.theme-dark .home-success-card,
+    body.theme-dark .home-cta-card,
+    body.theme-dark .home-hero-stat,
+    body.theme-dark .hero-floating-card,
+    body.theme-dark .home-success-metric {
+      background: rgba(17, 24, 39, 0.92) !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .lang-switch,
+    body.theme-dark .header-profile-link,
+    body.theme-dark .main-login-btn.ghost,
+    body.theme-dark .home-hero-btn.secondary,
+    body.theme-dark .modern-tag,
+    body.theme-dark .home-diagnostic-tag,
+    body.theme-dark .home-cta-tag,
+    body.theme-dark .course-fav {
+      background: rgba(17, 24, 39, 0.92) !important;
+      border-color: #2d3b55 !important;
+      color: #dbe7ff !important;
+    }
+
+    body.theme-dark .main-site-nav a:hover,
+    body.theme-dark .main-site-nav a.active,
+    body.theme-dark .header-profile-link:hover,
+    body.theme-dark .lang-switch:hover,
+    body.theme-dark .course-fav.active {
+      background: #1b2a44 !important;
+      color: #dbe7ff !important;
+    }
+
+    body.theme-dark .home-hero-image-box,
+    body.theme-dark .home-diagnostic-side,
+    body.theme-dark .home-success-quote {
+      background: linear-gradient(135deg, #111827 0%, #1b2a44 100%) !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .home-diagnostic-item {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border-color: #2d3b55 !important;
+      color: #c8d6ec !important;
+    }
+
+    body.theme-dark .home-diagnostic-score::before {
+      background: #0f172a;
+    }
+
+    body.theme-dark .home-slider-dots span {
+      background: #2d3b55;
+    }
+
+    body.theme-dark .home-hero::after {
+      opacity: 0.08;
+    }
+
+    @media (max-width: 1180px) {
+      .home-features-grid,
+      .home-path-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .home-courses,
+      .home-live-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 980px) {
+      .home-hero-inner,
+      .home-diagnostic-card,
+      .home-success-card {
+        grid-template-columns: 1fr;
+      }
+
+      .home-hero-image-box {
+        min-height: 320px;
+      }
+
+      .home-hero-stats,
+      .home-success-metrics {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+      }
+
+      .hero-floating-side {
+        right: 18px;
+        top: auto;
+        bottom: 18px;
+      }
+
+      .hero-floating-bottom {
+        display: none;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .main-nav-wrap {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 14px 16px 18px;
+      }
+
+      .main-site-nav {
+        justify-content: flex-start;
+        gap: 18px;
+      }
+
+      .profile-actions {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .wrap {
+        width: min(100% - 16px, 1000px);
+      }
+
+      .top-mini-bar {
+        padding-right: 10px;
+      }
+
+      .main-brand-logo {
+        width: 50px;
+        height: 50px;
+        font-size: 22px;
+      }
+
+      .main-site-nav {
+        gap: 8px;
+      }
+
+      .main-site-nav a,
+      .main-login-btn {
+        min-height: 44px;
+        padding: 0 14px;
+        font-size: 14px;
+        border-radius: 16px;
+      }
+
+      .home-courses,
+      .home-features-grid,
+      .home-path-grid,
+      .home-live-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .home-hero,
+      .home-diagnostic-card,
+      .home-success-card,
+      .home-cta-card {
+        border-radius: 24px;
+      }
+
+      .home-hero-inner,
+      .home-diagnostic-card,
+      .home-success-card,
+      .home-cta-card {
+        padding: 18px;
+      }
+
+      .modern-course-card,
+      .home-feature-card,
+      .home-faq-item,
+      .home-path-card {
+        border-radius: 20px;
+      }
+
+      .hero-floating-card {
+        min-width: 150px;
+        padding: 10px 12px;
+        border-radius: 14px;
+      }
+
+      .hero-floating-card strong {
+        font-size: 13px;
+      }
+
+      .hero-floating-card span {
+        font-size: 12px;
+      }
+
+      .hero-floating-side {
+        display: none;
+      }
+
+      .home-diagnostic-side-top {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .home-cta-actions {
+        width: 100%;
+        flex-direction: column;
+      }
+
+      .home-cta-actions a {
+        width: 100%;
+      }
+
+      .ai-chat-btn {
+        right: 12px;
+        bottom: 12px;
+        min-height: 60px;
+        padding: 0 22px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .header-profile-text {
+        display: none;
+      }
+
+      .header-profile-link {
+        padding-right: 6px;
+      }
+
+      .header-avatar {
+        width: 42px;
+        height: 42px;
+      }
+    }
+  </style>
+</head>
+<body class="home-page {% if dark_mode %}theme-dark{% endif %}">
+
   <header class="main-header">
     <div class="top-mini-bar">
       <div class="top-mini-right">
-        <button class="lang-switch" type="button">🌐 Қазақша</button>
+        <button class="lang-switch" id="langSwitch" type="button">🌐 Қазақша</button>
       </div>
     </div>
 
     <div class="main-nav-wrap">
       <div class="main-brand">
-        <div class="main-brand-logo">EМ</div>
+        <div class="main-brand-logo">EM</div>
         <div>
           <div class="main-brand-title">EduMentor AI</div>
-          <div class="main-brand-sub">Ақылды оқу платформасы</div>
+          <div class="main-brand-sub" data-i18n="brand_sub">Ақылды оқу платформасы</div>
         </div>
       </div>
 
       <nav class="main-site-nav">
-        <a href="/" class="active">Басты бет</a>
-        <a href="/courses/">Курстар</a>
-        
-        <a href="{% url 'guide' %}">Нұсқаулық</a>
-        <a href="{% url 'contact' %}">Байланыс</a>
-        <a href="{% url 'profile' %}">Профиль</a>
-        <a href="{% url 'progress' %}">Прогресс</a>
-        <a href="{% url 'quiz' %}">Quiz</a>
+        <a href="{% url 'home' %}" class="active" data-i18n="nav_home">Басты бет</a>
+        <a href="{% url 'courses' %}" data-i18n="nav_courses">Курстар</a>
+        <a href="{% url 'guide' %}" data-i18n="nav_guide">Нұсқаулық</a>
+        <a href="{% url 'contact' %}" data-i18n="nav_contact">Байланыс</a>
+        <a href="{% url 'quiz' %}" data-i18n="nav_quiz">Quiz</a>
       </nav>
 
-    <div class="main-nav-actions">
-  <a href="/login/" class="main-login-btn ghost">Кіру</a>
-  <a href="/register/" class="main-login-btn">Тіркелу</a>
-</div>
+      <div class="profile-actions">
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'profile' %}" class="header-profile-link">
+            {% if request.user.profile_image %}
+              <img src="{{ request.user.profile_image.url }}" alt="Profile" class="header-avatar">
+            {% else %}
+              <div class="header-avatar header-avatar-fallback">
+                {{ request.user.username|default:"U"|first|upper }}
+              </div>
+            {% endif %}
+            <span class="header-profile-text">{{ request.user.username }}</span>
+          </a>
+          <a href="{% url 'logout' %}" class="main-login-btn" data-i18n="btn_logout">Шығу</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="main-login-btn ghost" data-i18n="btn_login">Кіру</a>
+          <a href="{% url 'register' %}" class="main-login-btn" data-i18n="btn_register">Тіркелу</a>
+        {% endif %}
+      </div>
     </div>
   </header>
 
   <div class="wrap">
 
-    <!-- HERO -->
-    <section class="home-hero">
+    <section class="home-hero reveal">
       <div class="home-hero-inner">
         <div class="home-hero-content">
           <div class="home-hero-logo">
-            <div class="home-hero-logo-badge">AI</div>
-            <div>EDUMENTOR AI</div>
+            <div class="home-hero-logo-badge">EM</div>
+            <div data-i18n="hero_badge">EDUMENTOR AI</div>
           </div>
 
-          <h1>Қазір оқуды бастаңыз</h1>
-          <p>
-            EduMentor AI-пен дайындалып, пәндерді терең түсініңіз,
-            прогресті бақылаңыз және ҰБТ-ға тиімді дайындалыңыз.
+          <div class="home-hero-live-pill" data-i18n="hero_live">AI • Quiz • Progress</div>
+
+          <h1 data-i18n-html="hero_title">
+            ҰБТ-ға <span>ақылды</span> дайындықты бүгін баста
+          </h1>
+
+          <p data-i18n="hero_desc">
+            EduMentor AI саған пәндерді түсінуге, тесттерді тапсыруға,
+            прогресті бақылауға және AI көмекші арқылы тез үйренуге көмектеседі.
           </p>
 
           <div class="home-hero-actions">
-            <a href="/register/" class="home-hero-btn">Курсқа қатысу</a>
+            <a href="{% url 'courses' %}" class="home-hero-btn" data-i18n="hero_btn_1">Курстарды көру</a>
+            <a href="{% url 'ai_chat' %}" class="home-hero-btn secondary" data-i18n="hero_btn_2">AI Chat ашу</a>
           </div>
 
-          <div class="home-hero-note">
+          <div class="home-hero-note" data-i18n="hero_note">
             Жеке оқу траекториясы • AI көмекші • Байқау тесттері
+          </div>
+
+          <div class="home-hero-stats">
+            <div class="home-hero-stat">
+              <div class="home-hero-stat-value">9+</div>
+              <div class="home-hero-stat-label" data-i18n="stat_1">Пән қолжетімді</div>
+            </div>
+            <div class="home-hero-stat">
+              <div class="home-hero-stat-value">1200+</div>
+              <div class="home-hero-stat-label" data-i18n="stat_2">Тест пен материал</div>
+            </div>
+            <div class="home-hero-stat">
+              <div class="home-hero-stat-value">24/7</div>
+              <div class="home-hero-stat-label" data-i18n="stat_3">AI көмекші</div>
+            </div>
           </div>
 
           <div class="home-slider-dots">
@@ -87,96 +1709,249 @@
         <div class="home-hero-visual">
           <div class="home-hero-image-box">
             <img src="{% static 'accounts/hero-banner.png' %}" alt="EduMentor AI баннері">
+
+            <div class="hero-floating-card hero-floating-top">
+              <strong data-i18n="hero_float_title_1">1200+ материал</strong>
+              <span data-i18n="hero_float_text_1">Курс, тест және конспект бір жерде</span>
+            </div>
+
+            <div class="hero-floating-card hero-floating-side">
+              <strong data-i18n="hero_float_title_2">AI жауап</strong>
+              <span data-i18n="hero_float_text_2">Орташа жауап уақыты 14 сек</span>
+            </div>
+
+            <div class="hero-floating-card hero-floating-bottom">
+              <strong data-i18n="hero_float_title_3">Апталық план</strong>
+              <span data-i18n="hero_float_text_3">3/4 мақсат орындалды</span>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- COURSES BLOCK -->
-    <section class="home-section" id="courses">
-      <div class="home-courses">
+    <section class="home-section reveal">
+      <div class="home-live-strip">
+        <article class="home-live-item">
+          <div class="home-live-icon">⚡</div>
+          <div>
+            <div class="home-live-title" data-i18n="live_1_title">Қазір платформада</div>
+            <div class="home-live-text" data-i18n="live_1_text">
+              Оқушылар quiz, курс және AI Chat арқылы дайындалып жатыр.
+            </div>
+          </div>
+        </article>
 
-        <article class="home-course-card modern-course-card">
+        <article class="home-live-item">
+          <div class="home-live-icon">🧠</div>
+          <div>
+            <div class="home-live-title" data-i18n="live_2_title">Жеке трек</div>
+            <div class="home-live-text" data-i18n="live_2_text">
+              Жүйе әлсіз тақырыптарды тауып, сол бағытқа ұсыным береді.
+            </div>
+          </div>
+        </article>
+
+        <article class="home-live-item">
+          <div class="home-live-icon">🚀</div>
+          <div>
+            <div class="home-live-title" data-i18n="live_3_title">Тез әрекет</div>
+            <div class="home-live-text" data-i18n="live_3_text">
+              1 минуттық диагностикадан кейін бірден келесі қадамды аласың.
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="home-section reveal">
+      <div class="home-diagnostic-card">
+        <div class="home-diagnostic-content">
+          <div class="home-eyebrow" data-i18n="diag_badge">60 секундтық диагностика</div>
+
+          <h2 data-i18n-html="diag_title">
+            Өз деңгейіңді <span>1 минутта</span> анықта
+          </h2>
+
+          <p data-i18n="diag_desc">
+            Қысқа тесттен өтіп, қай пәнде күштірек, қай тақырыпты қайталау керек екенін бірден көр.
+          </p>
+
+          <div class="home-diagnostic-tags">
+            <div class="home-diagnostic-tag" data-i18n="diag_tag_1">Жылдам</div>
+            <div class="home-diagnostic-tag" data-i18n="diag_tag_2">Түсінікті</div>
+            <div class="home-diagnostic-tag" data-i18n="diag_tag_3">Жеке ұсыныс</div>
+          </div>
+
+          <div class="home-diagnostic-actions">
+            <a href="{% url 'quiz' %}" class="home-hero-btn" data-i18n="diag_btn_1">Диагностикадан өту</a>
+            <a href="{% url 'ai_chat' %}" class="home-hero-btn secondary" data-i18n="diag_btn_2">AI-дан жоспар алу</a>
+          </div>
+        </div>
+
+        <div class="home-diagnostic-side">
+          <div class="home-diagnostic-side-top">
+            <div class="home-diagnostic-score">
+              <span>78%</span>
+            </div>
+
+            <div class="home-diagnostic-side-copy">
+              <strong data-i18n="diag_side_title">Үлгі нәтиже</strong>
+              <p data-i18n="diag_score_text">
+                Жүйе нәтижеңе қарай келесі қадамды ұсынады және әлсіз тақырыптарды көрсетеді.
+              </p>
+            </div>
+          </div>
+
+          <div class="home-diagnostic-list">
+            <div class="home-diagnostic-item" data-i18n="diag_item_1">Математика: функциялар мен пайыздарды қайталау</div>
+            <div class="home-diagnostic-item" data-i18n="diag_item_2">Оқу сауаттылығы: мәтін идеясы жақсы</div>
+            <div class="home-diagnostic-item" data-i18n="diag_item_3">Келесі қадам: 10 минуттық quiz + AI түсіндірме</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section reveal" id="courses">
+      <div class="home-section-head">
+        <h2 data-i18n-html="popular_courses">Танымал <span>курстар</span></h2>
+      </div>
+
+      <div class="home-courses">
+        <article class="modern-course-card">
           <button class="course-fav" type="button">♡</button>
 
-          <div class="modern-course-title">
+          <div class="course-top-line">
+            <div class="course-badge blue" data-i18n="course_badge_1">TOP</div>
+          </div>
+
+          <div class="modern-course-title" data-i18n="course_1_title">
             ҰБТ комбо 2025–2026
           </div>
 
           <div class="modern-course-rating">
             <span class="modern-rating-num">4.7</span>
             <span class="modern-stars">★ ★ ★ ★ ☆</span>
-            <span class="modern-rating-count">(789 отзывов)</span>
+            <span class="modern-rating-count" data-i18n="course_1_reviews">(789 пікір)</span>
           </div>
 
           <div class="modern-course-tags">
-            <span class="modern-tag">📘 1901 сабақтар</span>
-            <span class="modern-tag">🌐 Қазақ тілі</span>
+            <span class="modern-tag" data-i18n="course_1_lessons">📘 1901 сабақ</span>
+            <span class="modern-tag" data-i18n="course_1_lang">🌐 Қазақ тілі</span>
           </div>
 
           <div class="modern-course-bottom">
-            <a href="/courses/" class="modern-course-btn">Толығырақ</a>
+            <a href="{% url 'courses' %}" class="modern-course-btn" data-i18n="details_btn">Толығырақ</a>
           </div>
         </article>
 
-        <article class="home-course-card modern-course-card">
+        <article class="modern-course-card">
           <button class="course-fav" type="button">♡</button>
 
-          <div class="modern-course-title">
+          <div class="course-top-line">
+            <div class="course-badge orange" data-i18n="course_badge_2">Жаңа</div>
+          </div>
+
+          <div class="modern-course-title" data-i18n="course_2_title">
             ҰБТ шығармашылық комбо 2025–2026
           </div>
 
           <div class="modern-course-rating">
             <span class="modern-rating-num">4.6</span>
             <span class="modern-stars">★ ★ ★ ★ ☆</span>
-            <span class="modern-rating-count">(286 отзывов)</span>
+            <span class="modern-rating-count" data-i18n="course_2_reviews">(286 пікір)</span>
           </div>
 
           <div class="modern-course-tags">
-            <span class="modern-tag">📘 181 сабақтар</span>
-            <span class="modern-tag">🌐 Қазақ тілі</span>
+            <span class="modern-tag" data-i18n="course_2_lessons">📘 181 сабақ</span>
+            <span class="modern-tag" data-i18n="course_2_lang">🌐 Қазақ тілі</span>
           </div>
 
           <div class="modern-course-bottom">
-            <a href="/courses/" class="modern-course-btn">Толығырақ</a>
+            <a href="{% url 'courses' %}" class="modern-course-btn" data-i18n="details_btn">Толығырақ</a>
           </div>
         </article>
 
-        <article class="home-course-card modern-course-card">
+        <article class="modern-course-card">
           <button class="course-fav" type="button">♡</button>
 
-          <div class="modern-course-title">
+          <div class="course-top-line">
+            <div class="course-badge green" data-i18n="course_badge_3">Ұсыныс</div>
+          </div>
+
+          <div class="modern-course-title" data-i18n="course_3_title">
             ЕНТ КОМБО основные предметы
           </div>
 
           <div class="modern-course-rating">
-            <span class="modern-rating-num">5</span>
+            <span class="modern-rating-num">5.0</span>
             <span class="modern-stars">★ ★ ★ ★ ★</span>
-            <span class="modern-rating-count">(8 отзывов)</span>
+            <span class="modern-rating-count" data-i18n="course_3_reviews">(8 пікір)</span>
           </div>
 
           <div class="modern-course-tags">
-            <span class="modern-tag">📘 213 сабақтар</span>
-            <span class="modern-tag">🌐 Орыс тілі</span>
+            <span class="modern-tag" data-i18n="course_3_lessons">📘 213 сабақ</span>
+            <span class="modern-tag" data-i18n="course_3_lang">🌐 Орыс тілі</span>
           </div>
 
           <div class="modern-course-bottom">
-            <a href="/courses/" class="modern-course-btn">Толығырақ</a>
+            <a href="{% url 'courses' %}" class="modern-course-btn" data-i18n="details_btn">Толығырақ</a>
           </div>
         </article>
-
       </div>
     </section>
 
-    <!-- FEATURES -->
-    <section class="home-section" id="features">
+    <section class="home-section reveal">
+      <div class="home-section-head">
+        <h2 data-i18n-html="path_title">Оқу жолы <span>4 қадамда</span></h2>
+      </div>
+
+      <div class="home-path-grid">
+        <article class="home-path-card">
+          <div class="home-path-step">01</div>
+          <div class="home-path-title" data-i18n="path_1_title">Диагностика тапсыр</div>
+          <div class="home-path-text" data-i18n="path_1_text">
+            Алдымен қысқа тесттен өтіп, нақты деңгейіңді анықтайсың.
+          </div>
+        </article>
+
+        <article class="home-path-card">
+          <div class="home-path-step">02</div>
+          <div class="home-path-title" data-i18n="path_2_title">Әлсіз тақырыпты тап</div>
+          <div class="home-path-text" data-i18n="path_2_text">
+            Платформа қиын тақырыптарды бөліп көрсетеді.
+          </div>
+        </article>
+
+        <article class="home-path-card">
+          <div class="home-path-step">03</div>
+          <div class="home-path-title" data-i18n="path_3_title">AI-мен түсін</div>
+          <div class="home-path-text" data-i18n="path_3_text">
+            Түсінбеген сұрақты AI Chat арқылы қарапайым тілде меңгересің.
+          </div>
+        </article>
+
+        <article class="home-path-card">
+          <div class="home-path-step">04</div>
+          <div class="home-path-title" data-i18n="path_4_title">Прогресті бақыла</div>
+          <div class="home-path-text" data-i18n="path_4_text">
+            Рейтинг, статистика және жеке кабинет арқылы өсімді көресің.
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="home-section reveal" id="features">
+      <div class="home-section-head">
+        <h2 data-i18n-html="features_title">Платформа <span>мүмкіндіктері</span></h2>
+      </div>
+
       <div class="home-features-grid">
         <article class="home-feature-card">
           <div class="home-feature-image">
             <img src="{% static 'accounts/feature-1.png' %}" alt="Адаптация">
           </div>
-          <div class="home-feature-title">Адаптация</div>
-          <div class="home-feature-text">
+          <div class="home-feature-title" data-i18n="feature_1_title">Адаптация</div>
+          <div class="home-feature-text" data-i18n="feature_1_text">
             Жүйе оқушы деңгейіне қарай материалдарды бейімдеп ұсынады.
           </div>
         </article>
@@ -185,19 +1960,19 @@
           <div class="home-feature-image">
             <img src="{% static 'accounts/feature-2.png' %}" alt="Платформа">
           </div>
-          <div class="home-feature-title">Платформа</div>
-          <div class="home-feature-text">
+          <div class="home-feature-title" data-i18n="feature_2_title">Бір платформа</div>
+          <div class="home-feature-text" data-i18n="feature_2_text">
             Барлық курс, тест, статистика және жеке кабинет бір жерде орналасады.
           </div>
         </article>
 
         <article class="home-feature-card">
           <div class="home-feature-image">
-            <img src="{% static 'accounts/feature-3.png' %}" alt="Тікелей эфир">
+            <img src="{% static 'accounts/feature-3.png' %}" alt="Тікелей көмек">
           </div>
-          <div class="home-feature-title">Тікелей эфир</div>
-          <div class="home-feature-text">
-            Мұғаліммен тікелей байланыс жасап, сұрақтарға жауап алуға болады.
+          <div class="home-feature-title" data-i18n="feature_3_title">Тікелей көмек</div>
+          <div class="home-feature-text" data-i18n="feature_3_text">
+            AI мен мұғалім арқылы сұрақтарға жылдам жауап алуға болады.
           </div>
         </article>
 
@@ -205,8 +1980,8 @@
           <div class="home-feature-image">
             <img src="{% static 'accounts/feature-4.png' %}" alt="Байқау тесті">
           </div>
-          <div class="home-feature-title">Байқау тесті</div>
-          <div class="home-feature-text">
+          <div class="home-feature-title" data-i18n="feature_4_title">Байқау тесті</div>
+          <div class="home-feature-text" data-i18n="feature_4_text">
             ҰБТ форматына жақын тесттер арқылы өз деңгейіңді анықтайсың.
           </div>
         </article>
@@ -215,8 +1990,8 @@
           <div class="home-feature-image">
             <img src="{% static 'accounts/feature-5.png' %}" alt="Диагностика">
           </div>
-          <div class="home-feature-title">Диагностика</div>
-          <div class="home-feature-text">
+          <div class="home-feature-title" data-i18n="feature_5_title">Диагностика</div>
+          <div class="home-feature-text" data-i18n="feature_5_text">
             Әлсіз тақырыптарды анықтап, сол бағытта ұсыныстар береді.
           </div>
         </article>
@@ -225,18 +2000,18 @@
           <div class="home-feature-image">
             <img src="{% static 'accounts/feature-6.png' %}" alt="Рейтинг жүйесі">
           </div>
-          <div class="home-feature-title">Рейтинг жүйесі</div>
-          <div class="home-feature-text">
+          <div class="home-feature-title" data-i18n="feature_6_title">Рейтинг жүйесі</div>
+          <div class="home-feature-text" data-i18n="feature_6_text">
             Прогресті бақылауға және мотивацияны ұстап тұруға көмектеседі.
           </div>
         </article>
 
         <article class="home-feature-card">
           <div class="home-feature-image">
-            <img src="{% static 'accounts/feature-7.png' %}" alt="Куратор маманы">
+            <img src="{% static 'accounts/feature-7.png' %}" alt="Куратор көмегі">
           </div>
-          <div class="home-feature-title">Куратор маманы</div>
-          <div class="home-feature-text">
+          <div class="home-feature-title" data-i18n="feature_7_title">Куратор көмегі</div>
+          <div class="home-feature-text" data-i18n="feature_7_text">
             Оқу процесінде бағыт беріп, қолдау көрсететін маман көмегі болады.
           </div>
         </article>
@@ -245,80 +2020,583 @@
           <div class="home-feature-image">
             <img src="{% static 'accounts/feature-8.png' %}" alt="Профориентация">
           </div>
-          <div class="home-feature-title">Профориентация</div>
-          <div class="home-feature-text">
-            Мамандық таңдауға көмектесетін пайдалы бағыттар мен кеңестер беріледі.
+          <div class="home-feature-title" data-i18n="feature_8_title">Профориентация</div>
+          <div class="home-feature-text" data-i18n="feature_8_text">
+            Мамандық таңдауға көмектесетін бағыттар мен кеңестер беріледі.
           </div>
         </article>
       </div>
     </section>
 
-    <!-- FAQ PREVIEW -->
-    <section class="home-section" id="faq">
+    <section class="home-section reveal">
       <div class="home-section-head">
-        <h2>Сұрақтар қалды <span>ма?</span></h2>
+        <h2 data-i18n-html="success_title">Нәтиже <span>тарихы</span></h2>
+      </div>
+
+      <div class="home-success-card">
+        <div class="home-success-content">
+          <div class="home-success-badge" data-i18n="success_badge">Оқушы тәжірибесі</div>
+
+          <h3 data-i18n="success_heading">
+            Қысқа жоспар, тұрақты практика және AI көмегі нәтиже береді
+          </h3>
+
+          <p data-i18n="success_desc">
+            Күн сайын аз уақытпен жүйелі дайындалу үлкен өсім әкеледі. Платформа тест, түсіндірме және прогресті бір жерге жинайды.
+          </p>
+
+          <div class="home-success-metrics">
+            <div class="home-success-metric">
+              <strong>54 → 92</strong>
+              <span data-i18n="success_metric_1">Бастапқы баллдан соңғы нәтижеге өсу</span>
+            </div>
+
+            <div class="home-success-metric">
+              <strong>4x</strong>
+              <span data-i18n="success_metric_2">Аптасына орташа 4 қысқа quiz</span>
+            </div>
+
+            <div class="home-success-metric">
+              <strong>24/7</strong>
+              <span data-i18n="success_metric_3">AI көмегімен түсіндірілген қате сұрақтар</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-success-quote">
+          <div class="home-success-quote-mark">“</div>
+          <p data-i18n="success_quote">
+            Маған ең ұнағаны — қай жерден қателескенімді бірден көріп, сол сұрақты AI арқылы түсіну мүмкіндігі болды.
+          </p>
+          <div class="home-success-author" data-i18n="success_author">Айдана, 11-сынып оқушысы</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="home-section reveal" id="faq">
+      <div class="home-section-head">
+        <h2 data-i18n-html="faq_title">Сұрақтар қалды <span>ма?</span></h2>
       </div>
 
       <div class="home-faq">
         <div class="home-faq-item">
           <button class="home-faq-q" type="button">
-            <span>Қолданушы келісімшартын қайдан көруге болады?</span>
-            <span>⌄</span>
+            <span data-i18n="faq_q1">Қолданушы келісімшартын қайдан көруге болады?</span>
+            <span class="faq-chevron">⌄</span>
           </button>
-          <div class="home-faq-a">
+          <div class="home-faq-a" data-i18n="faq_a1">
             Қолданушы келісімшарты сайттағы көмек немесе ақпарат бөлімінде беріледі.
           </div>
         </div>
 
         <div class="home-faq-item">
           <button class="home-faq-q" type="button">
-            <span>Байқау тесті ҰБТ сұрақтарымен сәйкес келе ме?</span>
-            <span>⌄</span>
+            <span data-i18n="faq_q2">Байқау тесті ҰБТ сұрақтарымен сәйкес келе ме?</span>
+            <span class="faq-chevron">⌄</span>
           </button>
-          <div class="home-faq-a">
+          <div class="home-faq-a" data-i18n="faq_a2">
             Иә, тест құрылымы мен мазмұны нақты емтихан форматына барынша жақын жасалған.
           </div>
         </div>
 
         <div class="home-faq-item">
           <button class="home-faq-q" type="button">
-            <span>Құпия сөзді ұмытып қалдым, не істеуге болады?</span>
-            <span>⌄</span>
+            <span data-i18n="faq_q3">Құпия сөзді ұмытып қалдым, не істеуге болады?</span>
+            <span class="faq-chevron">⌄</span>
           </button>
-          <div class="home-faq-a">
+          <div class="home-faq-a" data-i18n="faq_a3">
             Кіру бетінде құпия сөзді қалпына келтіру функциясын пайдалануға болады.
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CTA -->
-    <section class="home-section">
-      <div class="card" style="display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap;">
-        <div>
-          <h2>EduMentor AI-мен дайындалуға дайынсың ба?</h2>
-          <p class="muted">Қазіргі заманға сай, ыңғайлы және түсінікті оқу интерфейсі.</p>
+    <section class="home-section reveal">
+      <div class="home-cta-card">
+        <div class="home-cta-copy">
+          <div class="home-cta-badge" data-i18n="cta_badge">Дайындықты қазір баста</div>
+          <h2 data-i18n="cta_title">EduMentor AI-мен жүйелі дайындалуға дайынсың ба?</h2>
+          <p data-i18n="cta_desc">
+            Курс, quiz, AI көмекші және жеке прогресс бір жерде болғанда дайындық әлдеқайда жеңілдейді.
+          </p>
+
+          <div class="home-cta-tags">
+            <div class="home-cta-tag" data-i18n="cta_chip_1">Quiz</div>
+            <div class="home-cta-tag" data-i18n="cta_chip_2">AI Chat</div>
+            <div class="home-cta-tag" data-i18n="cta_chip_3">Прогресс</div>
+          </div>
         </div>
-        <a href="{% url 'register' %}" class="btn primary">Тіркелу</a>
+
+        <div class="home-cta-actions">
+          <a href="{% url 'quiz' %}" class="home-hero-btn" data-i18n="cta_btn_1">Quiz бастау</a>
+          <a href="{% url 'ai_chat' %}" class="home-hero-btn secondary" data-i18n="cta_btn_2">AI Chat ашу</a>
+        </div>
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="site-footer">
       <div class="footer">
         <div>
           <strong>EduMentor AI</strong><br>
-          <span>Ақылды оқу платформасы</span>
+          <span data-i18n="brand_sub">Ақылды оқу платформасы</span>
         </div>
       </div>
     </footer>
   </div>
 
-  <!-- AI CHAT BUTTON -->
   <a href="{% url 'ai_chat' %}" class="ai-chat-btn" title="AI Chat">
-    <span>AI чат</span>
+    <span data-i18n="ai_btn">AI чат</span>
   </a>
 
-  <script src="{% static 'accounts/script.js' %}"></script>
+  <script>
+    const translations = {
+      kk: {
+        lang_btn: "🌐 Қазақша",
+        brand_sub: "Ақылды оқу платформасы",
+        nav_home: "Басты бет",
+        nav_courses: "Курстар",
+        nav_guide: "Нұсқаулық",
+        nav_contact: "Байланыс",
+        nav_quiz: "Quiz",
+        btn_login: "Кіру",
+        btn_register: "Тіркелу",
+        btn_logout: "Шығу",
+
+        hero_badge: "EDUMENTOR AI",
+        hero_live: "AI • Quiz • Progress",
+        hero_title: "ҰБТ-ға <span>ақылды</span> дайындықты бүгін баста",
+        hero_desc: "EduMentor AI саған пәндерді түсінуге, тесттерді тапсыруға, прогресті бақылауға және AI көмекші арқылы тез үйренуге көмектеседі.",
+        hero_btn_1: "Курстарды көру",
+        hero_btn_2: "AI Chat ашу",
+        hero_note: "Жеке оқу траекториясы • AI көмекші • Байқау тесттері",
+        stat_1: "Пән қолжетімді",
+        stat_2: "Тест пен материал",
+        stat_3: "AI көмекші",
+        hero_float_title_1: "1200+ материал",
+        hero_float_text_1: "Курс, тест және конспект бір жерде",
+        hero_float_title_2: "AI жауап",
+        hero_float_text_2: "Орташа жауап уақыты 14 сек",
+        hero_float_title_3: "Апталық план",
+        hero_float_text_3: "3/4 мақсат орындалды",
+
+        live_1_title: "Қазір платформада",
+        live_1_text: "Оқушылар quiz, курс және AI Chat арқылы дайындалып жатыр.",
+        live_2_title: "Жеке трек",
+        live_2_text: "Жүйе әлсіз тақырыптарды тауып, сол бағытқа ұсыным береді.",
+        live_3_title: "Тез әрекет",
+        live_3_text: "1 минуттық диагностикадан кейін бірден келесі қадамды аласың.",
+
+        diag_badge: "60 секундтық диагностика",
+        diag_title: "Өз деңгейіңді <span>1 минутта</span> анықта",
+        diag_desc: "Қысқа тесттен өтіп, қай пәнде күштірек, қай тақырыпты қайталау керек екенін бірден көр.",
+        diag_tag_1: "Жылдам",
+        diag_tag_2: "Түсінікті",
+        diag_tag_3: "Жеке ұсыныс",
+        diag_btn_1: "Диагностикадан өту",
+        diag_btn_2: "AI-дан жоспар алу",
+        diag_side_title: "Үлгі нәтиже",
+        diag_score_text: "Жүйе нәтижеңе қарай келесі қадамды ұсынады және әлсіз тақырыптарды көрсетеді.",
+        diag_item_1: "Математика: функциялар мен пайыздарды қайталау",
+        diag_item_2: "Оқу сауаттылығы: мәтін идеясы жақсы",
+        diag_item_3: "Келесі қадам: 10 минуттық quiz + AI түсіндірме",
+
+        popular_courses: "Танымал <span>курстар</span>",
+        course_badge_1: "TOP",
+        course_badge_2: "Жаңа",
+        course_badge_3: "Ұсыныс",
+        course_1_title: "ҰБТ комбо 2025–2026",
+        course_1_reviews: "(789 пікір)",
+        course_1_lessons: "📘 1901 сабақ",
+        course_1_lang: "🌐 Қазақ тілі",
+        course_2_title: "ҰБТ шығармашылық комбо 2025–2026",
+        course_2_reviews: "(286 пікір)",
+        course_2_lessons: "📘 181 сабақ",
+        course_2_lang: "🌐 Қазақ тілі",
+        course_3_title: "ЕНТ КОМБО основные предметы",
+        course_3_reviews: "(8 пікір)",
+        course_3_lessons: "📘 213 сабақ",
+        course_3_lang: "🌐 Орыс тілі",
+        details_btn: "Толығырақ",
+
+        path_title: "Оқу жолы <span>4 қадамда</span>",
+        path_1_title: "Диагностика тапсыр",
+        path_1_text: "Алдымен қысқа тесттен өтіп, нақты деңгейіңді анықтайсың.",
+        path_2_title: "Әлсіз тақырыпты тап",
+        path_2_text: "Платформа қиын тақырыптарды бөліп көрсетеді.",
+        path_3_title: "AI-мен түсін",
+        path_3_text: "Түсінбеген сұрақты AI Chat арқылы қарапайым тілде меңгересің.",
+        path_4_title: "Прогресті бақыла",
+        path_4_text: "Рейтинг, статистика және жеке кабинет арқылы өсімді көресің.",
+
+        features_title: "Платформа <span>мүмкіндіктері</span>",
+        feature_1_title: "Адаптация",
+        feature_1_text: "Жүйе оқушы деңгейіне қарай материалдарды бейімдеп ұсынады.",
+        feature_2_title: "Бір платформа",
+        feature_2_text: "Барлық курс, тест, статистика және жеке кабинет бір жерде орналасады.",
+        feature_3_title: "Тікелей көмек",
+        feature_3_text: "AI мен мұғалім арқылы сұрақтарға жылдам жауап алуға болады.",
+        feature_4_title: "Байқау тесті",
+        feature_4_text: "ҰБТ форматына жақын тесттер арқылы өз деңгейіңді анықтайсың.",
+        feature_5_title: "Диагностика",
+        feature_5_text: "Әлсіз тақырыптарды анықтап, сол бағытта ұсыныстар береді.",
+        feature_6_title: "Рейтинг жүйесі",
+        feature_6_text: "Прогресті бақылауға және мотивацияны ұстап тұруға көмектеседі.",
+        feature_7_title: "Куратор көмегі",
+        feature_7_text: "Оқу процесінде бағыт беріп, қолдау көрсететін маман көмегі болады.",
+        feature_8_title: "Профориентация",
+        feature_8_text: "Мамандық таңдауға көмектесетін бағыттар мен кеңестер беріледі.",
+
+        success_title: "Нәтиже <span>тарихы</span>",
+        success_badge: "Оқушы тәжірибесі",
+        success_heading: "Қысқа жоспар, тұрақты практика және AI көмегі нәтиже береді",
+        success_desc: "Күн сайын аз уақытпен жүйелі дайындалу үлкен өсім әкеледі. Платформа тест, түсіндірме және прогресті бір жерге жинайды.",
+        success_metric_1: "Бастапқы баллдан соңғы нәтижеге өсу",
+        success_metric_2: "Аптасына орташа 4 қысқа quiz",
+        success_metric_3: "AI көмегімен түсіндірілген қате сұрақтар",
+        success_quote: "Маған ең ұнағаны — қай жерден қателескенімді бірден көріп, сол сұрақты AI арқылы түсіну мүмкіндігі болды.",
+        success_author: "Айдана, 11-сынып оқушысы",
+
+        faq_title: "Сұрақтар қалды <span>ма?</span>",
+        faq_q1: "Қолданушы келісімшартын қайдан көруге болады?",
+        faq_a1: "Қолданушы келісімшарты сайттағы көмек немесе ақпарат бөлімінде беріледі.",
+        faq_q2: "Байқау тесті ҰБТ сұрақтарымен сәйкес келе ме?",
+        faq_a2: "Иә, тест құрылымы мен мазмұны нақты емтихан форматына барынша жақын жасалған.",
+        faq_q3: "Құпия сөзді ұмытып қалдым, не істеуге болады?",
+        faq_a3: "Кіру бетінде құпия сөзді қалпына келтіру функциясын пайдалануға болады.",
+
+        cta_badge: "Дайындықты қазір баста",
+        cta_title: "EduMentor AI-мен жүйелі дайындалуға дайынсың ба?",
+        cta_desc: "Курс, quiz, AI көмекші және жеке прогресс бір жерде болғанда дайындық әлдеқайда жеңілдейді.",
+        cta_chip_1: "Quiz",
+        cta_chip_2: "AI Chat",
+        cta_chip_3: "Прогресс",
+        cta_btn_1: "Quiz бастау",
+        cta_btn_2: "AI Chat ашу",
+
+        ai_btn: "AI чат"
+      },
+
+      ru: {
+        lang_btn: "🌐 Русский",
+        brand_sub: "Умная образовательная платформа",
+        nav_home: "Главная",
+        nav_courses: "Курсы",
+        nav_guide: "Руководство",
+        nav_contact: "Контакты",
+        nav_quiz: "Quiz",
+        btn_login: "Войти",
+        btn_register: "Регистрация",
+        btn_logout: "Выйти",
+
+        hero_badge: "EDUMENTOR AI",
+        hero_live: "AI • Quiz • Progress",
+        hero_title: "Начни <span>умную</span> подготовку к ЕНТ уже сегодня",
+        hero_desc: "EduMentor AI помогает понимать предметы, проходить тесты, отслеживать прогресс и быстрее учиться с AI-помощником.",
+        hero_btn_1: "Смотреть курсы",
+        hero_btn_2: "Открыть AI Chat",
+        hero_note: "Индивидуальная траектория • AI помощник • Пробные тесты",
+        stat_1: "Доступных предметов",
+        stat_2: "Тестов и материалов",
+        stat_3: "AI помощник",
+        hero_float_title_1: "1200+ материалов",
+        hero_float_text_1: "Курсы, тесты и конспекты в одном месте",
+        hero_float_title_2: "AI ответ",
+        hero_float_text_2: "Среднее время ответа 14 сек",
+        hero_float_title_3: "Недельный план",
+        hero_float_text_3: "Выполнено 3/4 целей",
+
+        live_1_title: "Сейчас на платформе",
+        live_1_text: "Ученики готовятся через quiz, курсы и AI Chat.",
+        live_2_title: "Личный трек",
+        live_2_text: "Система находит слабые темы и даёт точные рекомендации.",
+        live_3_title: "Быстрый старт",
+        live_3_text: "После минутной диагностики ты сразу получаешь следующий шаг.",
+
+        diag_badge: "60-секундная диагностика",
+        diag_title: "Определи свой уровень <span>за 1 минуту</span>",
+        diag_desc: "Пройди короткий тест и сразу увидишь, в каком предмете ты сильнее, а какие темы нужно повторить.",
+        diag_tag_1: "Быстро",
+        diag_tag_2: "Понятно",
+        diag_tag_3: "Персонально",
+        diag_btn_1: "Пройти диагностику",
+        diag_btn_2: "Получить план от AI",
+        diag_side_title: "Пример результата",
+        diag_score_text: "Система подсказывает следующий шаг и показывает слабые темы на основе результата.",
+        diag_item_1: "Математика: повторить функции и проценты",
+        diag_item_2: "Читательская грамотность: хорошее понимание идеи текста",
+        diag_item_3: "Следующий шаг: 10-минутный quiz + объяснение от AI",
+
+        popular_courses: "Популярные <span>курсы</span>",
+        course_badge_1: "TOP",
+        course_badge_2: "Новое",
+        course_badge_3: "Рекомендуем",
+        course_1_title: "Комбо ЕНТ 2025–2026",
+        course_1_reviews: "(789 отзывов)",
+        course_1_lessons: "📘 1901 урок",
+        course_1_lang: "🌐 Казахский язык",
+        course_2_title: "Творческий комбо ЕНТ 2025–2026",
+        course_2_reviews: "(286 отзывов)",
+        course_2_lessons: "📘 181 урок",
+        course_2_lang: "🌐 Казахский язык",
+        course_3_title: "ЕНТ КОМБО основные предметы",
+        course_3_reviews: "(8 отзывов)",
+        course_3_lessons: "📘 213 уроков",
+        course_3_lang: "🌐 Русский язык",
+        details_btn: "Подробнее",
+
+        path_title: "Путь обучения <span>в 4 шага</span>",
+        path_1_title: "Пройди диагностику",
+        path_1_text: "Сначала короткий тест покажет твой текущий уровень.",
+        path_2_title: "Найди слабые темы",
+        path_2_text: "Платформа отдельно показывает сложные для тебя темы.",
+        path_3_title: "Разбери с AI",
+        path_3_text: "Непонятные вопросы можно разобрать в AI Chat простым языком.",
+        path_4_title: "Следи за прогрессом",
+        path_4_text: "Рост видно через рейтинг, статистику и личный кабинет.",
+
+        features_title: "Возможности <span>платформы</span>",
+        feature_1_title: "Адаптация",
+        feature_1_text: "Система подбирает материалы под уровень ученика.",
+        feature_2_title: "Одна платформа",
+        feature_2_text: "Все курсы, тесты, статистика и личный кабинет находятся в одном месте.",
+        feature_3_title: "Быстрая помощь",
+        feature_3_text: "Можно быстро получить ответ через AI и преподавателя.",
+        feature_4_title: "Пробный тест",
+        feature_4_text: "Тесты помогают определить уровень в формате, близком к ЕНТ.",
+        feature_5_title: "Диагностика",
+        feature_5_text: "Система выявляет слабые темы и даёт рекомендации.",
+        feature_6_title: "Рейтинговая система",
+        feature_6_text: "Помогает отслеживать прогресс и поддерживать мотивацию.",
+        feature_7_title: "Помощь куратора",
+        feature_7_text: "Есть поддержка специалиста, который помогает в процессе обучения.",
+        feature_8_title: "Профориентация",
+        feature_8_text: "Даются советы и направления для выбора будущей профессии.",
+
+        success_title: "История <span>результата</span>",
+        success_badge: "Опыт ученика",
+        success_heading: "Короткий план, регулярная практика и помощь AI дают результат",
+        success_desc: "Даже немного времени каждый день даёт сильный рост, если подготовка системная. Платформа объединяет тест, объяснение и прогресс в одном месте.",
+        success_metric_1: "Рост от стартового балла до итогового результата",
+        success_metric_2: "В среднем 4 коротких quiz в неделю",
+        success_metric_3: "Ошибки разобраны и объяснены через AI",
+        success_quote: "Больше всего мне понравилось то, что я сразу видел, где ошибаюсь, и мог сразу понять эту тему через AI.",
+        success_author: "Айдана, ученица 11 класса",
+
+        faq_title: "Остались <span>вопросы?</span>",
+        faq_q1: "Где можно посмотреть пользовательское соглашение?",
+        faq_a1: "Пользовательское соглашение находится в разделе помощи или информации на сайте.",
+        faq_q2: "Соответствует ли пробный тест вопросам ЕНТ?",
+        faq_a2: "Да, структура и содержание тестов максимально приближены к реальному экзамену.",
+        faq_q3: "Я забыл пароль, что делать?",
+        faq_a3: "На странице входа можно воспользоваться функцией восстановления пароля.",
+
+        cta_badge: "Начни подготовку сейчас",
+        cta_title: "Готов системно готовиться вместе с EduMentor AI?",
+        cta_desc: "Когда курсы, quiz, AI-помощник и личный прогресс собраны в одном месте, подготовка становится намного проще.",
+        cta_chip_1: "Quiz",
+        cta_chip_2: "AI Chat",
+        cta_chip_3: "Прогресс",
+        cta_btn_1: "Начать quiz",
+        cta_btn_2: "Открыть AI Chat",
+
+        ai_btn: "AI чат"
+      },
+
+      en: {
+        lang_btn: "🌐 English",
+        brand_sub: "Smart learning platform",
+        nav_home: "Home",
+        nav_courses: "Courses",
+        nav_guide: "Guide",
+        nav_contact: "Contact",
+        nav_quiz: "Quiz",
+        btn_login: "Login",
+        btn_register: "Register",
+        btn_logout: "Logout",
+
+        hero_badge: "EDUMENTOR AI",
+        hero_live: "AI • Quiz • Progress",
+        hero_title: "Start your <span>smart</span> exam preparation today",
+        hero_desc: "EduMentor AI helps you understand subjects, take tests, track progress, and learn faster with an AI assistant.",
+        hero_btn_1: "View courses",
+        hero_btn_2: "Open AI Chat",
+        hero_note: "Personal learning path • AI assistant • Mock tests",
+        stat_1: "Subjects available",
+        stat_2: "Tests and materials",
+        stat_3: "AI assistant",
+        hero_float_title_1: "1200+ materials",
+        hero_float_text_1: "Courses, tests, and notes in one place",
+        hero_float_title_2: "AI reply",
+        hero_float_text_2: "Average response time is 14 sec",
+        hero_float_title_3: "Weekly plan",
+        hero_float_text_3: "3/4 goals completed",
+
+        live_1_title: "On the platform now",
+        live_1_text: "Students are preparing through quiz, courses, and AI Chat.",
+        live_2_title: "Personal track",
+        live_2_text: "The system finds weak topics and gives targeted guidance.",
+        live_3_title: "Fast action",
+        live_3_text: "After a 1-minute diagnostic, you instantly get the next step.",
+
+        diag_badge: "60-second diagnostic",
+        diag_title: "Find your level <span>in 1 minute</span>",
+        diag_desc: "Take a short test and instantly see which subjects are stronger and which topics need review.",
+        diag_tag_1: "Fast",
+        diag_tag_2: "Clear",
+        diag_tag_3: "Personalized",
+        diag_btn_1: "Start diagnostic",
+        diag_btn_2: "Get a plan from AI",
+        diag_side_title: "Sample result",
+        diag_score_text: "The system suggests the next step and highlights weak topics based on your result.",
+        diag_item_1: "Math: review functions and percentages",
+        diag_item_2: "Reading literacy: strong understanding of the main idea",
+        diag_item_3: "Next step: 10-minute quiz + AI explanation",
+
+        popular_courses: "Popular <span>courses</span>",
+        course_badge_1: "TOP",
+        course_badge_2: "New",
+        course_badge_3: "Recommended",
+        course_1_title: "UNT Combo 2025–2026",
+        course_1_reviews: "(789 reviews)",
+        course_1_lessons: "📘 1901 lessons",
+        course_1_lang: "🌐 Kazakh language",
+        course_2_title: "Creative UNT Combo 2025–2026",
+        course_2_reviews: "(286 reviews)",
+        course_2_lessons: "📘 181 lessons",
+        course_2_lang: "🌐 Kazakh language",
+        course_3_title: "UNT COMBO core subjects",
+        course_3_reviews: "(8 reviews)",
+        course_3_lessons: "📘 213 lessons",
+        course_3_lang: "🌐 Russian language",
+        details_btn: "Learn more",
+
+        path_title: "Learning path <span>in 4 steps</span>",
+        path_1_title: "Take a diagnostic",
+        path_1_text: "A short test first shows your actual level.",
+        path_2_title: "Find weak topics",
+        path_2_text: "The platform clearly shows the topics that need work.",
+        path_3_title: "Understand with AI",
+        path_3_text: "You can review difficult questions in AI Chat using simple explanations.",
+        path_4_title: "Track progress",
+        path_4_text: "See your growth through ranking, statistics, and your personal dashboard.",
+
+        features_title: "Platform <span>features</span>",
+        feature_1_title: "Adaptation",
+        feature_1_text: "The system adapts materials according to the student's level.",
+        feature_2_title: "One platform",
+        feature_2_text: "All courses, tests, statistics, and personal account are in one place.",
+        feature_3_title: "Fast help",
+        feature_3_text: "You can quickly get answers through AI and a teacher.",
+        feature_4_title: "Mock tests",
+        feature_4_text: "Tests help determine your level in a format close to UNT.",
+        feature_5_title: "Diagnostics",
+        feature_5_text: "The system identifies weak topics and gives recommendations.",
+        feature_6_title: "Ranking system",
+        feature_6_text: "Helps track progress and maintain motivation.",
+        feature_7_title: "Curator support",
+        feature_7_text: "A specialist provides guidance and support during the learning process.",
+        feature_8_title: "Career guidance",
+        feature_8_text: "Recommendations and directions are provided for choosing a future profession.",
+
+        success_title: "Success <span>story</span>",
+        success_badge: "Student experience",
+        success_heading: "A short plan, steady practice, and AI support create real progress",
+        success_desc: "Even a small amount of time each day can produce major growth when preparation is consistent. The platform combines tests, explanations, and progress in one place.",
+        success_metric_1: "Growth from starting score to final result",
+        success_metric_2: "Average of 4 short quizzes per week",
+        success_metric_3: "Mistakes reviewed and explained with AI",
+        success_quote: "What I liked most was seeing my mistakes right away and then understanding that exact topic through AI.",
+        success_author: "Aidana, 11th grade student",
+
+        faq_title: "Still have <span>questions?</span>",
+        faq_q1: "Where can I find the user agreement?",
+        faq_a1: "The user agreement is available in the help or information section of the website.",
+        faq_q2: "Do the mock tests match the UNT format?",
+        faq_a2: "Yes, the structure and content are made as close as possible to the real exam.",
+        faq_q3: "I forgot my password, what should I do?",
+        faq_a3: "You can use the password recovery option on the login page.",
+
+        cta_badge: "Start preparing now",
+        cta_title: "Ready to prepare systematically with EduMentor AI?",
+        cta_desc: "When courses, quiz, AI support, and progress are all in one place, preparation becomes much easier.",
+        cta_chip_1: "Quiz",
+        cta_chip_2: "AI Chat",
+        cta_chip_3: "Progress",
+        cta_btn_1: "Start quiz",
+        cta_btn_2: "Open AI Chat",
+
+        ai_btn: "AI chat"
+      }
+    };
+
+    let currentLang = localStorage.getItem("siteLang") || "kk";
+    const langSwitch = document.getElementById("langSwitch");
+
+    function applyLanguage(lang) {
+      const dict = translations[lang];
+      if (!dict) return;
+
+      document.documentElement.lang = lang;
+
+      document.querySelectorAll("[data-i18n]").forEach((el) => {
+        const key = el.getAttribute("data-i18n");
+        if (!dict[key]) return;
+        el.textContent = dict[key];
+      });
+
+      document.querySelectorAll("[data-i18n-html]").forEach((el) => {
+        const key = el.getAttribute("data-i18n-html");
+        if (!dict[key]) return;
+        el.innerHTML = dict[key];
+      });
+
+      if (langSwitch) {
+        langSwitch.textContent = dict.lang_btn;
+      }
+
+      localStorage.setItem("siteLang", lang);
+    }
+
+    if (langSwitch) {
+      langSwitch.addEventListener("click", function () {
+        if (currentLang === "kk") currentLang = "ru";
+        else if (currentLang === "ru") currentLang = "en";
+        else currentLang = "kk";
+
+        applyLanguage(currentLang);
+      });
+    }
+
+    document.querySelectorAll(".home-faq-q").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const item = btn.closest(".home-faq-item");
+        item.classList.toggle("open");
+      });
+    });
+
+    document.querySelectorAll(".course-fav").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        btn.classList.toggle("active");
+        btn.textContent = btn.classList.contains("active") ? "♥" : "♡";
+      });
+    });
+
+    if ("IntersectionObserver" in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      document.querySelectorAll(".reveal").forEach((el) => observer.observe(el));
+    } else {
+      document.querySelectorAll(".reveal").forEach((el) => el.classList.add("visible"));
+    }
+
+    applyLanguage(currentLang);
+  </script>
 </body>
 </html>
