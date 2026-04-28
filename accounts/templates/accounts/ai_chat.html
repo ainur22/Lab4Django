@@ -259,13 +259,6 @@
       opacity: 0.55;
     }
 
-    .ai-icon-btn svg {
-      width: 18px;
-      height: 18px;
-      display: block;
-      stroke: currentColor;
-    }
-
     .ai-summary-row {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -514,12 +507,6 @@
       justify-content: center;
     }
 
-    .speak-btn svg {
-      width: 15px;
-      height: 15px;
-      stroke: currentColor;
-    }
-
     .ai-chat-form {
       margin-top: 14px;
       display: grid;
@@ -595,6 +582,12 @@
       cursor: pointer;
     }
 
+    .ai-send-btn:disabled,
+    .ai-voice-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
     .ai-typing {
       display: inline-flex;
       align-items: center;
@@ -625,7 +618,6 @@
       100% { transform: scale(1); }
     }
 
-    /* DARK MODE */
     body.theme-dark {
       --bg-1: #0f172a;
       --bg-2: #111827;
@@ -700,10 +692,6 @@
       color: #f3f7ff !important;
     }
 
-    body.theme-dark .ai-input-box input::placeholder {
-      color: #8fa3c2 !important;
-    }
-
     @media (max-width: 900px) {
       .ai-summary-row { grid-template-columns: 1fr; }
     }
@@ -724,11 +712,9 @@
       .ai-input-box input { height: 52px; }
       .ai-input-tip { display: none; }
       .ai-empty-card { padding: 22px 16px; }
-      .ai-char-count { right: 10px; bottom: -2px; }
     }
   </style>
 </head>
-
 <body class="ai-page {% if dark_mode %}theme-dark{% endif %}">
 
 <header class="topbar">
@@ -747,30 +733,23 @@
 
 <main class="ai-wrap">
   <section class="ai-chat-shell">
+
     <div class="ai-chat-head">
       <div class="ai-chat-head-left">
         <div class="ai-avatar">AI</div>
         <div>
           <div class="ai-chat-title">EduMentor AI Chat</div>
-          <div class="ai-chat-status" id="assistantStatus">Онлайн • жауап беруге дайын</div>
+          <div class="ai-chat-status" id="assistantStatus">Онлайн • Gemini дайын</div>
         </div>
       </div>
 
       <div class="ai-head-actions">
-        <button type="button" class="ai-icon-btn" id="clearChatBtn" aria-label="Чатты тазалау">
-          🧹 <span>Тазалау</span>
-        </button>
-
-        <button type="button" class="ai-icon-btn" id="toggleVoiceReadBtn" aria-label="Дауыстап оқу">
-          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-            <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-          </svg>
-          <span>Дауыс</span>
-        </button>
+        <button type="button" class="ai-icon-btn" id="clearChatBtn">🧹 <span>Тазалау</span></button>
+        <button type="button" class="ai-icon-btn" id="toggleVoiceReadBtn">🔊 <span>Дауыс</span></button>
       </div>
     </div>
-        <div class="ai-summary-row">
+
+    <div class="ai-summary-row">
       <div class="ai-summary-card">
         <div class="ai-summary-label">Қалай қолдану керек</div>
         <div class="ai-summary-value">Сұрақ жаз немесе микрофонды бас</div>
@@ -780,8 +759,8 @@
         <div class="ai-summary-value">Нақты пән мен тақырыпты көрсет</div>
       </div>
       <div class="ai-summary-card">
-        <div class="ai-summary-label">Жылдам әрекет</div>
-        <div class="ai-summary-value">Төмендегі көк батырмаларды қолдан</div>
+        <div class="ai-summary-label">AI модель</div>
+        <div class="ai-summary-value">Gemini арқылы жауап береді</div>
       </div>
     </div>
 
@@ -810,22 +789,20 @@
           <div class="ai-empty-emoji">🤖</div>
           <div class="ai-empty-title">Сұрағыңды қой</div>
           <div class="ai-empty-text">
-            Мысалы: «ҰБТ-ға 7 күндік оқу жоспарын құр», «Математика формулаларын түсіндір» немесе «Қазақстан тарихынан тестке көмектес».
+            Мысалы: «ҰБТ-ға 7 күндік оқу жоспарын құр» немесе «Математика формулаларын түсіндір».
           </div>
         </div>
       </div>
     </div>
 
     <form class="ai-chat-form" id="chatForm">
-      <button type="button" class="ai-voice-btn" id="voiceBtn" aria-label="Voice">
-        🎤
-      </button>
+      <button type="button" class="ai-voice-btn" id="voiceBtn">🎤</button>
 
       <div class="ai-input-box">
         <input
           type="text"
           id="chatInput"
-          placeholder="Сұрағыңды нақты жаз... Мысалы: ҰБТ математика формулалары"
+          placeholder="Сұрағыңды нақты жаз..."
           autocomplete="off"
           required
         />
@@ -835,6 +812,7 @@
 
       <button type="submit" class="ai-send-btn" id="sendBtn">Жіберу</button>
     </form>
+
   </section>
 </main>
 
@@ -853,18 +831,12 @@
   const charCount = document.getElementById("charCount");
   const subjectChips = document.querySelectorAll(".ai-subject-chip");
 
-  let recognition = null;
-  let isRecognizing = false;
-
-  let mediaRecorder = null;
-  let audioChunks = [];
-  let mediaStream = null;
-  let isRecording = false;
-
   let autoSpeakEnabled = true;
   let isSending = false;
   let selectedSubject = "";
   let lastUserMessage = "";
+  let recognition = null;
+  let isRecognizing = false;
 
   function getCookie(name) {
     const value = "; " + document.cookie;
@@ -886,9 +858,9 @@
   }
 
   function showError(text) {
-    if (!errorBox) return;
     errorBox.textContent = text;
     errorBox.style.display = "block";
+
     setTimeout(() => {
       errorBox.style.display = "none";
       errorBox.textContent = "";
@@ -929,7 +901,28 @@
     utterance.lang = "kk-KZ";
     utterance.rate = 1;
     utterance.pitch = 1;
+
     window.speechSynthesis.speak(utterance);
+  }
+
+  function appendUserMessage(text) {
+    hideEmptyState();
+
+    const div = document.createElement("div");
+    div.className = "ai-msg ai-msg-user";
+    div.innerHTML = `
+      <div class="ai-msg-body">
+        <div class="ai-bubble ai-bubble-user"></div>
+        <div class="ai-msg-meta">
+          <span>Сіз</span>
+          <span>${getCurrentTime()}</span>
+        </div>
+      </div>
+    `;
+
+    div.querySelector(".ai-bubble").textContent = text;
+    chatWindow.appendChild(div);
+    scrollChatBottom();
   }
 
   function appendBotMessage(text) {
@@ -943,47 +936,23 @@
         <div class="ai-bubble ai-bubble-bot"></div>
         <div class="ai-msg-meta">
           <span>EduMentor AI</span>
-          <span class="ai-msg-time">${getCurrentTime()}</span>
+          <span>${getCurrentTime()}</span>
         </div>
         <div class="ai-msg-actions">
           <button type="button" class="ai-mini-btn copy-btn">Көшіру</button>
           <button type="button" class="ai-mini-btn retry-btn">Қайта сұрау</button>
-          <button type="button" class="speak-btn" aria-label="Оқу">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M5 9v6h4l5 4V5L9 9H5Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-              <path d="M17 9.5C18.2 10.4 19 11.9 19 13.5C19 15.1 18.2 16.6 17 17.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-            </svg>
-          </button>
+          <button type="button" class="speak-btn" data-speak="">🔊</button>
         </div>
       </div>
     `;
+
     div.querySelector(".ai-bubble").textContent = text;
-    div.querySelector(".speak-btn").setAttribute("data-speak", text);
+    div.querySelector(".speak-btn").dataset.speak = text;
+
     chatWindow.appendChild(div);
     scrollChatBottom();
 
-    if (autoSpeakEnabled) {
-      speakText(text);
-    }
-  }
-
-  function appendUserMessage(text) {
-    hideEmptyState();
-
-    const div = document.createElement("div");
-    div.className = "ai-msg ai-msg-user";
-    div.innerHTML = `
-      <div class="ai-msg-body">
-        <div class="ai-bubble ai-bubble-user"></div>
-        <div class="ai-msg-meta">
-          <span>Сіз</span>
-          <span class="ai-msg-time">${getCurrentTime()}</span>
-        </div>
-      </div>
-    `;
-    div.querySelector(".ai-bubble").textContent = text;
-    chatWindow.appendChild(div);
-    scrollChatBottom();
+    if (autoSpeakEnabled) speakText(text);
   }
 
   function appendTypingRow() {
@@ -999,9 +968,10 @@
         <div class="ai-bubble ai-bubble-bot ai-typing">
           <span></span><span></span><span></span>
         </div>
-        <div class="ai-msg-meta">EduMentor AI жауап дайындап жатыр...</div>
+        <div class="ai-msg-meta">Gemini жауап дайындап жатыр...</div>
       </div>
     `;
+
     chatWindow.appendChild(div);
     scrollChatBottom();
   }
@@ -1011,27 +981,20 @@
     if (typingRow) typingRow.remove();
   }
 
-  function setVoiceState({ listening = false, status = "", hint = "" }) {
-    if (voiceBtn) {
-      voiceBtn.classList.toggle("is-listening", listening);
-    }
-    if (status && assistantStatus) assistantStatus.textContent = status;
-    if (hint && voiceHint) voiceHint.textContent = hint;
-  }
-
   function setSendingState(sending) {
     isSending = sending;
-    if (sendBtn) sendBtn.disabled = sending;
-    if (voiceBtn) voiceBtn.disabled = sending;
-    if (chatInput) chatInput.disabled = sending;
+    sendBtn.disabled = sending;
+    voiceBtn.disabled = sending;
+    chatInput.disabled = sending;
 
     if (sending) {
-      assistantStatus.textContent = "Жауап дайындап жатыр...";
+      assistantStatus.textContent = "Gemini жауап дайындап жатыр...";
       voiceHint.textContent = "Күте тұр";
     } else {
-      assistantStatus.textContent = "Онлайн • жауап беруге дайын";
+      assistantStatus.textContent = "Онлайн • Gemini дайын";
       voiceHint.textContent = "Enter — жіберу";
-      if (chatInput) chatInput.disabled = false;
+      chatInput.disabled = false;
+      chatInput.focus();
     }
   }
 
@@ -1040,11 +1003,6 @@
 
     if (!cleanText) {
       showError("Сұрақ бос болмауы керек.");
-      return;
-    }
-
-    if (cleanText.length < 2) {
-      showError("Сұрақ тым қысқа. Нақтырақ жаз.");
       return;
     }
 
@@ -1058,14 +1016,15 @@
     lastUserMessage = cleanText;
 
     let finalMessage = cleanText;
+
     if (selectedSubject) {
       finalMessage = `${selectedSubject} пәні бойынша: ${cleanText}`;
     }
 
     appendUserMessage(finalMessage);
+
     chatInput.value = "";
     updateCharCount();
-    chatInput.focus();
 
     appendTypingRow();
     setSendingState(true);
@@ -1083,15 +1042,17 @@
       });
 
       const data = await response.json();
+
       removeTypingRow();
 
       if (!response.ok || !data.ok) {
-        const msg = data.error || "Қате шықты. Кейінірек қайта байқап көр.";
+        const msg = data.error || "Қате шықты. Gemini жауап бере алмады.";
         appendBotMessage(msg);
         showError(msg);
       } else {
         appendBotMessage(data.answer || "Жауап бос қайтты.");
       }
+
     } catch (error) {
       removeTypingRow();
       appendBotMessage("Сервермен байланыс кезінде қате шықты.");
@@ -1107,6 +1068,7 @@
 
   function initSpeechRecognition() {
     const SR = detectSpeechRecognition();
+
     if (!SR) return false;
 
     recognition = new SR();
@@ -1119,11 +1081,9 @@
     recognition.onstart = () => {
       isRecognizing = true;
       finalTranscript = "";
-      setVoiceState({
-        listening: true,
-        status: "Тыңдап тұр...",
-        hint: "Сөйлей бер"
-      });
+      voiceBtn.classList.add("is-listening");
+      assistantStatus.textContent = "Тыңдап тұр...";
+      voiceHint.textContent = "Сөйлей бер";
     };
 
     recognition.onresult = (event) => {
@@ -1145,147 +1105,39 @@
 
     recognition.onerror = (event) => {
       isRecognizing = false;
-      setVoiceState({
-        listening: false,
-        status: "Voice қатесі: " + event.error,
-        hint: "Қайта байқап көр"
-      });
+      voiceBtn.classList.remove("is-listening");
+      assistantStatus.textContent = "Voice қатесі";
+      voiceHint.textContent = "Қайта байқап көр";
       showError("Дауысты оқу кезінде қате: " + event.error);
     };
 
     recognition.onend = () => {
       isRecognizing = false;
-      setVoiceState({
-        listening: false,
-        status: "Дауыстық мәтін дайын",
-        hint: "Enter — жіберу"
-      });
+      voiceBtn.classList.remove("is-listening");
+      assistantStatus.textContent = "Дауыстық мәтін дайын";
+      voiceHint.textContent = "Enter — жіберу";
       chatInput.focus();
     };
 
     return true;
   }
 
-  async function startBrowserRecognition() {
+  function handleVoiceClick() {
+    if (isSending) return;
+
     if (!recognition) {
       const ok = initSpeechRecognition();
-      if (!ok) return false;
+
+      if (!ok) {
+        showError("Бұл браузерде микрофон арқылы мәтін тану істемейді.");
+        return;
+      }
     }
 
     if (isRecognizing) {
       recognition.stop();
-      return true;
-    }
-
-    recognition.start();
-    return true;
-  }
-
-  async function startRecorderFallback() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      appendBotMessage("Бұл браузерде микрофон API қолжетімсіз.");
-      showError("Бұл браузерде микрофон API қолжетімсіз.");
-      return;
-    }
-
-    try {
-      mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      audioChunks = [];
-      mediaRecorder = new MediaRecorder(mediaStream, { mimeType: "audio/webm" });
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        try {
-          setVoiceState({
-            listening: false,
-            status: "Аудио жіберіліп жатыр...",
-            hint: "Күте тұр"
-          });
-
-          const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-          const formData = new FormData();
-          formData.append("audio", audioBlob, "voice.webm");
-
-          const response = await fetch("{% url 'transcribe_audio' %}", {
-            method: "POST",
-            headers: {
-              "X-CSRFToken": getCookie("csrftoken")
-            },
-            body: formData
-          });
-
-          const data = await response.json();
-
-          if (!response.ok || !data.ok) {
-            throw new Error(data.error || "Transcription failed");
-          }
-
-          chatInput.value = data.text || "";
-          updateCharCount();
-          assistantStatus.textContent = "Дауыстық мәтін дайын";
-          voiceHint.textContent = "Enter — жіберу";
-          chatInput.focus();
-
-        } catch (error) {
-          assistantStatus.textContent = "Қате шықты";
-          voiceHint.textContent = "Қайта байқап көр";
-          appendBotMessage("Voice transcription қатесі: " + error.message);
-          showError("Voice transcription қатесі: " + error.message);
-        } finally {
-          if (mediaStream) {
-            mediaStream.getTracks().forEach((track) => track.stop());
-            mediaStream = null;
-          }
-          isRecording = false;
-          if (voiceBtn) voiceBtn.classList.remove("is-listening");
-        }
-      };
-
-      mediaRecorder.start();
-      isRecording = true;
-
-      setVoiceState({
-        listening: true,
-        status: "Жазып жатыр...",
-        hint: "Тоқтату үшін қайта бас"
-      });
-
-    } catch (error) {
-      appendBotMessage("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
-      showError("Микрофонға рұқсат берілмеді немесе құрылғы табылмады.");
-      setVoiceState({
-        listening: false,
-        status: "Микрофон қолжетімсіз",
-        hint: "Рұқсат беріп қайта байқап көр"
-      });
-    }
-  }
-
-  function stopRecorderFallback() {
-    if (mediaRecorder && isRecording) {
-      mediaRecorder.stop();
-    }
-  }
-
-  async function handleVoiceClick() {
-    if (isSending) return;
-
-    const hasSpeechRecognition = !!detectSpeechRecognition();
-
-    if (hasSpeechRecognition) {
-      await startBrowserRecognition();
-      return;
-    }
-
-    if (isRecording) {
-      stopRecorderFallback();
     } else {
-      await startRecorderFallback();
+      recognition.start();
     }
   }
 
@@ -1303,39 +1155,32 @@
 
   chatInput.addEventListener("input", updateCharCount);
 
-  if (voiceBtn) {
-    voiceBtn.addEventListener("click", handleVoiceClick);
-  }
+  voiceBtn.addEventListener("click", handleVoiceClick);
 
-  if (toggleVoiceReadBtn) {
-    toggleVoiceReadBtn.addEventListener("click", function () {
-      autoSpeakEnabled = !autoSpeakEnabled;
-      this.classList.toggle("is-off", !autoSpeakEnabled);
+  toggleVoiceReadBtn.addEventListener("click", function () {
+    autoSpeakEnabled = !autoSpeakEnabled;
+    this.classList.toggle("is-off", !autoSpeakEnabled);
 
-      if (!autoSpeakEnabled && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
+    if (!autoSpeakEnabled && "speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
 
-      assistantStatus.textContent = autoSpeakEnabled
-        ? "Онлайн • дауыспен оқу қосулы"
-        : "Онлайн • дауыспен оқу сөндірулі";
-    });
-  }
+    assistantStatus.textContent = autoSpeakEnabled
+      ? "Онлайн • дауыспен оқу қосулы"
+      : "Онлайн • дауыспен оқу сөндірулі";
+  });
 
-  if (clearChatBtn) {
-    clearChatBtn.addEventListener("click", function () {
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-      removeTypingRow();
-      renderEmptyState("Жаңа чат басталды. Төменге сұрағыңды жаз.");
-      assistantStatus.textContent = "Онлайн • жаңа чат дайын";
-      voiceHint.textContent = "Enter — жіберу";
-      chatInput.value = "";
-      updateCharCount();
-      chatInput.focus();
-    });
-  }
+  clearChatBtn.addEventListener("click", function () {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    removeTypingRow();
+    renderEmptyState("Жаңа чат басталды. Төменге сұрағыңды жаз.");
+    chatInput.value = "";
+    updateCharCount();
+    chatInput.focus();
+  });
 
   subjectChips.forEach((chip) => {
     chip.addEventListener("click", function () {
@@ -1356,36 +1201,38 @@
 
   document.addEventListener("click", async function (e) {
     const copyBtn = e.target.closest(".copy-btn");
+
     if (copyBtn) {
       const msgBody = copyBtn.closest(".ai-msg-body");
       const bubble = msgBody.querySelector(".ai-bubble");
       const text = bubble ? bubble.textContent : "";
 
       if (text) {
-        try {
-          await navigator.clipboard.writeText(text);
-          copyBtn.textContent = "Көшірілді";
-          setTimeout(() => {
-            copyBtn.textContent = "Көшіру";
-          }, 1200);
-        } catch {
-          showError("Мәтінді көшіру мүмкін болмады.");
-        }
+        await navigator.clipboard.writeText(text);
+        copyBtn.textContent = "Көшірілді";
+
+        setTimeout(() => {
+          copyBtn.textContent = "Көшіру";
+        }, 1200);
       }
+
       return;
     }
 
     const retryBtn = e.target.closest(".retry-btn");
+
     if (retryBtn) {
       if (lastUserMessage) {
         sendMessage(lastUserMessage);
       } else {
         showError("Қайта жіберетін соңғы сұрақ жоқ.");
       }
+
       return;
     }
 
     const speakBtn = e.target.closest(".speak-btn");
+
     if (speakBtn) {
       const text = speakBtn.dataset.speak || "";
       if (text) speakText(text);
