@@ -110,10 +110,7 @@ def ai_web_chat_api(request):
                 "answer": "GEMINI_API_KEY орнатылмаған. Render Environment ішіне GEMINI_API_KEY қосыңыз."
             })
 
-        url = (
-    "https://generativelanguage.googleapis.com/v1beta/"
-    f"models/gemini-1.5-flash-latest:generateContent?key={api_key}"
-)
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={api_key}"
 
         payload = {
             "contents": [
