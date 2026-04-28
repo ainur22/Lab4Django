@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>EduMentor AI — Курстар</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
   <style>
     * {
       box-sizing: border-box;
@@ -13,112 +17,414 @@
       padding: 0;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(180deg, #f5f8ff 0%, #eef3fb 100%);
-      color: #1c2740;
+    :root {
+      --bg-1: #eef4ff;
+      --bg-2: #f8fbff;
+      --bg-3: #eefbf5;
+      --card: rgba(255, 255, 255, 0.94);
+      --line: #dfe8f5;
+      --text: #22324d;
+      --muted: #7386a6;
+      --blue-1: #2563eb;
+      --blue-2: #60a5fa;
+      --blue-soft: #edf5ff;
+      --shadow: 0 20px 50px rgba(78, 98, 135, 0.10);
+      --shadow-soft: 0 12px 26px rgba(37, 99, 235, 0.12);
+      --radius-xl: 28px;
+      --radius-lg: 22px;
+      --radius-md: 18px;
+      --wrap: min(1340px, calc(100% - 28px));
     }
 
-    .courses-header {
-      background: rgba(255, 255, 255, 0.94);
-      border-bottom: 1px solid #e2e9f3;
+    html,
+    body {
+      font-family: "Inter", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 52%, var(--bg-3) 100%);
+      overflow-x: hidden;
+    }
+
+    body.courses-page-body {
+      min-height: 100vh;
+      position: relative;
+    }
+
+    body.courses-page-body::before,
+    body.courses-page-body::after {
+      content: "";
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body.courses-page-body::before {
+      width: 320px;
+      height: 320px;
+      top: -90px;
+      right: -100px;
+      background: rgba(59, 130, 246, 0.14);
+    }
+
+    body.courses-page-body::after {
+      width: 240px;
+      height: 240px;
+      left: -70px;
+      bottom: -70px;
+      background: rgba(16, 185, 129, 0.10);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    button,
+    input {
+      font-family: inherit;
+    }
+
+    .container {
+      width: min(1380px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .topbar-new {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid #eaf0fb;
       position: sticky;
       top: 0;
-      z-index: 100;
-      backdrop-filter: blur(12px);
+      z-index: 1000;
     }
 
-    .courses-navbar {
-      max-width: 1380px;
-      margin: 0 auto;
-      padding: 22px 28px;
+    .topbar-new-wrap {
+      min-height: 98px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 28px;
+      gap: 20px;
     }
 
-    .courses-brand {
+    .brand-new {
       display: flex;
       align-items: center;
       gap: 14px;
       flex-shrink: 0;
     }
 
-    .courses-logo {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, #0e1830, #1a2a4d);
-      color: white;
+    .brand-new-logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #5f98ff, #4a86f7);
+      color: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 28px;
       font-weight: 800;
+      box-shadow: 0 10px 22px rgba(74, 134, 247, 0.18);
     }
 
-    .courses-brand-title {
-      font-size: 19px;
+    .brand-new-title {
+      font-size: 18px;
       font-weight: 800;
-      color: #152038;
+      color: #243b63;
+      line-height: 1.1;
     }
 
-    .courses-brand-sub {
-      font-size: 14px;
-      color: #74829a;
+    .brand-new-subtitle {
+      font-size: 13px;
+      color: #8ca0c0;
       margin-top: 4px;
+      line-height: 1.1;
     }
 
-    .courses-nav {
+    .main-nav-new {
       display: flex;
       align-items: center;
-      gap: 34px;
-      flex-wrap: wrap;
+      justify-content: center;
+      gap: 30px;
+      flex: 1;
     }
 
-    .courses-nav a {
-      text-decoration: none;
-      color: #33425c;
+    .nav-link-new {
+      position: relative;
+      color: #455f8e;
       font-size: 16px;
       font-weight: 700;
-      position: relative;
-      padding: 8px 0;
+      padding: 10px 0;
+      transition: 0.2s ease;
+      white-space: nowrap;
     }
 
-    .courses-nav a.active {
-      color: #245bdb;
+    .nav-link-new:hover {
+      color: #2f5fb8;
     }
 
-    .courses-nav a.active::after {
+    .nav-link-new.active {
+      color: #2f5fb8;
+    }
+
+    .nav-link-new.active::after {
       content: "";
       position: absolute;
       left: 0;
-      bottom: -8px;
+      bottom: -6px;
       width: 100%;
       height: 4px;
       border-radius: 999px;
-      background: #245bdb;
+      background: #4a86f7;
+    }
+
+    .topbar-new-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .lang-pill-new {
+      border: 1px solid #dbe7fb;
+      background: #f7fbff;
+      color: #4f6793;
+      height: 44px;
+      padding: 0 16px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .lang-pill-new:hover {
+      background: #eaf2ff;
+      transform: translateY(-1px);
+    }
+
+    .profile-pill-new {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #ffffff;
+      border: 1px solid #dfe9fb;
+      height: 52px;
+      padding: 0 14px 0 10px;
+      border-radius: 999px;
+      color: #2c4570;
+      font-size: 15px;
+      font-weight: 800;
+      box-shadow: 0 6px 16px rgba(60, 92, 160, 0.06);
+      transition: 0.2s ease;
+    }
+
+    .profile-pill-new:hover {
+      transform: translateY(-1px);
+    }
+
+    .profile-pill-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+
+    .profile-pill-fallback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #5f98ff, #4a86f7);
+      color: white;
+      font-weight: 800;
+    }
+
+    .logout-btn-new {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 52px;
+      padding: 0 24px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #5f98ff, #4a86f7);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      box-shadow: 0 10px 22px rgba(74, 134, 247, 0.20);
+      transition: 0.2s ease;
+    }
+
+    .logout-btn-new:hover {
+      transform: translateY(-1px);
     }
 
     .courses-page {
-      max-width: 1380px;
-      margin: 0 auto;
-      padding: 34px 28px 50px;
+      position: relative;
+      z-index: 1;
+      width: var(--wrap);
+      margin: 24px auto 50px;
     }
 
-    .courses-layout {
+    .courses-hero,
+    .compact-note,
+    .course-grid-card,
+    .material-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+    }
+
+    .courses-hero {
+      border-radius: 32px;
+      padding: 28px;
+      margin-bottom: 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .courses-hero::after {
+      content: "";
+      position: absolute;
+      right: -70px;
+      top: -70px;
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(96,165,250,.18) 0%, rgba(96,165,250,0) 70%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      width: fit-content;
+      min-height: 38px;
+      padding: 0 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #edf4ff 0%, #dceaff 100%);
+      color: var(--blue-1);
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 14px;
+      border: 1px solid #d4e4ff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .courses-hero h1 {
+      font-size: clamp(34px, 5vw, 54px);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      color: #233454;
+      margin-bottom: 14px;
+      max-width: 760px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .courses-hero p {
+      max-width: 620px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stats {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 310px;
-      gap: 28px;
-      align-items: start;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-stat {
+      background: rgba(255,255,255,0.82);
+      border: 1px solid #e3edf8;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .hero-stat strong {
+      display: block;
+      font-size: 24px;
+      color: #24406f;
+      font-weight: 900;
+      margin-bottom: 6px;
+    }
+
+    .hero-stat span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.5;
+    }
+
+    .inner-tabs {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .inner-tab-btn {
+      border: 1px solid #cdd8e8;
+      background: #fff;
+      color: #36455f;
+      padding: 12px 20px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .inner-tab-btn.active,
+    .inner-tab-btn:hover {
+      background: var(--blue-soft);
+      color: var(--blue-1);
+      border-color: #bfd2ff;
+    }
+
+    .section-panel {
+      display: none;
+    }
+
+    .section-panel.active {
+      display: block;
+    }
+
+    .panel-tools {
+      display: grid;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .compact-note {
+      border-radius: 22px;
+      padding: 18px 20px;
+      margin-bottom: 18px;
+      color: #5e7394;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .compact-note strong {
+      color: #23406c;
+      font-weight: 800;
     }
 
     .courses-search {
-      height: 64px;
-      border-radius: 20px;
+      height: 62px;
+      border-radius: 18px;
       border: 1px solid #dde6f2;
-      background: rgba(255, 255, 255, 0.96);
+      background: var(--card);
       display: flex;
       align-items: center;
       gap: 12px;
@@ -140,22 +446,22 @@
     }
 
     .courses-search-icon {
-      font-size: 26px;
+      font-size: 24px;
       color: #7f8ba1;
+      flex-shrink: 0;
     }
 
     .courses-tags {
       display: flex;
       gap: 12px;
       flex-wrap: wrap;
-      margin: 18px 0 26px;
     }
 
     .courses-tag {
       border: 1px solid #cdd8e8;
       background: #fff;
       color: #36455f;
-      padding: 12px 20px;
+      padding: 12px 18px;
       border-radius: 999px;
       font-size: 15px;
       font-weight: 700;
@@ -165,67 +471,94 @@
 
     .courses-tag.active,
     .courses-tag:hover {
-      background: #edf4ff;
-      color: #245bdb;
+      background: var(--blue-soft);
+      color: var(--blue-1);
       border-color: #bfd2ff;
     }
 
-    .courses-found {
-      margin-bottom: 20px;
-      font-size: 28px;
+    .section-title {
+      margin-bottom: 8px;
+      font-size: 30px;
       color: #22314d;
+      font-weight: 800;
     }
 
-    .courses-list {
+    .section-subtext {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+      margin-bottom: 18px;
+      max-width: 720px;
+    }
+
+    .cards-grid,
+    .materials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 20px;
+    }
+
+    .course-grid-card,
+    .material-card {
+      border-radius: 24px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 22px;
+      gap: 14px;
+      transition: 0.2s ease;
+      background: linear-gradient(180deg, rgba(255,255,255,0.97), rgba(247,251,255,0.93));
     }
 
-    .course-card {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #e2e9f3;
-      border-radius: 28px;
-      padding: 24px;
-      display: grid;
-      grid-template-columns: 220px minmax(0, 1fr);
-      gap: 24px;
-      box-shadow: 0 18px 40px rgba(22, 38, 79, 0.06);
+    .course-grid-card:hover,
+    .material-card:hover {
+      transform: translateY(-2px);
     }
 
-    .course-image {
-      width: 100%;
-      height: 210px;
-      border-radius: 24px;
-      background: linear-gradient(135deg, #eef4ff, #e8eefb);
+    .course-grid-top,
+    .material-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .course-icon-box {
+      width: 62px;
+      height: 62px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #eef5ff, #dbeafe);
+      border: 1px solid #dbe7f8;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      font-size: 28px;
+      flex-shrink: 0;
     }
 
-    .course-placeholder {
-      font-size: 68px;
-    }
-
-    .course-badges {
+    .course-grid-badges {
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
-      margin-bottom: 10px;
+      margin-top: 2px;
     }
 
-    .course-badge {
+    .course-badge,
+    .material-format,
+    .material-level {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 36px;
-      padding: 8px 16px;
+      min-height: 32px;
+      padding: 6px 12px;
       border-radius: 999px;
-      background: #edf4ff;
-      color: #245bdb;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 800;
+    }
+
+    .course-badge,
+    .material-format {
+      background: var(--blue-soft);
+      color: var(--blue-1);
     }
 
     .course-badge.light {
@@ -233,300 +566,1625 @@
       color: #62728c;
     }
 
-    .course-content h3 {
-      margin-bottom: 14px;
-      font-size: 32px;
+    .material-level {
+      background: #ecfdf5;
+      color: #15803d;
+    }
+
+    .course-grid-card h3,
+    .material-card h3 {
+      font-size: 26px;
       line-height: 1.15;
       color: #1a2640;
+      font-weight: 800;
     }
 
-    .course-info {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 14px;
-      margin-bottom: 16px;
-    }
-
-    .course-info div {
-      background: #f8fbff;
-      border: 1px solid #e6edf8;
-      border-radius: 18px;
-      padding: 14px 16px;
-    }
-
-    .course-info strong {
-      display: block;
-      font-size: 14px;
-      color: #24314d;
-      margin-bottom: 6px;
-    }
-
-    .course-info span {
-      color: #667790;
+    .course-grid-card p,
+    .material-card p {
       font-size: 15px;
-    }
-
-    .course-content p {
-      margin-bottom: 20px;
-      font-size: 16px;
       line-height: 1.7;
       color: #71809a;
     }
 
-    .course-btn {
+    .course-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .course-meta-grid div {
+      background: #f8fbff;
+      border: 1px solid #e6edf8;
+      border-radius: 16px;
+      padding: 12px 14px;
+    }
+
+    .course-meta-grid strong {
+      display: block;
+      font-size: 13px;
+      color: #24314d;
+      margin-bottom: 6px;
+    }
+
+    .course-meta-grid span {
+      color: #667790;
+      font-size: 14px;
+    }
+
+    .course-focus-list,
+    .material-tags {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .course-focus-chip,
+    .material-tag {
+      min-height: 34px;
+      padding: 0 12px;
+      border-radius: 999px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 160px;
-      height: 52px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, #2d66f6, #1849d6);
-      color: #fff;
-      text-decoration: none;
-      font-size: 17px;
-      font-weight: 800;
-      box-shadow: 0 14px 30px rgba(45, 102, 246, 0.22);
-      transition: 0.2s ease;
+      background: #f8fbff;
+      border: 1px solid #e6edf8;
+      color: #5f728e;
+      font-size: 12px;
+      font-weight: 700;
     }
 
-    .course-btn:hover {
+    .course-detail-panel,
+    .material-extra {
+      display: none;
+      gap: 10px;
+      background: #f8fbff;
+      border: 1px solid #e6edf8;
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .course-grid-card.expanded .course-detail-panel,
+    .material-card.expanded .material-extra {
+      display: grid;
+    }
+
+    .course-detail-row,
+    .material-extra-item {
+      display: grid;
+      gap: 4px;
+    }
+
+    .course-detail-row strong,
+    .material-extra-item strong {
+      color: #24406f;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .course-detail-row span,
+    .material-extra-item span {
+      color: #60738f;
+      font-size: 14px;
+      line-height: 1.65;
+    }
+
+    .course-actions,
+    .material-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .course-btn,
+    .course-btn-outline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 145px;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 800;
+      transition: 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .course-btn {
+      background: linear-gradient(135deg, #2d66f6, #1849d6);
+      color: #fff;
+      box-shadow: 0 14px 30px rgba(45, 102, 246, 0.22);
+    }
+
+    .course-btn-outline {
+      background: #f7fbff;
+      border: 1px solid #dbe7f6;
+      color: #43618f;
+    }
+
+    .course-btn:hover,
+    .course-btn-outline:hover {
       transform: translateY(-2px);
     }
 
-    .courses-sidebar {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .sidebar-card {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #e2e9f3;
-      border-radius: 24px;
+    .empty-state {
+      background: var(--card);
+      border: 1px dashed #cfdcee;
+      border-radius: 22px;
       padding: 22px;
-      box-shadow: 0 12px 30px rgba(22, 38, 79, 0.05);
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+      display: none;
+      margin-top: 18px;
     }
 
-    .sidebar-card h4 {
-      margin-bottom: 18px;
-      font-size: 22px;
-      color: #1d2942;
-    }
-
-    .sidebar-link {
-      display: block;
-      text-decoration: none;
-      color: #4d5d77;
-      font-size: 17px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      margin-bottom: 8px;
-      transition: 0.2s ease;
-    }
-
-    .sidebar-link.active,
-    .sidebar-link:hover {
-      background: #edf4ff;
-      color: #245bdb;
-    }
-
-    .sidebar-check {
-      display: flex;
+    .ai-chat-btn {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 120;
+      min-width: 118px;
+      height: 56px;
+      padding: 0 24px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: #fff;
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 14px;
+      justify-content: center;
       font-size: 17px;
-      color: #4d5d77;
+      font-weight: 800;
+      box-shadow: 0 16px 30px rgba(37, 99, 235, 0.22);
     }
 
-    .sidebar-check input {
-      width: 18px;
-      height: 18px;
-      accent-color: #2d66f6;
+
+
+    /* DARK MODE: settings арқылы қосылады */
+    body.theme-dark {
+      --bg-1: #0f172a;
+      --bg-2: #111827;
+      --bg-3: #172033;
+      --card: rgba(17, 24, 39, 0.92);
+      --line: #2d3b55;
+      --text: #e5eefc;
+      --muted: #9fb0cc;
+      --blue-soft: #17345f;
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.32);
+      --shadow-soft: 0 12px 26px rgba(37, 99, 235, 0.22);
+    }
+
+    body.theme-dark .topbar-new {
+      background: rgba(15, 23, 42, 0.92);
+      border-bottom-color: rgba(148, 163, 184, 0.16);
+    }
+
+    body.theme-dark .courses-hero,
+    body.theme-dark .compact-note,
+    body.theme-dark .course-grid-card,
+    body.theme-dark .material-card,
+    body.theme-dark .courses-search,
+    body.theme-dark .hero-stat,
+    body.theme-dark .course-meta-grid div,
+    body.theme-dark .course-detail-panel,
+    body.theme-dark .material-extra,
+    body.theme-dark .course-focus-chip,
+    body.theme-dark .material-tag,
+    body.theme-dark .inner-tab-btn,
+    body.theme-dark .courses-tag,
+    body.theme-dark .profile-pill-new,
+    body.theme-dark .lang-pill-new,
+    body.theme-dark .course-btn-outline,
+    body.theme-dark .empty-state {
+      background: rgba(17, 24, 39, 0.92) !important;
+      border-color: #2d3b55 !important;
+      color: #dbe7ff !important;
+    }
+
+    body.theme-dark .course-grid-card,
+    body.theme-dark .material-card {
+      background: linear-gradient(180deg, rgba(17,24,39,0.96), rgba(24,35,54,0.94)) !important;
+    }
+
+    body.theme-dark .courses-hero {
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,.18), transparent 30%),
+        radial-gradient(circle at bottom left, rgba(34,197,94,.12), transparent 28%),
+        linear-gradient(135deg, rgba(17,24,39,.96), rgba(24,35,54,.94)) !important;
+    }
+
+    body.theme-dark .brand-new-title,
+    body.theme-dark .courses-hero h1,
+    body.theme-dark .section-title,
+    body.theme-dark .course-grid-card h3,
+    body.theme-dark .material-card h3,
+    body.theme-dark .hero-stat strong,
+    body.theme-dark .compact-note strong,
+    body.theme-dark .course-detail-row strong,
+    body.theme-dark .material-extra-item strong,
+    body.theme-dark .course-meta-grid strong {
+      color: #f3f7ff !important;
+    }
+
+    body.theme-dark .brand-new-subtitle,
+    body.theme-dark .nav-link-new,
+    body.theme-dark .courses-hero p,
+    body.theme-dark .section-subtext,
+    body.theme-dark .course-grid-card p,
+    body.theme-dark .material-card p,
+    body.theme-dark .hero-stat span,
+    body.theme-dark .compact-note,
+    body.theme-dark .course-detail-row span,
+    body.theme-dark .material-extra-item span,
+    body.theme-dark .course-meta-grid span,
+    body.theme-dark .course-focus-chip,
+    body.theme-dark .material-tag {
+      color: #9fb0cc !important;
+    }
+
+    body.theme-dark .courses-search input { color: #f3f7ff; }
+    body.theme-dark .courses-search input::placeholder { color: #8fa3c2; }
+
+    body.theme-dark .inner-tab-btn.active,
+    body.theme-dark .inner-tab-btn:hover,
+    body.theme-dark .courses-tag.active,
+    body.theme-dark .courses-tag:hover,
+    body.theme-dark .nav-link-new:hover,
+    body.theme-dark .nav-link-new.active,
+    body.theme-dark .lang-pill-new:hover,
+    body.theme-dark .profile-pill-new:hover,
+    body.theme-dark .course-btn-outline:hover {
+      background: #17345f !important;
+      color: #dbe7ff !important;
+      border-color: #3b82f6 !important;
+    }
+
+    body.theme-dark .nav-link-new.active::after { background: #60a5fa; }
+
+    body.theme-dark .course-icon-box {
+      background: linear-gradient(135deg, #132845, #17345f) !important;
+      border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .material-level { background: #123524 !important; color: #86efac !important; }
+
+    body.theme-dark .course-badge,
+    body.theme-dark .material-format,
+    body.theme-dark .hero-badge {
+      background: #17345f !important;
+      color: #dbe7ff !important;
+      border-color: #3b82f6 !important;
+    }
+
+    body.theme-dark .course-badge.light {
+      background: #1b2a44 !important;
+      color: #c8d6ec !important;
     }
 
     @media (max-width: 1100px) {
-      .course-card {
-        grid-template-columns: 1fr;
+      .topbar-new-wrap {
+        flex-wrap: wrap;
+        padding: 14px 0;
       }
 
-      .course-info {
-        grid-template-columns: 1fr 1fr;
+      .main-nav-new {
+        order: 3;
+        width: 100%;
+        justify-content: flex-start;
+        overflow-x: auto;
+        padding-bottom: 6px;
+        gap: 18px;
       }
 
-      .courses-layout {
-        grid-template-columns: 1fr;
+      .topbar-new-actions {
+        margin-left: auto;
+      }
+
+      .hero-stats,
+      .cards-grid,
+      .materials-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
     }
 
     @media (max-width: 760px) {
-      .courses-navbar {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .courses-nav {
-        gap: 18px;
-      }
-
       .courses-page {
-        padding: 20px 14px 30px;
+        width: min(100% - 16px, 1000px);
+        margin-top: 16px;
       }
 
-      .course-info {
+      .courses-hero {
+        padding: 20px;
+        border-radius: 24px;
+      }
+
+      .hero-stats,
+      .cards-grid,
+      .materials-grid,
+      .course-meta-grid {
         grid-template-columns: 1fr;
       }
 
-      .course-content h3 {
+      .section-title {
         font-size: 24px;
+      }
+
+      .course-grid-card h3,
+      .material-card h3 {
+        font-size: 22px;
+      }
+
+      .course-actions,
+      .material-actions {
+        flex-direction: column;
+      }
+
+      .course-btn,
+      .course-btn-outline {
+        width: 100%;
+      }
+
+      .ai-chat-btn {
+        right: 14px;
+        bottom: 14px;
+        min-width: 102px;
+        height: 50px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .brand-new-logo {
+        width: 54px;
+        height: 54px;
+        font-size: 24px;
+      }
+
+      .brand-new-title {
+        font-size: 16px;
+      }
+
+      .logout-btn-new,
+      .profile-pill-new {
+        height: 46px;
+      }
+
+      .lang-pill-new {
+        height: 40px;
+        padding: 0 12px;
+        font-size: 13px;
       }
     }
   </style>
 </head>
-<body>
+<body class="courses-page-body {% if dark_mode %}theme-dark{% endif %}" data-site-language="{{ site_language|default:'kk' }}">
 
-<header class="courses-header">
-  <div class="courses-navbar">
-    <div class="courses-brand">
-      <div class="courses-logo">EM</div>
-      <div>
-        <div class="courses-brand-title">EduMentor AI</div>
-        <div class="courses-brand-sub">Ақылды оқу платформасы</div>
+<header class="topbar-new">
+  <div class="container topbar-new-wrap">
+    <a href="{% url 'home' %}" class="brand-new">
+      <div class="brand-new-logo">EM</div>
+      <div class="brand-new-text">
+        <div class="brand-new-title">EduMentor AI</div>
+        <div class="brand-new-subtitle" data-i18n="brand_sub">Ақылды оқу платформасы</div>
       </div>
-    </div>
+    </a>
 
-    <nav class="courses-nav">
-      <a href="{% url 'home' %}">Басты бет</a>
-      <a href="{% url 'courses' %}" class="active">Курстар</a>
-      <a href="/ai-chat/">Сұрақ-жауап</a>
-      <a href="{% url 'guide' %}">Нұсқаулық</a>
-      <a href="{% url 'contact' %}">Байланыс</a>
-      <a href="/profile/">Профиль</a>
-      <a href="{% url 'progress' %}">Прогресс</a>
-      <a href="{% url 'quiz' %}">Quiz</a>
+    <nav class="main-nav-new">
+      <a href="{% url 'home' %}" class="nav-link-new" data-i18n="nav_home">Басты бет</a>
+      <a href="{% url 'courses' %}" class="nav-link-new active" data-i18n="nav_courses">Курстар</a>
+      <a href="{% url 'guide' %}" class="nav-link-new" data-i18n="nav_guide">Нұсқаулық</a>
+      <a href="{% url 'contact' %}" class="nav-link-new" data-i18n="nav_contact">Байланыс</a>
+      <a href="{% url 'quiz' %}" class="nav-link-new" data-i18n="nav_quiz">Quiz</a>
     </nav>
+
+    <div class="topbar-new-actions">
+      <button class="lang-pill-new" id="langSwitch" type="button">🌐 Қазақша</button>
+
+      {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}" class="profile-pill-new">
+          {% if user.profile_image %}
+            <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="profile-pill-avatar">
+          {% else %}
+            <div class="profile-pill-avatar profile-pill-fallback">
+              {{ user.username|default:"U"|first|upper }}
+            </div>
+          {% endif %}
+          <span data-i18n="profile_btn">Профиль</span>
+        </a>
+        <a href="{% url 'logout' %}" class="logout-btn-new" data-i18n="logout_btn">Шығу</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="profile-pill-new">
+          <span data-i18n="btn_login">Кіру</span>
+        </a>
+        <a href="{% url 'register' %}" class="logout-btn-new" data-i18n="btn_register">Тіркелу</a>
+      {% endif %}
+    </div>
   </div>
 </header>
 
 <main class="courses-page">
-  <section class="courses-layout">
 
-    <div class="courses-main">
+  <section class="courses-hero">
+    <div class="hero-badge" data-i18n="hero_badge">EduMentor AI</div>
+    <h1 data-i18n="hero_title">Курстар мен материалдар</h1>
+    <p data-i18n="hero_desc">Пәнді таңда. Қысқа ақпаратты көр. Дайын болсаң, Quiz-ке өт.</p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <strong>9+</strong>
+        <span data-i18n="hero_stat_1">Қолжетімді пән</span>
+      </div>
+      <div class="hero-stat">
+        <strong>48+</strong>
+        <span data-i18n="hero_stat_2">Материал</span>
+      </div>
+      <div class="hero-stat">
+        <strong>24/7</strong>
+        <span data-i18n="hero_stat_3">AI көмекші</span>
+      </div>
+      <div class="hero-stat">
+        <strong>3</strong>
+        <span data-i18n="hero_stat_4">Тіл</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="inner-tabs">
+    <button class="inner-tab-btn active" type="button" data-panel="coursesPanel" data-i18n="tab_courses">Курстар</button>
+    <button class="inner-tab-btn" type="button" data-panel="materialsPanel" data-i18n="tab_materials">Материалдар</button>
+  </div>
+
+  <section class="section-panel active" id="coursesPanel">
+    <div class="compact-note"><strong data-i18n="note_courses_title">Қарапайым логика:</strong> <span data-i18n="note_courses_text">алдымен курс туралы оқы, кейін Quiz-ке өт.</span></div>
+
+    <div class="panel-tools">
       <div class="courses-search">
         <span class="courses-search-icon">⌕</span>
-        <input type="text" placeholder="Сіз қандай курсты іздеп жүрсіз?" />
+        <input type="text" id="courseSearch" data-i18n-placeholder="search_placeholder" placeholder="Сіз қандай курсты іздеп жүрсіз?" />
       </div>
 
-      <div class="courses-tags">
-        <button class="courses-tag active" type="button">Барлығы</button>
-        <button class="courses-tag" type="button">ҰБТ</button>
-        <button class="courses-tag" type="button">Мектеп пәндері</button>
-        <button class="courses-tag" type="button">Жаңа</button>
-      </div>
-
-      <h2 class="courses-found">Табылған курстар</h2>
-
-      <div class="courses-list">
-
-        <article class="course-card">
-          <div class="course-image"><div class="course-placeholder">💻</div></div>
-          <div class="course-content">
-            <div class="course-badges">
-              <span class="course-badge">ҰБТ</span>
-              <span class="course-badge light">Негізгі курс</span>
-            </div>
-            <h3>Информатика</h3>
-            <div class="course-info">
-              <div><strong>Сабақтар</strong><span>12 бөлім</span></div>
-              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
-              <div><strong>Формат</strong><span>Теория + тест</span></div>
-            </div>
-            <p>Информатика пәні бойынша негізгі тақырыптар, қысқа түсіндірулер және тесттер.</p>
-            <a href="{% url 'quiz' %}?subject=informatika" class="course-btn">Өту</a>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <div class="course-image"><div class="course-placeholder">📘</div></div>
-          <div class="course-content">
-            <div class="course-badges">
-              <span class="course-badge">ҰБТ</span>
-              <span class="course-badge light">Танымал</span>
-            </div>
-            <h3>Математикалық сауаттылық</h3>
-            <div class="course-info">
-              <div><strong>Сабақтар</strong><span>10 бөлім</span></div>
-              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
-              <div><strong>Формат</strong><span>Теория + тест</span></div>
-            </div>
-            <p>Логика, есептер, пайыз және ҰБТ-ға арналған қысқа дайындық материалы.</p>
-            <a href="{% url 'quiz' %}?subject=math" class="course-btn">Өту</a>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <div class="course-image"><div class="course-placeholder">📖</div></div>
-          <div class="course-content">
-            <div class="course-badges">
-              <span class="course-badge">ҰБТ</span>
-              <span class="course-badge light">Жаңа</span>
-            </div>
-            <h3>Оқу сауаттылығы</h3>
-            <div class="course-info">
-              <div><strong>Сабақтар</strong><span>8 бөлім</span></div>
-              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
-              <div><strong>Формат</strong><span>Теория + тест</span></div>
-            </div>
-            <p>Мәтінді түсіну, негізгі ойды табу және талдау дағдыларына арналған курс.</p>
-            <a href="{% url 'quiz' %}?subject=reading" class="course-btn">Өту</a>
-          </div>
-        </article>
-
-        <article class="course-card">
-          <div class="course-image"><div class="course-placeholder">🏛️</div></div>
-          <div class="course-content">
-            <div class="course-badges">
-              <span class="course-badge">ҰБТ</span>
-              <span class="course-badge light">Негізгі курс</span>
-            </div>
-            <h3>Қазақстан тарихы</h3>
-            <div class="course-info">
-              <div><strong>Сабақтар</strong><span>11 бөлім</span></div>
-              <div><strong>Тіл</strong><span>Қазақ тілі</span></div>
-              <div><strong>Формат</strong><span>Теория + тест</span></div>
-            </div>
-            <p>Тарихи кезеңдер, маңызды даталар және тақырыптар бойынша курс.</p>
-            <a href="{% url 'quiz' %}?subject=history" class="course-btn">Өту</a>
-          </div>
-        </article>
-
+      <div class="courses-tags" id="courseTags">
+        <button class="courses-tag active" type="button" data-filter="all" data-i18n="tag_all">Барлығы</button>
+        <button class="courses-tag" type="button" data-filter="mandatory" data-i18n="tag_mandatory">Міндетті пәндер</button>
+        <button class="courses-tag" type="button" data-filter="profile" data-i18n="tag_profile">Профильді пәндер</button>
+        <button class="courses-tag" type="button" data-filter="new" data-i18n="tag_new">Жаңа</button>
       </div>
     </div>
 
-    <aside class="courses-sidebar">
-      <div class="sidebar-card">
-        <h4>Санаттар</h4>
-        <a href="#" class="sidebar-link active">Барлығы</a>
-        <a href="#" class="sidebar-link">ҰБТ</a>
-        <a href="#" class="sidebar-link">Мектеп пәндері</a>
-        <a href="#" class="sidebar-link">Қысқа курстар</a>
-      </div>
+    <h2 class="section-title" data-i18n="courses_title">Барлық курстар</h2>
+    <p class="section-subtext" data-i18n="courses_subtext">Карточкадан қысқаша мәліметті көр. Тереңірек ақпарат керек болса, `Толығырақ` батырмасын аш.</p>
 
-      <div class="sidebar-card">
-        <h4>Тілі</h4>
-        <label class="sidebar-check"><input type="checkbox" checked><span>Қазақ тілі</span></label>
-        <label class="sidebar-check"><input type="checkbox"><span>Орыс тілі</span></label>
-      </div>
+    <div class="cards-grid">
+      <article class="course-grid-card course-item" data-category="mandatory" data-title-kk="Қазақстан тарихы" data-title-ru="История Казахстана" data-title-en="History of Kazakhstan">
+        <div class="course-grid-top">
+          <div class="course-grid-badges">
+            <span class="course-badge" data-i18n="badge_mandatory">Міндетті</span>
+            <span class="course-badge light" data-i18n="badge_main">Негізгі курс</span>
+          </div>
+          <div class="course-icon-box">🏛️</div>
+        </div>
 
-      <div class="sidebar-card">
-        <h4>Формат</h4>
-        <label class="sidebar-check"><input type="checkbox" checked><span>Теория</span></label>
-        <label class="sidebar-check"><input type="checkbox" checked><span>Тест</span></label>
-      </div>
-    </aside>
+        <h3 data-i18n="course_history_title">Қазақстан тарихы</h3>
 
+        <div class="course-meta-grid">
+          <div><strong data-i18n="label_duration">Ұзақтығы</strong><span data-i18n="history_duration">8 ай</span></div>
+          <div><strong data-i18n="label_lessons">Сабақтар</strong><span data-i18n="history_lessons">60 сабақ</span></div>
+          <div><strong data-i18n="label_lang">Тіл</strong><span data-i18n="history_lang">Қазақ тілі</span></div>
+        </div>
+
+        <p data-i18n="history_desc">Даталар, хандар, реформалар.</p>
+
+        <div class="course-focus-list">
+          <span class="course-focus-chip" data-i18n="history_chip_1">Даталар</span>
+          <span class="course-focus-chip" data-i18n="history_chip_2">Тұлғалар</span>
+        </div>
+
+        <div class="course-detail-panel">
+          <div class="course-detail-row">
+            <strong data-i18n="detail_focus">Фокус</strong>
+            <span data-i18n="history_focus">Негізгі кезеңдер мен жиі келетін тақырыптар.</span>
+          </div>
+          <div class="course-detail-row">
+            <strong data-i18n="detail_result">Нәтиже</strong>
+            <span data-i18n="history_result">Даталарды шатастырмай, сенімді жауап беруге көмектеседі.</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button type="button" class="course-btn-outline course-detail-btn" data-i18n="btn_info">Толығырақ</button>
+          <a href="{% url 'quiz' %}?subject=history" class="course-btn" data-i18n="btn_join">Quiz-ке өту</a>
+        </div>
+      </article>
+
+      <article class="course-grid-card course-item" data-category="mandatory new" data-title-kk="Оқу сауаттылығы" data-title-ru="Читательская грамотность" data-title-en="Reading Literacy">
+        <div class="course-grid-top">
+          <div class="course-grid-badges">
+            <span class="course-badge" data-i18n="badge_mandatory">Міндетті</span>
+            <span class="course-badge light" data-i18n="badge_new">Жаңа</span>
+          </div>
+          <div class="course-icon-box">📚</div>
+        </div>
+
+        <h3 data-i18n="course_reading_title">Оқу сауаттылығы</h3>
+
+        <div class="course-meta-grid">
+          <div><strong data-i18n="label_duration">Ұзақтығы</strong><span data-i18n="reading_duration">8 ай</span></div>
+          <div><strong data-i18n="label_lessons">Сабақтар</strong><span data-i18n="reading_lessons">60 сабақ</span></div>
+          <div><strong data-i18n="label_lang">Тіл</strong><span data-i18n="reading_lang">Қазақ тілі</span></div>
+        </div>
+
+        <p data-i18n="reading_desc">Мәтінді түсіну және негізгі ой.</p>
+
+        <div class="course-focus-list">
+          <span class="course-focus-chip" data-i18n="reading_chip_1">Негізгі ой</span>
+          <span class="course-focus-chip" data-i18n="reading_chip_2">Талдау</span>
+        </div>
+
+        <div class="course-detail-panel">
+          <div class="course-detail-row">
+            <strong data-i18n="detail_focus">Фокус</strong>
+            <span data-i18n="reading_focus">Автор ойы, нақты ақпарат, мәтін құрылымы.</span>
+          </div>
+          <div class="course-detail-row">
+            <strong data-i18n="detail_result">Нәтиже</strong>
+            <span data-i18n="reading_result">Сұрақты тез талдап, артық нұсқаны қысқартуға көмектеседі.</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button type="button" class="course-btn-outline course-detail-btn" data-i18n="btn_info">Толығырақ</button>
+          <a href="{% url 'quiz' %}?subject=reading" class="course-btn" data-i18n="btn_join">Quiz-ке өту</a>
+        </div>
+      </article>
+
+      <article class="course-grid-card course-item" data-category="mandatory" data-title-kk="Математикалық сауаттылық" data-title-ru="Математическая грамотность" data-title-en="Mathematical Literacy">
+        <div class="course-grid-top">
+          <div class="course-grid-badges">
+            <span class="course-badge" data-i18n="badge_mandatory">Міндетті</span>
+            <span class="course-badge light" data-i18n="badge_popular">Танымал</span>
+          </div>
+          <div class="course-icon-box">🧠</div>
+        </div>
+
+        <h3 data-i18n="course_math_title">Математикалық сауаттылық</h3>
+
+        <div class="course-meta-grid">
+          <div><strong data-i18n="label_duration">Ұзақтығы</strong><span data-i18n="math_duration">8 ай</span></div>
+          <div><strong data-i18n="label_lessons">Сабақтар</strong><span data-i18n="math_lessons">60 сабақ</span></div>
+          <div><strong data-i18n="label_lang">Тіл</strong><span data-i18n="math_lang">Қазақ тілі</span></div>
+        </div>
+
+        <p data-i18n="math_desc">Пайыз, логика, есеп.</p>
+
+        <div class="course-focus-list">
+          <span class="course-focus-chip" data-i18n="math_chip_1">Пайыз</span>
+          <span class="course-focus-chip" data-i18n="math_chip_2">Логика</span>
+        </div>
+
+        <div class="course-detail-panel">
+          <div class="course-detail-row">
+            <strong data-i18n="detail_focus">Фокус</strong>
+            <span data-i18n="math_focus">Қатынас, диаграмма, қысқа стратегиялар.</span>
+          </div>
+          <div class="course-detail-row">
+            <strong data-i18n="detail_result">Нәтиже</strong>
+            <span data-i18n="math_result">Тиісті тәсілді тез таңдауға үйретеді.</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button type="button" class="course-btn-outline course-detail-btn" data-i18n="btn_info">Толығырақ</button>
+          <a href="{% url 'quiz' %}?subject=math" class="course-btn" data-i18n="btn_join">Quiz-ке өту</a>
+        </div>
+      </article>
+
+      <article class="course-grid-card course-item" data-category="profile new" data-title-kk="Информатика" data-title-ru="Информатика" data-title-en="Computer Science">
+        <div class="course-grid-top">
+          <div class="course-grid-badges">
+            <span class="course-badge" data-i18n="badge_profile">Профиль</span>
+            <span class="course-badge light" data-i18n="badge_new">Жаңа</span>
+          </div>
+          <div class="course-icon-box">💻</div>
+        </div>
+
+        <h3 data-i18n="course_info_title">Информатика</h3>
+
+        <div class="course-meta-grid">
+          <div><strong data-i18n="label_duration">Ұзақтығы</strong><span data-i18n="info_duration">8 ай</span></div>
+          <div><strong data-i18n="label_lessons">Сабақтар</strong><span data-i18n="info_lessons">60 сабақ</span></div>
+          <div><strong data-i18n="label_lang">Тіл</strong><span data-i18n="info_lang">Қазақ тілі</span></div>
+        </div>
+
+        <p data-i18n="info_desc">Алгоритм, байт, интернет ұғымдары.</p>
+
+        <div class="course-focus-list">
+          <span class="course-focus-chip" data-i18n="info_chip_1">Алгоритм</span>
+          <span class="course-focus-chip" data-i18n="info_chip_2">URL</span>
+        </div>
+
+        <div class="course-detail-panel">
+          <div class="course-detail-row">
+            <strong data-i18n="detail_focus">Фокус</strong>
+            <span data-i18n="info_focus">Құрылғылар, өлшем бірліктері, логика.</span>
+          </div>
+          <div class="course-detail-row">
+            <strong data-i18n="detail_result">Нәтиже</strong>
+            <span data-i18n="info_result">Терминдерді тез тануға көмектеседі.</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button type="button" class="course-btn-outline course-detail-btn" data-i18n="btn_info">Толығырақ</button>
+          <a href="{% url 'quiz' %}?subject=informatika" class="course-btn" data-i18n="btn_join">Quiz-ке өту</a>
+        </div>
+      </article>
+
+      <article class="course-grid-card course-item" data-category="profile" data-title-kk="Биология" data-title-ru="Биология" data-title-en="Biology">
+        <div class="course-grid-top">
+          <div class="course-grid-badges">
+            <span class="course-badge" data-i18n="badge_profile">Профиль</span>
+            <span class="course-badge light" data-i18n="badge_main">Негізгі курс</span>
+          </div>
+          <div class="course-icon-box">🧪</div>
+        </div>
+
+        <h3 data-i18n="course_bio_title">Биология</h3>
+
+        <div class="course-meta-grid">
+          <div><strong data-i18n="label_duration">Ұзақтығы</strong><span data-i18n="bio_duration">8 ай</span></div>
+          <div><strong data-i18n="label_lessons">Сабақтар</strong><span data-i18n="bio_lessons">60 сабақ</span></div>
+          <div><strong data-i18n="label_lang">Тіл</strong><span data-i18n="bio_lang">Қазақ тілі</span></div>
+        </div>
+
+        <p data-i18n="bio_desc">Жасуша, ДНҚ, анатомия.</p>
+
+        <div class="course-focus-list">
+          <span class="course-focus-chip" data-i18n="bio_chip_1">Жасуша</span>
+          <span class="course-focus-chip" data-i18n="bio_chip_2">ДНҚ</span>
+        </div>
+
+        <div class="course-detail-panel">
+          <div class="course-detail-row">
+            <strong data-i18n="detail_focus">Фокус</strong>
+            <span data-i18n="bio_focus">Адам мүшелері, генетика, үрдістер.</span>
+          </div>
+          <div class="course-detail-row">
+            <strong data-i18n="detail_result">Нәтиже</strong>
+            <span data-i18n="bio_result">Көп терминді жүйелеуге көмектеседі.</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button type="button" class="course-btn-outline course-detail-btn" data-i18n="btn_info">Толығырақ</button>
+          <a href="{% url 'quiz' %}?subject=biology" class="course-btn" data-i18n="btn_join">Quiz-ке өту</a>
+        </div>
+      </article>
+
+      <article class="course-grid-card course-item" data-category="profile" data-title-kk="География" data-title-ru="География" data-title-en="Geography">
+        <div class="course-grid-top">
+          <div class="course-grid-badges">
+            <span class="course-badge" data-i18n="badge_profile">Профиль</span>
+            <span class="course-badge light" data-i18n="badge_main">Негізгі курс</span>
+          </div>
+          <div class="course-icon-box">🌍</div>
+        </div>
+
+        <h3 data-i18n="course_geo_title">География</h3>
+
+        <div class="course-meta-grid">
+          <div><strong data-i18n="label_duration">Ұзақтығы</strong><span data-i18n="geo_duration">8 ай</span></div>
+          <div><strong data-i18n="label_lessons">Сабақтар</strong><span data-i18n="geo_lessons">60 сабақ</span></div>
+          <div><strong data-i18n="label_lang">Тіл</strong><span data-i18n="geo_lang">Қазақ тілі</span></div>
+        </div>
+
+        <p data-i18n="geo_desc">Карта, материк, климат.</p>
+
+        <div class="course-focus-list">
+          <span class="course-focus-chip" data-i18n="geo_chip_1">Карта</span>
+          <span class="course-focus-chip" data-i18n="geo_chip_2">Климат</span>
+        </div>
+
+        <div class="course-detail-panel">
+          <div class="course-detail-row">
+            <strong data-i18n="detail_focus">Фокус</strong>
+            <span data-i18n="geo_focus">Капиталдар, материктер, табиғи заңдылықтар.</span>
+          </div>
+          <div class="course-detail-row">
+            <strong data-i18n="detail_result">Нәтиже</strong>
+            <span data-i18n="geo_result">Кең ақпаратты топтастырып оқуға көмектеседі.</span>
+          </div>
+        </div>
+
+        <div class="course-actions">
+          <button type="button" class="course-btn-outline course-detail-btn" data-i18n="btn_info">Толығырақ</button>
+          <a href="{% url 'quiz' %}?subject=geography" class="course-btn" data-i18n="btn_join">Quiz-ке өту</a>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" id="courseEmptyState" data-i18n="empty_courses">
+      Ешқандай курс табылмады. Басқа сүзгі немесе іздеу сөзін қолданып көріңіз.
+    </div>
   </section>
+
+  <section class="section-panel" id="materialsPanel">
+    <div class="compact-note"><strong data-i18n="note_materials_title">Материал логикасы:</strong> <span data-i18n="note_materials_text">алдымен теорияны қара, кейін Quiz арқылы бекіт.</span></div>
+
+    <div class="panel-tools">
+      <div class="courses-search">
+        <span class="courses-search-icon">⌕</span>
+        <input type="text" id="materialSearch" data-i18n-placeholder="materials_search_placeholder" placeholder="Қандай материал іздеп жүрсіз?" />
+      </div>
+
+      <div class="courses-tags" id="materialTags">
+        <button class="courses-tag active" type="button" data-filter="all" data-i18n="mat_all">Барлығы</button>
+        <button class="courses-tag" type="button" data-filter="pdf" data-i18n="mat_pdf">PDF</button>
+        <button class="courses-tag" type="button" data-filter="video" data-i18n="mat_video">Видео</button>
+        <button class="courses-tag" type="button" data-filter="audio" data-i18n="mat_audio">Аудио</button>
+        <button class="courses-tag" type="button" data-filter="archive" data-i18n="mat_archive">ZIP</button>
+      </div>
+    </div>
+
+    <h2 class="section-title" data-i18n="materials_title">Материалдар</h2>
+    <p class="section-subtext" data-i18n="materials_subtext">Әр карточкада қысқа түсінік бар. Қажет болса `Қарау` батырмасымен ішкі фокусын аш.</p>
+
+    <div class="materials-grid" id="materialsGrid">
+      <article class="material-card material-item" data-category="pdf history" data-title-kk="Қазақстан тарихы конспект" data-title-ru="Конспект по истории Казахстана" data-title-en="History of Kazakhstan notes">
+        <div class="material-card-top">
+          <span class="material-format">PDF</span>
+          <span class="material-level" data-i18n="level_basic">Базалық</span>
+        </div>
+        <h3 data-i18n="mat1_title">Қазақстан тарихы конспект</h3>
+        <p data-i18n="mat1_desc">Негізгі даталар мен қысқа теория.</p>
+        <div class="material-tags">
+          <span class="material-tag" data-i18n="tag_history">Тарих</span>
+          <span class="material-tag" data-i18n="tag_theory">Теория</span>
+        </div>
+        <div class="material-extra">
+          <div class="material-extra-item">
+            <strong data-i18n="mat_focus_label">Фокус</strong>
+            <span data-i18n="mat1_focus">Қайталауға ыңғайлы қысқа конспект.</span>
+          </div>
+          <div class="material-extra-item">
+            <strong data-i18n="mat_use_label">Қолдану</strong>
+            <span data-i18n="mat_use_text">Алдымен теория, кейін quiz.</span>
+          </div>
+        </div>
+        <div class="material-actions">
+          <button type="button" class="course-btn-outline material-preview-btn" data-i18n="btn_preview">Қарау</button>
+          <button type="button" class="course-btn" data-i18n="btn_download">Жүктеу</button>
+        </div>
+      </article>
+
+      <article class="material-card material-item" data-category="video math" data-title-kk="Математика видео түсіндірме" data-title-ru="Видеообъяснение по математике" data-title-en="Mathematics video explanation">
+        <div class="material-card-top">
+          <span class="material-format">MP4</span>
+          <span class="material-level" data-i18n="level_mid">Орта</span>
+        </div>
+        <h3 data-i18n="mat2_title">Математика видео түсіндірме</h3>
+        <p data-i18n="mat2_desc">Пайыз және қысқа есептер.</p>
+        <div class="material-tags">
+          <span class="material-tag" data-i18n="tag_math">Математика</span>
+          <span class="material-tag" data-i18n="tag_video">Видео</span>
+        </div>
+        <div class="material-extra">
+          <div class="material-extra-item">
+            <strong data-i18n="mat_focus_label">Фокус</strong>
+            <span data-i18n="mat2_focus">Қиын формуланы емес, тәсілді түсіндіреді.</span>
+          </div>
+          <div class="material-extra-item">
+            <strong data-i18n="mat_use_label">Қолдану</strong>
+            <span data-i18n="mat_use_text">Алдымен теория, кейін quiz.</span>
+          </div>
+        </div>
+        <div class="material-actions">
+          <button type="button" class="course-btn-outline material-preview-btn" data-i18n="btn_preview">Қарау</button>
+          <button type="button" class="course-btn" data-i18n="btn_download">Жүктеу</button>
+        </div>
+      </article>
+
+      <article class="material-card material-item" data-category="audio english" data-title-kk="English listening audio" data-title-ru="English listening audio" data-title-en="English listening audio">
+        <div class="material-card-top">
+          <span class="material-format">MP3</span>
+          <span class="material-level" data-i18n="level_mid">Орта</span>
+        </div>
+        <h3 data-i18n="mat3_title">English listening audio</h3>
+        <p data-i18n="mat3_desc">Тыңдалымға арналған қысқа аудио.</p>
+        <div class="material-tags">
+          <span class="material-tag" data-i18n="tag_english">Ағылшын</span>
+          <span class="material-tag" data-i18n="tag_audio">Аудио</span>
+        </div>
+        <div class="material-extra">
+          <div class="material-extra-item">
+            <strong data-i18n="mat_focus_label">Фокус</strong>
+            <span data-i18n="mat3_focus">Қысқа форматта listening дағдысын бекітеді.</span>
+          </div>
+          <div class="material-extra-item">
+            <strong data-i18n="mat_use_label">Қолдану</strong>
+            <span data-i18n="mat_use_text">Алдымен теория, кейін quiz.</span>
+          </div>
+        </div>
+        <div class="material-actions">
+          <button type="button" class="course-btn-outline material-preview-btn" data-i18n="btn_preview">Қарау</button>
+          <button type="button" class="course-btn" data-i18n="btn_download">Жүктеу</button>
+        </div>
+      </article>
+
+      <article class="material-card material-item" data-category="archive tests" data-title-kk="ҰБТ тесттер жинағы" data-title-ru="Сборник тестов ЕНТ" data-title-en="UNT tests archive">
+        <div class="material-card-top">
+          <span class="material-format">ZIP</span>
+          <span class="material-level" data-i18n="level_advanced">Жоғары</span>
+        </div>
+        <h3 data-i18n="mat4_title">ҰБТ тесттер жинағы</h3>
+        <p data-i18n="mat4_desc">Пәндер бойынша тест архиві.</p>
+        <div class="material-tags">
+          <span class="material-tag" data-i18n="tag_tests">Тест</span>
+          <span class="material-tag" data-i18n="tag_archive">Архив</span>
+        </div>
+        <div class="material-extra">
+          <div class="material-extra-item">
+            <strong data-i18n="mat_focus_label">Фокус</strong>
+            <span data-i18n="mat4_focus">Практикаға арналған жинақталған файлдар.</span>
+          </div>
+          <div class="material-extra-item">
+            <strong data-i18n="mat_use_label">Қолдану</strong>
+            <span data-i18n="mat_use_text">Алдымен теория, кейін quiz.</span>
+          </div>
+        </div>
+        <div class="material-actions">
+          <button type="button" class="course-btn-outline material-preview-btn" data-i18n="btn_preview">Қарау</button>
+          <button type="button" class="course-btn" data-i18n="btn_download">Жүктеу</button>
+        </div>
+      </article>
+
+      <article class="material-card material-item" data-category="pdf biology" data-title-kk="Биология схема" data-title-ru="Схема по биологии" data-title-en="Biology scheme">
+        <div class="material-card-top">
+          <span class="material-format">PDF</span>
+          <span class="material-level" data-i18n="level_basic">Базалық</span>
+        </div>
+        <h3 data-i18n="mat5_title">Биология схема</h3>
+        <p data-i18n="mat5_desc">Жасуша мен негізгі ұғымдар.</p>
+        <div class="material-tags">
+          <span class="material-tag" data-i18n="tag_biology">Биология</span>
+          <span class="material-tag" data-i18n="tag_scheme">Схема</span>
+        </div>
+        <div class="material-extra">
+          <div class="material-extra-item">
+            <strong data-i18n="mat_focus_label">Фокус</strong>
+            <span data-i18n="mat5_focus">Күрделі ұғымдарды бір бетке жинайды.</span>
+          </div>
+          <div class="material-extra-item">
+            <strong data-i18n="mat_use_label">Қолдану</strong>
+            <span data-i18n="mat_use_text">Алдымен теория, кейін quiz.</span>
+          </div>
+        </div>
+        <div class="material-actions">
+          <button type="button" class="course-btn-outline material-preview-btn" data-i18n="btn_preview">Қарау</button>
+          <button type="button" class="course-btn" data-i18n="btn_download">Жүктеу</button>
+        </div>
+      </article>
+
+      <article class="material-card material-item" data-category="video geography" data-title-kk="География қысқа видео" data-title-ru="Короткое видео по географии" data-title-en="Short geography video">
+        <div class="material-card-top">
+          <span class="material-format">MP4</span>
+          <span class="material-level" data-i18n="level_basic">Базалық</span>
+        </div>
+        <h3 data-i18n="mat6_title">География қысқа видео</h3>
+        <p data-i18n="mat6_desc">Материк пен климатқа қысқа шолу.</p>
+        <div class="material-tags">
+          <span class="material-tag" data-i18n="tag_geography">География</span>
+          <span class="material-tag" data-i18n="tag_video">Видео</span>
+        </div>
+        <div class="material-extra">
+          <div class="material-extra-item">
+            <strong data-i18n="mat_focus_label">Фокус</strong>
+            <span data-i18n="mat6_focus">Карта логикасын қысқа форматта түсіндіреді.</span>
+          </div>
+          <div class="material-extra-item">
+            <strong data-i18n="mat_use_label">Қолдану</strong>
+            <span data-i18n="mat_use_text">Алдымен теория, кейін quiz.</span>
+          </div>
+        </div>
+        <div class="material-actions">
+          <button type="button" class="course-btn-outline material-preview-btn" data-i18n="btn_preview">Қарау</button>
+          <button type="button" class="course-btn" data-i18n="btn_download">Жүктеу</button>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" id="materialEmptyState" data-i18n="empty_materials">
+      Ешқандай материал табылмады. Басқа сүзгі немесе іздеу сөзін қолданып көріңіз.
+    </div>
+  </section>
+
 </main>
+
+<a href="{% url 'ai_chat' %}" class="ai-chat-btn" data-i18n="ai_btn">AI чат</a>
+
+<script>
+  const translations = {
+    kk: {
+      lang_btn: "🌐 Қазақша",
+      brand_sub: "Ақылды оқу платформасы",
+      nav_home: "Басты бет",
+      nav_courses: "Курстар",
+      nav_guide: "Нұсқаулық",
+      nav_contact: "Байланыс",
+      nav_quiz: "Quiz",
+      profile_btn: "Профиль",
+      logout_btn: "Шығу",
+      btn_login: "Кіру",
+      btn_register: "Тіркелу",
+
+      hero_badge: "EduMentor AI",
+      hero_title: "Курстар мен материалдар",
+      hero_desc: "Пәнді таңда. Қысқа ақпаратты көр. Дайын болсаң, Quiz-ке өт.",
+      hero_stat_1: "Қолжетімді пән",
+      hero_stat_2: "Материал",
+      hero_stat_3: "AI көмекші",
+      hero_stat_4: "Тіл",
+
+      tab_courses: "Курстар",
+      tab_materials: "Материалдар",
+
+      note_courses_title: "Қарапайым логика:",
+      note_courses_text: "алдымен курс туралы оқы, кейін Quiz-ке өт.",
+      note_materials_title: "Материал логикасы:",
+      note_materials_text: "алдымен теорияны қара, кейін Quiz арқылы бекіт.",
+
+      search_placeholder: "Сіз қандай курсты іздеп жүрсіз?",
+      materials_search_placeholder: "Қандай материал іздеп жүрсіз?",
+
+      tag_all: "Барлығы",
+      tag_mandatory: "Міндетті пәндер",
+      tag_profile: "Профильді пәндер",
+      tag_new: "Жаңа",
+
+      courses_title: "Барлық курстар",
+      courses_subtext: "Карточкадан қысқаша мәліметті көр. Тереңірек ақпарат керек болса, `Толығырақ` батырмасын аш.",
+      badge_mandatory: "Міндетті",
+      badge_profile: "Профиль",
+      badge_main: "Негізгі курс",
+      badge_popular: "Танымал",
+      badge_new: "Жаңа",
+
+      label_duration: "Ұзақтығы",
+      label_lessons: "Сабақтар",
+      label_lang: "Тіл",
+      detail_focus: "Фокус",
+      detail_result: "Нәтиже",
+      btn_info: "Толығырақ",
+      btn_join: "Quiz-ке өту",
+
+      history_duration: "8 ай",
+      history_lessons: "60 сабақ",
+      history_lang: "Қазақ тілі",
+      course_history_title: "Қазақстан тарихы",
+      history_desc: "Даталар, хандар, реформалар.",
+      history_chip_1: "Даталар",
+      history_chip_2: "Тұлғалар",
+      history_focus: "Негізгі кезеңдер мен жиі келетін тақырыптар.",
+      history_result: "Даталарды шатастырмай, сенімді жауап беруге көмектеседі.",
+
+      reading_duration: "8 ай",
+      reading_lessons: "60 сабақ",
+      reading_lang: "Қазақ тілі",
+      course_reading_title: "Оқу сауаттылығы",
+      reading_desc: "Мәтінді түсіну және негізгі ой.",
+      reading_chip_1: "Негізгі ой",
+      reading_chip_2: "Талдау",
+      reading_focus: "Автор ойы, нақты ақпарат, мәтін құрылымы.",
+      reading_result: "Сұрақты тез талдап, артық нұсқаны қысқартуға көмектеседі.",
+
+      math_duration: "8 ай",
+      math_lessons: "60 сабақ",
+      math_lang: "Қазақ тілі",
+      course_math_title: "Математикалық сауаттылық",
+      math_desc: "Пайыз, логика, есеп.",
+      math_chip_1: "Пайыз",
+      math_chip_2: "Логика",
+      math_focus: "Қатынас, диаграмма, қысқа стратегиялар.",
+      math_result: "Тиісті тәсілді тез таңдауға үйретеді.",
+
+      info_duration: "8 ай",
+      info_lessons: "60 сабақ",
+      info_lang: "Қазақ тілі",
+      course_info_title: "Информатика",
+      info_desc: "Алгоритм, байт, интернет ұғымдары.",
+      info_chip_1: "Алгоритм",
+      info_chip_2: "URL",
+      info_focus: "Құрылғылар, өлшем бірліктері, логика.",
+      info_result: "Терминдерді тез тануға көмектеседі.",
+
+      bio_duration: "8 ай",
+      bio_lessons: "60 сабақ",
+      bio_lang: "Қазақ тілі",
+      course_bio_title: "Биология",
+      bio_desc: "Жасуша, ДНҚ, анатомия.",
+      bio_chip_1: "Жасуша",
+      bio_chip_2: "ДНҚ",
+      bio_focus: "Адам мүшелері, генетика, үрдістер.",
+      bio_result: "Көп терминді жүйелеуге көмектеседі.",
+
+      geo_duration: "8 ай",
+      geo_lessons: "60 сабақ",
+      geo_lang: "Қазақ тілі",
+      course_geo_title: "География",
+      geo_desc: "Карта, материк, климат.",
+      geo_chip_1: "Карта",
+      geo_chip_2: "Климат",
+      geo_focus: "Капиталдар, материктер, табиғи заңдылықтар.",
+      geo_result: "Кең ақпаратты топтастырып оқуға көмектеседі.",
+
+      materials_title: "Материалдар",
+      materials_subtext: "Әр карточкада қысқа түсінік бар. Қажет болса `Қарау` батырмасымен ішкі фокусын аш.",
+      mat_all: "Барлығы",
+      mat_pdf: "PDF",
+      mat_video: "Видео",
+      mat_audio: "Аудио",
+      mat_archive: "ZIP",
+      level_basic: "Базалық",
+      level_mid: "Орта",
+      level_advanced: "Жоғары",
+
+      mat1_title: "Қазақстан тарихы конспект",
+      mat1_desc: "Негізгі даталар мен қысқа теория.",
+      mat1_focus: "Қайталауға ыңғайлы қысқа конспект.",
+
+      mat2_title: "Математика видео түсіндірме",
+      mat2_desc: "Пайыз және қысқа есептер.",
+      mat2_focus: "Қиын формуланы емес, тәсілді түсіндіреді.",
+
+      mat3_title: "English listening audio",
+      mat3_desc: "Тыңдалымға арналған қысқа аудио.",
+      mat3_focus: "Қысқа форматта listening дағдысын бекітеді.",
+
+      mat4_title: "ҰБТ тесттер жинағы",
+      mat4_desc: "Пәндер бойынша тест архиві.",
+      mat4_focus: "Практикаға арналған жинақталған файлдар.",
+
+      mat5_title: "Биология схема",
+      mat5_desc: "Жасуша мен негізгі ұғымдар.",
+      mat5_focus: "Күрделі ұғымдарды бір бетке жинайды.",
+
+      mat6_title: "География қысқа видео",
+      mat6_desc: "Материк пен климатқа қысқа шолу.",
+      mat6_focus: "Карта логикасын қысқа форматта түсіндіреді.",
+
+      tag_history: "Тарих",
+      tag_theory: "Теория",
+      tag_math: "Математика",
+      tag_video: "Видео",
+      tag_english: "Ағылшын",
+      tag_audio: "Аудио",
+      tag_tests: "Тест",
+      tag_archive: "Архив",
+      tag_biology: "Биология",
+      tag_scheme: "Схема",
+      tag_geography: "География",
+
+      mat_focus_label: "Фокус",
+      mat_use_label: "Қолдану",
+      mat_use_text: "Алдымен теория, кейін quiz.",
+      btn_preview: "Қарау",
+      btn_download: "Жүктеу",
+
+      empty_courses: "Ешқандай курс табылмады. Басқа сүзгі немесе іздеу сөзін қолданып көріңіз.",
+      empty_materials: "Ешқандай материал табылмады. Басқа сүзгі немесе іздеу сөзін қолданып көріңіз.",
+      ai_btn: "AI чат"
+    },
+
+    ru: {
+      lang_btn: "🌐 Русский",
+      brand_sub: "Умная образовательная платформа",
+      nav_home: "Главная",
+      nav_courses: "Курсы",
+      nav_guide: "Руководство",
+      nav_contact: "Контакты",
+      nav_quiz: "Quiz",
+      profile_btn: "Профиль",
+      logout_btn: "Выйти",
+      btn_login: "Войти",
+      btn_register: "Регистрация",
+
+      hero_badge: "EduMentor AI",
+      hero_title: "Курсы и материалы",
+      hero_desc: "Выбери предмет. Посмотри краткую информацию. Когда будешь готов, переходи в Quiz.",
+      hero_stat_1: "Доступных предметов",
+      hero_stat_2: "Материалов",
+      hero_stat_3: "AI помощник",
+      hero_stat_4: "Языка",
+
+      tab_courses: "Курсы",
+      tab_materials: "Материалы",
+
+      note_courses_title: "Простая логика:",
+      note_courses_text: "сначала прочитай о курсе, потом переходи в Quiz.",
+      note_materials_title: "Логика материалов:",
+      note_materials_text: "сначала смотри теорию, потом закрепляй через Quiz.",
+
+      search_placeholder: "Какой курс вы ищете?",
+      materials_search_placeholder: "Какой материал вы ищете?",
+
+      tag_all: "Все",
+      tag_mandatory: "Обязательные предметы",
+      tag_profile: "Профильные предметы",
+      tag_new: "Новые",
+
+      courses_title: "Все курсы",
+      courses_subtext: "Смотри короткое описание в карточке. Если нужно больше, открой `Подробнее`.",
+      badge_mandatory: "Обязательный",
+      badge_profile: "Профильный",
+      badge_main: "Основной курс",
+      badge_popular: "Популярный",
+      badge_new: "Новый",
+
+      label_duration: "Длительность",
+      label_lessons: "Уроки",
+      label_lang: "Язык",
+      detail_focus: "Фокус",
+      detail_result: "Результат",
+      btn_info: "Подробнее",
+      btn_join: "Перейти в Quiz",
+
+      history_duration: "8 месяцев",
+      history_lessons: "60 занятий",
+      history_lang: "Казахский язык",
+      course_history_title: "История Казахстана",
+      history_desc: "Даты, ханы, реформы.",
+      history_chip_1: "Даты",
+      history_chip_2: "Личности",
+      history_focus: "Основные периоды и частые темы тестов.",
+      history_result: "Помогает увереннее отвечать и не путать даты.",
+
+      reading_duration: "8 месяцев",
+      reading_lessons: "60 занятий",
+      reading_lang: "Казахский язык",
+      course_reading_title: "Читательская грамотность",
+      reading_desc: "Понимание текста и главной мысли.",
+      reading_chip_1: "Главная мысль",
+      reading_chip_2: "Анализ",
+      reading_focus: "Авторская позиция, точная информация, структура.",
+      reading_result: "Помогает быстрее анализировать вопрос и варианты.",
+
+      math_duration: "8 месяцев",
+      math_lessons: "60 занятий",
+      math_lang: "Казахский язык",
+      course_math_title: "Математическая грамотность",
+      math_desc: "Проценты, логика, задачи.",
+      math_chip_1: "Проценты",
+      math_chip_2: "Логика",
+      math_focus: "Отношения, диаграммы, короткие стратегии.",
+      math_result: "Помогает быстрее выбирать нужный способ решения.",
+
+      info_duration: "8 месяцев",
+      info_lessons: "60 занятий",
+      info_lang: "Казахский язык",
+      course_info_title: "Информатика",
+      info_desc: "Алгоритмы, байты, интернет-понятия.",
+      info_chip_1: "Алгоритм",
+      info_chip_2: "URL",
+      info_focus: "Устройства, единицы данных, логика.",
+      info_result: "Помогает быстрее узнавать термины и типы вопросов.",
+
+      bio_duration: "8 месяцев",
+      bio_lessons: "60 занятий",
+      bio_lang: "Казахский язык",
+      course_bio_title: "Биология",
+      bio_desc: "Клетка, ДНК, анатомия.",
+      bio_chip_1: "Клетка",
+      bio_chip_2: "ДНК",
+      bio_focus: "Органы человека, генетика, процессы.",
+      bio_result: "Помогает упорядочить сложные термины.",
+
+      geo_duration: "8 месяцев",
+      geo_lessons: "60 занятий",
+      geo_lang: "Казахский язык",
+      course_geo_title: "География",
+      geo_desc: "Карта, материк, климат.",
+      geo_chip_1: "Карта",
+      geo_chip_2: "Климат",
+      geo_focus: "Столицы, материки, природные закономерности.",
+      geo_result: "Помогает собирать большой объем информации в систему.",
+
+      materials_title: "Материалы",
+      materials_subtext: "В каждой карточке есть короткое описание. При необходимости открой внутренний фокус через `Посмотреть`.",
+      mat_all: "Все",
+      mat_pdf: "PDF",
+      mat_video: "Видео",
+      mat_audio: "Аудио",
+      mat_archive: "ZIP",
+      level_basic: "Базовый",
+      level_mid: "Средний",
+      level_advanced: "Продвинутый",
+
+      mat1_title: "Конспект по истории Казахстана",
+      mat1_desc: "Основные даты и короткая теория.",
+      mat1_focus: "Удобный короткий конспект для повторения.",
+
+      mat2_title: "Видеообъяснение по математике",
+      mat2_desc: "Проценты и короткие задачи.",
+      mat2_focus: "Объясняет не формулу, а сам подход.",
+
+      mat3_title: "English listening audio",
+      mat3_desc: "Короткое аудио для listening.",
+      mat3_focus: "Закрепляет listening в коротком формате.",
+
+      mat4_title: "Сборник тестов ЕНТ",
+      mat4_desc: "Архив тестов по предметам.",
+      mat4_focus: "Собранные файлы для практики.",
+
+      mat5_title: "Схема по биологии",
+      mat5_desc: "Клетка и основные понятия.",
+      mat5_focus: "Собирает сложные понятия на одной странице.",
+
+      mat6_title: "Короткое видео по географии",
+      mat6_desc: "Короткий обзор материков и климата.",
+      mat6_focus: "Кратко объясняет логику карты.",
+
+      tag_history: "История",
+      tag_theory: "Теория",
+      tag_math: "Математика",
+      tag_video: "Видео",
+      tag_english: "Английский",
+      tag_audio: "Аудио",
+      tag_tests: "Тест",
+      tag_archive: "Архив",
+      tag_biology: "Биология",
+      tag_scheme: "Схема",
+      tag_geography: "География",
+
+      mat_focus_label: "Фокус",
+      mat_use_label: "Использование",
+      mat_use_text: "Сначала теория, потом quiz.",
+      btn_preview: "Посмотреть",
+      btn_download: "Скачать",
+
+      empty_courses: "Курсы не найдены. Попробуйте другой фильтр или запрос.",
+      empty_materials: "Материалы не найдены. Попробуйте другой фильтр или запрос.",
+      ai_btn: "AI чат"
+    },
+
+    en: {
+      lang_btn: "🌐 English",
+      brand_sub: "Smart learning platform",
+      nav_home: "Home",
+      nav_courses: "Courses",
+      nav_guide: "Guide",
+      nav_contact: "Contact",
+      nav_quiz: "Quiz",
+      profile_btn: "Profile",
+      logout_btn: "Logout",
+      btn_login: "Login",
+      btn_register: "Register",
+
+      hero_badge: "EduMentor AI",
+      hero_title: "Courses and materials",
+      hero_desc: "Choose a subject. Read the short info. When ready, move to Quiz.",
+      hero_stat_1: "Available subjects",
+      hero_stat_2: "Materials",
+      hero_stat_3: "AI assistant",
+      hero_stat_4: "Languages",
+
+      tab_courses: "Courses",
+      tab_materials: "Materials",
+
+      note_courses_title: "Simple flow:",
+      note_courses_text: "read about the course first, then go to Quiz.",
+      note_materials_title: "Material flow:",
+      note_materials_text: "review theory first, then reinforce it through Quiz.",
+
+      search_placeholder: "What course are you looking for?",
+      materials_search_placeholder: "What material are you looking for?",
+
+      tag_all: "All",
+      tag_mandatory: "Mandatory subjects",
+      tag_profile: "Profile subjects",
+      tag_new: "New",
+
+      courses_title: "All courses",
+      courses_subtext: "See the short overview in each card. Open `Details` if you want more.",
+      badge_mandatory: "Mandatory",
+      badge_profile: "Profile",
+      badge_main: "Main course",
+      badge_popular: "Popular",
+      badge_new: "New",
+
+      label_duration: "Duration",
+      label_lessons: "Lessons",
+      label_lang: "Language",
+      detail_focus: "Focus",
+      detail_result: "Result",
+      btn_info: "Details",
+      btn_join: "Go to Quiz",
+
+      history_duration: "8 months",
+      history_lessons: "60 lessons",
+      history_lang: "Kazakh language",
+      course_history_title: "History of Kazakhstan",
+      history_desc: "Dates, khans, reforms.",
+      history_chip_1: "Dates",
+      history_chip_2: "Figures",
+      history_focus: "Key periods and common test topics.",
+      history_result: "Helps answer with more confidence without mixing up dates.",
+
+      reading_duration: "8 months",
+      reading_lessons: "60 lessons",
+      reading_lang: "Kazakh language",
+      course_reading_title: "Reading Literacy",
+      reading_desc: "Text understanding and the main idea.",
+      reading_chip_1: "Main idea",
+      reading_chip_2: "Analysis",
+      reading_focus: "Author position, exact information, structure.",
+      reading_result: "Helps analyze questions and options faster.",
+
+      math_duration: "8 months",
+      math_lessons: "60 lessons",
+      math_lang: "Kazakh language",
+      course_math_title: "Mathematical Literacy",
+      math_desc: "Percentages, logic, problems.",
+      math_chip_1: "Percentages",
+      math_chip_2: "Logic",
+      math_focus: "Ratios, charts, short strategies.",
+      math_result: "Helps choose the right solving method faster.",
+
+      info_duration: "8 months",
+      info_lessons: "60 lessons",
+      info_lang: "Kazakh language",
+      course_info_title: "Computer Science",
+      info_desc: "Algorithms, bytes, internet concepts.",
+      info_chip_1: "Algorithm",
+      info_chip_2: "URL",
+      info_focus: "Devices, data units, logic.",
+      info_result: "Helps recognize terms and question types faster.",
+
+      bio_duration: "8 months",
+      bio_lessons: "60 lessons",
+      bio_lang: "Kazakh language",
+      course_bio_title: "Biology",
+      bio_desc: "Cells, DNA, anatomy.",
+      bio_chip_1: "Cell",
+      bio_chip_2: "DNA",
+      bio_focus: "Human organs, genetics, processes.",
+      bio_result: "Helps organize terminology-heavy topics.",
+
+      geo_duration: "8 months",
+      geo_lessons: "60 lessons",
+      geo_lang: "Kazakh language",
+      course_geo_title: "Geography",
+      geo_desc: "Maps, continents, climate.",
+      geo_chip_1: "Map",
+      geo_chip_2: "Climate",
+      geo_focus: "Capitals, continents, natural patterns.",
+      geo_result: "Helps structure large geography content clearly.",
+
+      materials_title: "Materials",
+      materials_subtext: "Each card includes a short explanation. Open `Preview` if you want its internal focus.",
+      mat_all: "All",
+      mat_pdf: "PDF",
+      mat_video: "Video",
+      mat_audio: "Audio",
+      mat_archive: "ZIP",
+      level_basic: "Basic",
+      level_mid: "Intermediate",
+      level_advanced: "Advanced",
+
+      mat1_title: "History of Kazakhstan notes",
+      mat1_desc: "Key dates and short theory.",
+      mat1_focus: "A compact revision note for quick review.",
+
+      mat2_title: "Mathematics video explanation",
+      mat2_desc: "Percentages and short problems.",
+      mat2_focus: "Explains the approach, not just the formula.",
+
+      mat3_title: "English listening audio",
+      mat3_desc: "A short listening audio file.",
+      mat3_focus: "Reinforces listening in a compact format.",
+
+      mat4_title: "UNT tests archive",
+      mat4_desc: "A subject-based test archive.",
+      mat4_focus: "Collected files for practice.",
+
+      mat5_title: "Biology scheme",
+      mat5_desc: "Cells and core concepts.",
+      mat5_focus: "Puts difficult concepts onto one clear page.",
+
+      mat6_title: "Short geography video",
+      mat6_desc: "A short overview of continents and climate.",
+      mat6_focus: "Explains map logic in a compact way.",
+
+      tag_history: "History",
+      tag_theory: "Theory",
+      tag_math: "Mathematics",
+      tag_video: "Video",
+      tag_english: "English",
+      tag_audio: "Audio",
+      tag_tests: "Tests",
+      tag_archive: "Archive",
+      tag_biology: "Biology",
+      tag_scheme: "Scheme",
+      tag_geography: "Geography",
+
+      mat_focus_label: "Focus",
+      mat_use_label: "Usage",
+      mat_use_text: "Theory first, then quiz.",
+      btn_preview: "Preview",
+      btn_download: "Download",
+
+      empty_courses: "No courses found. Try another filter or search query.",
+      empty_materials: "No materials found. Try another filter or search query.",
+      ai_btn: "AI chat"
+    }
+  };
+
+  function normalizeLang(value) {
+    const mapping = {
+      kk: "kk",
+      ru: "ru",
+      en: "en",
+      "Қазақша": "kk",
+      "Русский": "ru",
+      "English": "en"
+    };
+    return mapping[value] || "kk";
+  }
+
+  let currentLang = normalizeLang(document.body.dataset.siteLanguage || "kk");
+  const langSwitch = document.getElementById("langSwitch");
+
+  function applyLanguage(lang) {
+    const dict = translations[lang];
+    if (!dict) return;
+
+    document.documentElement.lang = lang;
+
+    document.querySelectorAll("[data-i18n]").forEach((el) => {
+      const key = el.getAttribute("data-i18n");
+      if (dict[key]) el.textContent = dict[key];
+    });
+
+    document.querySelectorAll("[data-i18n-placeholder]").forEach((el) => {
+      const key = el.getAttribute("data-i18n-placeholder");
+      if (dict[key]) el.placeholder = dict[key];
+    });
+
+    if (langSwitch) langSwitch.textContent = dict.lang_btn;
+    // Тіл settings/backend арқылы келсе де, кнопка бет ішінде уақытша ауыстырады
+  }
+
+  if (langSwitch) {
+    langSwitch.addEventListener("click", function () {
+      if (currentLang === "kk") currentLang = "ru";
+      else if (currentLang === "ru") currentLang = "en";
+      else currentLang = "kk";
+      applyLanguage(currentLang);
+    });
+  }
+
+  const innerTabBtns = document.querySelectorAll(".inner-tab-btn");
+  const panels = document.querySelectorAll(".section-panel");
+
+  function openPanel(panelId) {
+    panels.forEach((panel) => {
+      panel.classList.toggle("active", panel.id === panelId);
+    });
+
+    innerTabBtns.forEach((btn) => {
+      btn.classList.toggle("active", btn.dataset.panel === panelId);
+    });
+  }
+
+  innerTabBtns.forEach((btn) => {
+    btn.addEventListener("click", () => openPanel(btn.dataset.panel));
+  });
+
+  document.querySelectorAll(".course-detail-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".course-grid-card");
+      if (card) card.classList.toggle("expanded");
+    });
+  });
+
+  document.querySelectorAll(".material-preview-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const card = btn.closest(".material-card");
+      if (card) card.classList.toggle("expanded");
+    });
+  });
+
+  const courseTags = document.querySelectorAll("#courseTags .courses-tag");
+  const courseItems = document.querySelectorAll(".course-item");
+  const courseSearch = document.getElementById("courseSearch");
+  const courseEmptyState = document.getElementById("courseEmptyState");
+
+  let currentCourseFilter = "all";
+
+  function updateCourseView() {
+    const q = (courseSearch?.value || "").trim().toLowerCase();
+    let visibleCount = 0;
+
+    courseItems.forEach((card) => {
+      const categories = card.dataset.category || "";
+      const titleKk = (card.dataset.titleKk || "").toLowerCase();
+      const titleRu = (card.dataset.titleRu || "").toLowerCase();
+      const titleEn = (card.dataset.titleEn || "").toLowerCase();
+
+      const matchFilter = currentCourseFilter === "all" || categories.includes(currentCourseFilter);
+      const matchSearch = !q || titleKk.includes(q) || titleRu.includes(q) || titleEn.includes(q);
+
+      const show = matchFilter && matchSearch;
+      card.style.display = show ? "flex" : "none";
+      if (show) visibleCount++;
+    });
+
+    courseEmptyState.style.display = visibleCount === 0 ? "block" : "none";
+  }
+
+  courseTags.forEach((tag) => {
+    tag.addEventListener("click", function () {
+      courseTags.forEach((t) => t.classList.remove("active"));
+      this.classList.add("active");
+      currentCourseFilter = this.dataset.filter;
+      updateCourseView();
+    });
+  });
+
+  if (courseSearch) {
+    courseSearch.addEventListener("input", updateCourseView);
+  }
+
+  const materialTags = document.querySelectorAll("#materialTags .courses-tag");
+  const materialItems = document.querySelectorAll(".material-item");
+  const materialSearch = document.getElementById("materialSearch");
+  const materialEmptyState = document.getElementById("materialEmptyState");
+
+  let currentMaterialFilter = "all";
+
+  function updateMaterialView() {
+    const q = (materialSearch?.value || "").trim().toLowerCase();
+    let visibleCount = 0;
+
+    materialItems.forEach((card) => {
+      const categories = card.dataset.category || "";
+      const titleKk = (card.dataset.titleKk || "").toLowerCase();
+      const titleRu = (card.dataset.titleRu || "").toLowerCase();
+      const titleEn = (card.dataset.titleEn || "").toLowerCase();
+
+      const matchFilter = currentMaterialFilter === "all" || categories.includes(currentMaterialFilter);
+      const matchSearch = !q || titleKk.includes(q) || titleRu.includes(q) || titleEn.includes(q);
+
+      const show = matchFilter && matchSearch;
+      card.style.display = show ? "flex" : "none";
+      if (show) visibleCount++;
+    });
+
+    materialEmptyState.style.display = visibleCount === 0 ? "block" : "none";
+  }
+
+  materialTags.forEach((tag) => {
+    tag.addEventListener("click", function () {
+      materialTags.forEach((t) => t.classList.remove("active"));
+      this.classList.add("active");
+      currentMaterialFilter = this.dataset.filter;
+      updateMaterialView();
+    });
+  });
+
+  if (materialSearch) {
+    materialSearch.addEventListener("input", updateMaterialView);
+  }
+
+  window.addEventListener("load", function () {
+    if (window.location.hash === "#materialsPanel") {
+      openPanel("materialsPanel");
+    }
+  });
+
+  applyLanguage(currentLang);
+   updateCourseView();
+  updateMaterialView();
+</script>
 
 </body>
 </html>
