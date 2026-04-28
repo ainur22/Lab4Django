@@ -2,82 +2,334 @@
 <!doctype html>
 <html lang="kk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>EduMentor AI — Кіру</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-    rel="stylesheet"
-  >
-  <link rel="stylesheet" href="{% static 'accounts/style.css' %}" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduMentor AI — Кіру</title>
+
+<style>
+*{box-sizing:border-box}
+
+:root{
+  --bg1:#eef4ff;
+  --bg2:#f8fbff;
+  --text:#23395d;
+  --muted:#7e91b4;
+  --blue:#4a86f7;
+  --blue2:#60a5fa;
+  --line:#dbe7fb;
+  --card:#ffffff;
+  --shadow:0 18px 45px rgba(67,115,208,.12);
+}
+
+body{
+  margin:0;
+  font-family:"Inter","Segoe UI",Arial,sans-serif;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at left bottom,rgba(16,185,129,.12),transparent 22%),
+    linear-gradient(180deg,var(--bg2),var(--bg1));
+  color:var(--text);
+}
+
+a{text-decoration:none;color:inherit}
+
+.auth-page{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+}
+
+.auth-left{
+  padding:40px 70px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:48px;
+}
+
+.logo{
+  width:62px;
+  height:62px;
+  border-radius:20px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:28px;
+  font-weight:900;
+  box-shadow:0 12px 26px rgba(74,134,247,.25);
+}
+
+.brand-title{
+  font-size:20px;
+  font-weight:900;
+}
+
+.brand-sub{
+  color:var(--muted);
+  font-size:14px;
+  margin-top:4px;
+}
+
+.auth-card{
+  width:100%;
+  max-width:480px;
+  background:rgba(255,255,255,.88);
+  border:1px solid var(--line);
+  border-radius:30px;
+  padding:34px;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(12px);
+}
+
+.badge{
+  width:fit-content;
+  padding:9px 16px;
+  border-radius:999px;
+  background:#edf4ff;
+  color:#2f5fb8;
+  font-size:13px;
+  font-weight:800;
+  margin-bottom:18px;
+}
+
+h1{
+  margin:0 0 10px;
+  font-size:38px;
+  letter-spacing:-.03em;
+}
+
+.desc{
+  color:var(--muted);
+  line-height:1.7;
+  margin:0 0 26px;
+  font-weight:600;
+}
+
+.messages{
+  display:grid;
+  gap:10px;
+  margin-bottom:18px;
+}
+
+.message{
+  padding:13px 15px;
+  border-radius:16px;
+  background:#fff4f4;
+  border:1px solid #ffd2d2;
+  color:#b91c1c;
+  font-size:14px;
+  font-weight:700;
+}
+
+.form-group{
+  margin-bottom:18px;
+}
+
+label{
+  display:block;
+  margin-bottom:9px;
+  font-size:15px;
+  font-weight:800;
+  color:#29406a;
+}
+
+input{
+  width:100%;
+  height:54px;
+  border-radius:18px;
+  border:1px solid #d9e6fb;
+  background:white;
+  padding:0 17px;
+  font-size:15px;
+  color:#23395d;
+  outline:none;
+  transition:.2s;
+}
+
+input:focus{
+  border-color:#8db6ff;
+  box-shadow:0 0 0 4px rgba(74,134,247,.12);
+}
+
+.help-text{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:13px;
+  font-weight:600;
+}
+
+.auth-btn{
+  width:100%;
+  height:56px;
+  border:0;
+  border-radius:18px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:white;
+  font-size:16px;
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 14px 28px rgba(74,134,247,.25);
+  transition:.2s;
+  margin-top:8px;
+}
+
+.auth-btn:hover{
+  transform:translateY(-1px);
+}
+
+.auth-bottom{
+  text-align:center;
+  margin-top:22px;
+  color:var(--muted);
+  font-weight:700;
+}
+
+.auth-bottom a{
+  color:#2f5fb8;
+  font-weight:900;
+}
+
+.back-link{
+  display:inline-flex;
+  margin-top:24px;
+  color:#4d6793;
+  font-weight:800;
+}
+
+.auth-right{
+  background:linear-gradient(135deg,#4a86f7,#60a5fa);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px;
+  position:relative;
+  overflow:hidden;
+}
+
+.auth-right::before{
+  content:"";
+  position:absolute;
+  width:360px;
+  height:360px;
+  border-radius:50%;
+  background:rgba(255,255,255,.16);
+  top:-90px;
+  right:-90px;
+}
+
+.info-box{
+  position:relative;
+  z-index:1;
+  max-width:520px;
+  color:white;
+}
+
+.info-box h2{
+  font-size:44px;
+  line-height:1.12;
+  margin:0 0 18px;
+}
+
+.info-box p{
+  font-size:17px;
+  line-height:1.8;
+  opacity:.95;
+}
+
+.info-cards{
+  display:grid;
+  gap:14px;
+  margin-top:28px;
+}
+
+.info-card{
+  background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:22px;
+  padding:18px;
+  font-weight:800;
+}
+
+@media(max-width:900px){
+  .auth-page{grid-template-columns:1fr}
+  .auth-right{display:none}
+  .auth-left{padding:28px 18px}
+  .auth-card{max-width:100%;padding:26px}
+}
+</style>
 </head>
-<body class="auth-modern-page">
 
-  <div class="auth-modern-shell">
-    <div class="auth-modern-left">
-      <a href="/" class="auth-modern-brand">
-        <div class="auth-modern-logo">EМ</div>
-        <div>
-          <div class="auth-modern-brand-title">EduMentor AI</div>
-          <div class="auth-modern-brand-sub">Ақылды оқу платформасы</div>
+<body>
+<div class="auth-page">
+
+  <section class="auth-left">
+    <a href="{% url 'home' %}" class="brand">
+      <div class="logo">EM</div>
+      <div>
+        <div class="brand-title">EduMentor AI</div>
+        <div class="brand-sub">Ақылды оқу платформасы</div>
+      </div>
+    </a>
+
+    <div class="auth-card">
+      <div class="badge">Жүйеге кіру</div>
+      <h1>Қайта қош келдіңіз</h1>
+      <p class="desc">Профиль, курстар, quiz және AI Chat мүмкіндіктерін қолдану үшін аккаунтыңызға кіріңіз.</p>
+
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %}
+          <div class="message">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="id_username">Пайдаланушы аты</label>
+          <input type="text" name="username" id="id_username" placeholder="Username енгізіңіз" required>
+          <div class="help-text">Тіркелген username жазыңыз</div>
         </div>
-      </a>
 
-      <div class="auth-modern-content">
-        <div class="auth-modern-badge">Қош келдіңіз</div>
-        <h1>Аккаунтыңызға кіріңіз</h1>
-        <p>
-          Оқу прогресін көру, курстарды жалғастыру және жеке кабинетке кіру үшін
-          жүйеге авторизация жасаңыз.
-        </p>
-
-        <div class="auth-modern-points">
-          <div class="auth-point">Жеке оқу траекториясы</div>
-          <div class="auth-point">AI көмекші</div>
-          <div class="auth-point">Прогресс пен талдау</div>
+        <div class="form-group">
+          <label for="id_password">Құпия сөз</label>
+          <input type="password" name="password" id="id_password" placeholder="Құпия сөз енгізіңіз" required>
+          <div class="help-text">Құпия сөз кемінде 8 таңбадан тұрғаны дұрыс</div>
         </div>
+
+        <button type="submit" class="auth-btn">Кіру</button>
+      </form>
+
+      <div class="auth-bottom">
+        Аккаунтыңыз жоқ па? <a href="{% url 'register' %}">Тіркелу</a>
       </div>
     </div>
 
-    <div class="auth-modern-right">
-      <div class="auth-modern-card">
-        <div class="auth-modern-head">
-          <h2>Кіру</h2>
-          <p>Пайдаланушы аты мен құпия сөзді енгізіңіз</p>
-        </div>
+    <a href="{% url 'home' %}" class="back-link">← Басты бетке қайту</a>
+  </section>
 
-        {% if error %}
-          <div class="error-box">{{ error }}</div>
-        {% endif %}
+  <section class="auth-right">
+    <div class="info-box">
+      <h2>Оқуыңды бір жерден басқар</h2>
+      <p>EduMentor AI арқылы курстарды өтіп, тест тапсырып, прогресті бақылап және AI көмекшіден жауап аласың.</p>
 
-        <form method="POST" class="auth-form auth-modern-form">
-          {% csrf_token %}
-
-          <div class="field">
-            <label for="{{ form.username.id_for_label }}">Пайдаланушы аты</label>
-            {{ form.username }}
-          </div>
-
-          <div class="field">
-            <label for="{{ form.password.id_for_label }}">Құпия сөз</label>
-            {{ form.password }}
-          </div>
-
-          <button class="auth-modern-submit" type="submit">Кіру</button>
-
-          <div class="auth-modern-footer">
-            Аккаунт жоқ па? <a href="/register/">Тіркелу</a>
-          </div>
-
-          <div class="auth-modern-links">
-            <a href="/">Басты бетке оралу</a>
-          </div>
-        </form>
+      <div class="info-cards">
+        <div class="info-card">⚡ Жылдам кіру және жеке кабинет</div>
+        <div class="info-card">🤖 AI Chat арқылы көмек</div>
+        <div class="info-card">📊 Прогресс пен рейтинг бақылау</div>
       </div>
     </div>
-  </div>
+  </section>
 
+</div>
 </body>
 </html>
