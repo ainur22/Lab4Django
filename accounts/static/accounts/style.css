@@ -4730,3 +4730,50 @@ textarea.field-input,
 @media (max-width: 768px) {
    /* мобиль код */
 }
+
+@media (max-width: 768px) {
+  .hero,
+  .hero-wrap,
+  .hero-content,
+  .courses-grid,
+  .features-grid,
+  .profile-layout,
+  .grid,
+  .cards {
+    display: block !important;
+  }
+
+  .nav,
+  .navbar,
+  .topbar {
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .container,
+  .wrap,
+  .page,
+  .main {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  h1 {
+    font-size: 32px !important;
+    line-height: 1.15 !important;
+  }
+
+  .card,
+  .course-card,
+  .feature-card {
+    width: 100% !important;
+    margin-bottom: 14px !important;
+  }
+}
