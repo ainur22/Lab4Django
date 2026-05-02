@@ -4727,3 +4727,6 @@ textarea.field-input,
   }
 }
 
+@media (max-width: 768px) {
+   /* мобиль код */
+}
