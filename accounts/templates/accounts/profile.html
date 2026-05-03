@@ -526,9 +526,9 @@ textarea{
   position:fixed;
   right:28px;
   bottom:28px;
-  width:96px;
-  height:96px;
-  border-radius:50%;
+  width:150px;
+  height:72px;
+  border-radius:999px;
   border:none;
   outline:none;
   background:linear-gradient(135deg,#5d97ff,#4a86f7);
@@ -537,14 +537,21 @@ textarea{
   align-items:center;
   justify-content:center;
   text-align:center;
-  font-size:16px;
+  font-size:22px;
   font-weight:900;
-  line-height:1.15;
   cursor:pointer;
   z-index:999;
-  box-shadow:0 15px 35px rgba(74,134,247,.35);
+  box-shadow:0 16px 36px rgba(74,134,247,.35);
   transition:.25s ease;
-  overflow:hidden;
+}
+
+.ai-float:hover{
+  transform:translateY(-5px);
+  box-shadow:0 24px 50px rgba(74,134,247,.48);
+}
+
+.ai-float span{
+  color:white;
 }
 
 .ai-float::before{
@@ -722,7 +729,7 @@ body.theme-dark .btn-secondary{
     <a class="sidebar-link" href="{% url 'profile_progress' %}">Прогресс</a>
     <a class="sidebar-link" href="{% url 'profile_grants' %}">Грант калькуляторы</a>
     <a class="sidebar-link" href="{% url 'profile_leaderboard' %}">Лидерборд</a>
-    <a class="sidebar-link" href="{% url 'profile_settings' %}">Настройкалар</a>
+    <a class="sidebar-link" href="{% url 'profile_settings' %}">Баптаулар</a>
   </div>
 </aside>
 
@@ -864,7 +871,7 @@ body.theme-dark .btn-secondary{
 </main>
 
 <a href="{% url 'ai_chat' %}" class="ai-float">
-  <span>AI<br>чат</span>
+  <span>AI чат</span>
 </a>
 
 </body>
