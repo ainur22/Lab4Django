@@ -2,11 +2,10 @@ import os
 import json
 import tempfile
 import requests
-import time
 
 from django.conf import settings
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
@@ -14,6 +13,7 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 
 from .forms import RegisterForm, LoginForm, ProfileUpdateForm, ContactRequestForm
+from .models import AIChatSession, AIChatMessage
 
 
 User = get_user_model()
@@ -82,62 +82,117 @@ def quiz_view(request):
 
 
 @ensure_csrf_cookie
+@login_required
 def ai_chat_view(request):
     return render(request, "accounts/ai_chat.html", build_page_context(request))
 
 
-def get_demo_reply(user_message):
-    return (
-        "AI уақытша жауап бере алмады. "
-        "GEMINI_API_KEY дұрыс қойылғанын тексеріңіз немесе кейін қайта сұрап көріңіз."
-    )
+@login_required
+def ai_chat_sessions_api(request):
+    chats = AIChatSession.objects.filter(user=request.user)
+
+    data = []
+    for chat in chats:
+        last_message = chat.messages.last()
+        data.append({
+            "id": chat.id,
+            "title": chat.title,
+            "updated_at": chat.updated_at.strftime("%d.%m %H:%M"),
+            "last_message": last_message.text[:80] if last_message else "",
+        })
+
+    return JsonResponse({"ok": True, "chats": data})
 
 
+@login_required
+def ai_chat_detail_api(request, chat_id):
+    chat = get_object_or_404(AIChatSession, id=chat_id, user=request.user)
+
+    messages_data = []
+    for msg in chat.messages.all():
+        messages_data.append({
+            "role": msg.role,
+            "text": msg.text,
+            "time": msg.created_at.strftime("%H:%M"),
+        })
+
+    return JsonResponse({
+        "ok": True,
+        "chat": {
+            "id": chat.id,
+            "title": chat.title,
+            "messages": messages_data,
+        }
+    })
+
+
+@login_required
+@require_POST
+def ai_chat_delete_api(request, chat_id):
+    chat = get_object_or_404(AIChatSession, id=chat_id, user=request.user)
+    chat.delete()
+    return JsonResponse({"ok": True})
+
+
+@login_required
 @require_POST
 def ai_web_chat_api(request):
     try:
         data = json.loads(request.body)
         user_message = data.get("message", "").strip()
+        chat_id = data.get("chat_id")
 
         if not user_message:
             return JsonResponse({"ok": False, "error": "Сұрақ бос."}, status=400)
 
+        if chat_id:
+            chat = get_object_or_404(AIChatSession, id=chat_id, user=request.user)
+        else:
+            title = user_message[:45]
+            chat = AIChatSession.objects.create(user=request.user, title=title)
+
+        AIChatMessage.objects.create(chat=chat, role="user", text=user_message)
+
         api_key = getattr(settings, "GEMINI_API_KEY", "").strip()
 
         if not api_key:
-            return JsonResponse({
-                "ok": True,
-                "answer": "GEMINI_API_KEY орнатылмаған."
-            })
+            answer_text = "GEMINI_API_KEY орнатылмаған."
+        else:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
 
-        url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+            payload = {
+                "contents": [
+                    {
+                        "parts": [
+                            {
+                                "text": (
+                                    "Сен EduMentor AI атты оқу көмекшісісің. "
+                                    "Қазақша қысқа әрі түсінікті жауап бер.\n\n"
+                                    f"Сұрақ: {user_message}"
+                                )
+                            }
+                        ]
+                    }
+                ]
+            }
 
-        payload = {
-            "contents": [
-                {
-                    "parts": [
-                        {
-                            "text": (
-                                "Сен EduMentor AI атты оқу көмекшісісің. "
-                                "Қазақша қысқа әрі түсінікті жауап бер.\n\n"
-                                f"Сұрақ: {user_message}"
-                            )
-                        }
-                    ]
-                }
-            ]
-        }
+            response = requests.post(url, json=payload, timeout=30)
+            result = response.json()
 
-        response = requests.post(url, json=payload, timeout=30)
-        result = response.json()
+            if response.status_code != 200:
+                error_message = result.get("error", {}).get("message", "Gemini API қатесі шықты.")
+                answer_text = f"AI қатесі: {error_message}"
+            else:
+                answer_text = result["candidates"][0]["content"]["parts"][0]["text"]
 
-        if response.status_code != 200:
-            error_message = result.get("error", {}).get("message", "Gemini API қатесі шықты.")
-            return JsonResponse({"ok": True, "answer": f"AI қатесі: {error_message}"})
+        AIChatMessage.objects.create(chat=chat, role="bot", text=answer_text)
+        chat.save()
 
-        answer_text = result["candidates"][0]["content"]["parts"][0]["text"]
-
-        return JsonResponse({"ok": True, "answer": answer_text})
+        return JsonResponse({
+            "ok": True,
+            "chat_id": chat.id,
+            "answer": answer_text,
+        })
 
     except Exception as e:
         return JsonResponse({"ok": True, "answer": f"AI қатесі: {str(e)}"})

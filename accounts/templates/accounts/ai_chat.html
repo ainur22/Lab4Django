@@ -104,9 +104,132 @@
     }
 
     .ai-wrap {
-      width: min(1120px, calc(100% - 32px));
+      width: min(1240px, calc(100% - 32px));
       margin: 0 auto;
       padding: 28px 0 44px;
+    }
+
+    .ai-layout {
+      display: grid;
+      grid-template-columns: 300px 1fr;
+      gap: 16px;
+      align-items: stretch;
+    }
+
+    .ai-sidebar {
+      padding: 14px;
+      border-radius: 28px;
+      background: var(--card);
+      border: 1px solid #e3eaf3;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+      min-height: 720px;
+      max-height: calc(100vh - 128px);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .side-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .side-title {
+      font-size: 17px;
+      font-weight: 900;
+      color: #21375c;
+    }
+
+    .new-chat-btn {
+      width: 100%;
+      min-height: 46px;
+      border: 0;
+      border-radius: 16px;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      color: white;
+      font-weight: 900;
+      cursor: pointer;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 20px rgba(37,99,235,.16);
+    }
+
+    .chat-list {
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-item {
+      width: 100%;
+      text-align: left;
+      border: 1px solid #e3eaf3;
+      background: rgba(255,255,255,.82);
+      border-radius: 16px;
+      padding: 11px 10px;
+      cursor: pointer;
+      transition: .18s ease;
+      color: #28416d;
+    }
+
+    .chat-item:hover {
+      background: #f3f7ff;
+      transform: translateY(-1px);
+    }
+
+    .chat-item.active {
+      border-color: #9dc0ff;
+      background: #edf4ff;
+    }
+
+    .chat-item-title {
+      font-size: 13px;
+      font-weight: 900;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 5px;
+    }
+
+    .chat-item-preview {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.35;
+      max-height: 34px;
+      overflow: hidden;
+    }
+
+    .chat-item-bottom {
+      margin-top: 7px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: #92a2ba;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .delete-chat-btn {
+      border: 0;
+      background: transparent;
+      color: #ef4444;
+      cursor: pointer;
+      font-size: 13px;
+      padding: 2px 4px;
+    }
+
+    .side-empty {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      padding: 26px 10px;
+      line-height: 1.5;
     }
 
     .ai-chat-shell {
@@ -116,6 +239,7 @@
       border: 1px solid #e3eaf3;
       box-shadow: var(--shadow);
       backdrop-filter: blur(12px);
+      min-width: 0;
     }
 
     .ai-chat-head {
@@ -530,6 +654,7 @@
 
     body.theme-dark .topbar,
     body.theme-dark .ai-chat-shell,
+    body.theme-dark .ai-sidebar,
     body.theme-dark .ai-summary-card,
     body.theme-dark .ai-empty-card {
       background: rgba(17,24,39,.92) !important;
@@ -546,7 +671,8 @@
     body.theme-dark .brand-title,
     body.theme-dark .ai-chat-title,
     body.theme-dark .ai-summary-value,
-    body.theme-dark .ai-empty-title {
+    body.theme-dark .ai-empty-title,
+    body.theme-dark .side-title {
       color: #f3f7ff !important;
     }
 
@@ -560,10 +686,31 @@
     body.theme-dark .ai-mini-btn,
     body.theme-dark .speak-btn,
     body.theme-dark .ai-subject-chip,
-    body.theme-dark .chip {
+    body.theme-dark .chip,
+    body.theme-dark .chat-item {
       background: #1b2a44 !important;
       color: #dbe7ff !important;
       border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .chat-item.active {
+      background: #243758 !important;
+      border-color: #60a5fa !important;
+    }
+
+    @media (max-width: 1000px) {
+      .ai-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .ai-sidebar {
+        min-height: auto;
+        max-height: 260px;
+      }
+
+      .chat-list {
+        max-height: 180px;
+      }
     }
 
     @media (max-width: 900px) {
@@ -574,7 +721,7 @@
       .topbar { padding: 0 12px; }
       .brand-subtitle { display: none; }
       .ai-wrap { width: calc(100% - 18px); padding-top: 18px; }
-      .ai-chat-shell { border-radius: 22px; padding: 12px; }
+      .ai-chat-shell, .ai-sidebar { border-radius: 22px; padding: 12px; }
       .ai-chat-head { flex-direction: column; align-items: flex-start; }
       .ai-head-actions { width: 100%; }
       .ai-icon-btn { flex: 1; }
@@ -587,6 +734,7 @@
     }
   </style>
 </head>
+
 <body class="ai-page {% if dark_mode %}theme-dark{% endif %}">
 
 <header class="topbar">
@@ -602,89 +750,104 @@
 </header>
 
 <main class="ai-wrap">
-  <section class="ai-chat-shell">
+  <div class="ai-layout">
 
-    <div class="ai-chat-head">
-      <div class="ai-chat-head-left">
-        <div class="ai-avatar">AI</div>
-        <div>
-          <div class="ai-chat-title">EduMentor AI Chat</div>
-          <div class="ai-chat-status" id="assistantStatus">Онлайн • Gemini дайын</div>
+    <aside class="ai-sidebar">
+      <div class="side-top">
+        <div class="side-title">Недавние чаты</div>
+      </div>
+
+      <button type="button" class="new-chat-btn" id="newChatBtn">+ Жаңа чат</button>
+
+      <div class="chat-list" id="chatList">
+        <div class="side-empty">Чаттар жүктеліп жатыр...</div>
+      </div>
+    </aside>
+
+    <section class="ai-chat-shell">
+
+      <div class="ai-chat-head">
+        <div class="ai-chat-head-left">
+          <div class="ai-avatar">AI</div>
+          <div>
+            <div class="ai-chat-title" id="currentChatTitle">EduMentor AI Chat</div>
+            <div class="ai-chat-status" id="assistantStatus">Онлайн • Gemini дайын</div>
+          </div>
+        </div>
+
+        <div class="ai-head-actions">
+          <button type="button" class="ai-icon-btn" id="clearChatBtn">🧹 <span>Тазалау</span></button>
+          <button type="button" class="ai-icon-btn" id="toggleVoiceReadBtn">🔊 <span>Дауыс</span></button>
         </div>
       </div>
 
-      <div class="ai-head-actions">
-        <button type="button" class="ai-icon-btn" id="clearChatBtn">🧹 <span>Тазалау</span></button>
-        <button type="button" class="ai-icon-btn" id="toggleVoiceReadBtn">🔊 <span>Дауыс</span></button>
+      <div class="ai-summary-row">
+        <div class="ai-summary-card">
+          <div class="ai-summary-label">Қалай қолдану керек</div>
+          <div class="ai-summary-value">Сұрақ жаз немесе микрофонды бас</div>
+        </div>
+        <div class="ai-summary-card">
+          <div class="ai-summary-label">Недавний чат</div>
+          <div class="ai-summary-value">Чат аккаунтқа сақталады</div>
+        </div>
+        <div class="ai-summary-card">
+          <div class="ai-summary-label">AI модель</div>
+          <div class="ai-summary-value">Gemini арқылы жауап береді</div>
+        </div>
       </div>
-    </div>
 
-    <div class="ai-summary-row">
-      <div class="ai-summary-card">
-        <div class="ai-summary-label">Қалай қолдану керек</div>
-        <div class="ai-summary-value">Сұрақ жаз немесе микрофонды бас</div>
+      <div class="ai-error-box" id="errorBox"></div>
+
+      <div class="ai-subject-row">
+        <button type="button" class="ai-subject-chip active" data-subject="">Барлығы</button>
+        <button type="button" class="ai-subject-chip" data-subject="Математика">Математика</button>
+        <button type="button" class="ai-subject-chip" data-subject="Қазақстан тарихы">Тарих</button>
+        <button type="button" class="ai-subject-chip" data-subject="Биология">Биология</button>
+        <button type="button" class="ai-subject-chip" data-subject="Физика">Физика</button>
       </div>
-      <div class="ai-summary-card">
-        <div class="ai-summary-label">Недавний чат</div>
-        <div class="ai-summary-value">Чат автоматты сақталады</div>
+
+      <div class="ai-quick-row">
+        <button type="button" class="ai-quick-pill" data-text="Маған оқу жоспарын жасап бер">Оқу жоспары</button>
+        <button type="button" class="ai-quick-pill" data-text="Қазақстан тарихын қарапайым тілмен түсіндір">Тарих</button>
+        <button type="button" class="ai-quick-pill" data-text="Математикадан көмек керек">Математика</button>
+        <button type="button" class="ai-quick-pill" data-text="Биологиядан тестке дайындалуға көмектес">Биология</button>
       </div>
-      <div class="ai-summary-card">
-        <div class="ai-summary-label">AI модель</div>
-        <div class="ai-summary-value">Gemini арқылы жауап береді</div>
-      </div>
-    </div>
 
-    <div class="ai-error-box" id="errorBox"></div>
+      <div class="ai-chat-window" id="chatWindow">
+        <div class="ai-chat-day">Бүгін</div>
 
-    <div class="ai-subject-row">
-      <button type="button" class="ai-subject-chip active" data-subject="">Барлығы</button>
-      <button type="button" class="ai-subject-chip" data-subject="Математика">Математика</button>
-      <button type="button" class="ai-subject-chip" data-subject="Қазақстан тарихы">Тарих</button>
-      <button type="button" class="ai-subject-chip" data-subject="Биология">Биология</button>
-      <button type="button" class="ai-subject-chip" data-subject="Физика">Физика</button>
-    </div>
-
-    <div class="ai-quick-row">
-      <button type="button" class="ai-quick-pill" data-text="Маған оқу жоспарын жасап бер">Оқу жоспары</button>
-      <button type="button" class="ai-quick-pill" data-text="Қазақстан тарихын қарапайым тілмен түсіндір">Тарих</button>
-      <button type="button" class="ai-quick-pill" data-text="Математикадан көмек керек">Математика</button>
-      <button type="button" class="ai-quick-pill" data-text="Биологиядан тестке дайындалуға көмектес">Биология</button>
-    </div>
-
-    <div class="ai-chat-window" id="chatWindow">
-      <div class="ai-chat-day">Бүгін</div>
-
-      <div class="ai-empty-state" id="emptyState">
-        <div class="ai-empty-card">
-          <div class="ai-empty-emoji">🤖</div>
-          <div class="ai-empty-title">Сұрағыңды қой</div>
-          <div class="ai-empty-text">
-            Мысалы: «ҰБТ-ға 7 күндік оқу жоспарын құр» немесе «Математика формулаларын түсіндір».
+        <div class="ai-empty-state" id="emptyState">
+          <div class="ai-empty-card">
+            <div class="ai-empty-emoji">🤖</div>
+            <div class="ai-empty-title">Сұрағыңды қой</div>
+            <div class="ai-empty-text">
+              Мысалы: «ҰБТ-ға 7 күндік оқу жоспарын құр» немесе «Математика формулаларын түсіндір».
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <form class="ai-chat-form" id="chatForm">
-      <button type="button" class="ai-voice-btn" id="voiceBtn">🎤</button>
+      <form class="ai-chat-form" id="chatForm">
+        <button type="button" class="ai-voice-btn" id="voiceBtn">🎤</button>
 
-      <div class="ai-input-box">
-        <input
-          type="text"
-          id="chatInput"
-          placeholder="Сұрағыңды нақты жаз..."
-          autocomplete="off"
-          maxlength="500"
-          required
-        >
-        <div class="ai-input-tip" id="voiceHint">Enter — жіберу</div>
-        <div class="ai-char-count" id="charCount">0 / 500</div>
-      </div>
+        <div class="ai-input-box">
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Сұрағыңды нақты жаз..."
+            autocomplete="off"
+            maxlength="500"
+            required
+          >
+          <div class="ai-input-tip" id="voiceHint">Enter — жіберу</div>
+          <div class="ai-char-count" id="charCount">0 / 500</div>
+        </div>
 
-      <button type="submit" class="ai-send-btn" id="sendBtn">Жіберу</button>
-    </form>
+        <button type="submit" class="ai-send-btn" id="sendBtn">Жіберу</button>
+      </form>
 
-  </section>
+    </section>
+  </div>
 </main>
 
 <script>
@@ -701,8 +864,9 @@
   const clearChatBtn = document.getElementById("clearChatBtn");
   const charCount = document.getElementById("charCount");
   const subjectChips = document.querySelectorAll(".ai-subject-chip");
-
-  const CHAT_KEY = "edumentor_ai_chat_history_v2";
+  const chatList = document.getElementById("chatList");
+  const newChatBtn = document.getElementById("newChatBtn");
+  const currentChatTitle = document.getElementById("currentChatTitle");
 
   let autoSpeakEnabled = false;
   let isSending = false;
@@ -710,6 +874,7 @@
   let lastUserMessage = "";
   let recognition = null;
   let isRecognizing = false;
+  let currentChatId = null;
 
   function getCookie(name) {
     const value = "; " + document.cookie;
@@ -763,42 +928,11 @@
     `;
   }
 
-  function saveChatMessage(text, sender) {
-    let history = JSON.parse(localStorage.getItem(CHAT_KEY) || "[]");
-
-    history.push({
-      text: text,
-      sender: sender,
-      time: new Date().toISOString()
-    });
-
-    if (history.length > 50) {
-      history = history.slice(history.length - 50);
-    }
-
-    localStorage.setItem(CHAT_KEY, JSON.stringify(history));
-  }
-
-  function loadChatHistory() {
-    const history = JSON.parse(localStorage.getItem(CHAT_KEY) || "[]");
-
-    if (!history.length) return;
-
-    hideEmptyState();
-
-    history.forEach((msg) => {
-      if (msg.sender === "user") {
-        renderUserMessage(msg.text, false);
-      } else {
-        renderBotMessage(msg.text, false);
-      }
-    });
-
-    scrollChatBottom();
-  }
-
-  function clearChatHistory() {
-    localStorage.removeItem(CHAT_KEY);
+  function clearChatWindow() {
+    renderEmptyState("Жаңа чат басталды. Төменге сұрағыңды жаз.");
+    currentChatTitle.textContent = "EduMentor AI Chat";
+    currentChatId = null;
+    lastUserMessage = "";
   }
 
   function speakText(text) {
@@ -817,7 +951,7 @@
     window.speechSynthesis.speak(utterance);
   }
 
-  function renderUserMessage(text, shouldSave = true) {
+  function renderUserMessage(text) {
     hideEmptyState();
 
     const div = document.createElement("div");
@@ -834,12 +968,10 @@
 
     div.querySelector(".ai-bubble").textContent = text;
     chatWindow.appendChild(div);
-
-    if (shouldSave) saveChatMessage(text, "user");
     scrollChatBottom();
   }
 
-  function renderBotMessage(text, shouldSave = true) {
+  function renderBotMessage(text, shouldSpeak = true) {
     hideEmptyState();
 
     const div = document.createElement("div");
@@ -865,8 +997,7 @@
 
     chatWindow.appendChild(div);
 
-    if (shouldSave) saveChatMessage(text, "bot");
-    if (autoSpeakEnabled && shouldSave) speakText(text);
+    if (autoSpeakEnabled && shouldSpeak) speakText(text);
 
     scrollChatBottom();
   }
@@ -895,6 +1026,117 @@
   function removeTypingRow() {
     const typingRow = document.getElementById("typingRow");
     if (typingRow) typingRow.remove();
+  }
+
+  async function loadChatList() {
+    try {
+      const response = await fetch("{% url 'ai_chat_sessions_api' %}");
+      const data = await response.json();
+
+      if (!data.ok) {
+        chatList.innerHTML = `<div class="side-empty">Чаттарды жүктеу қатесі.</div>`;
+        return;
+      }
+
+      if (!data.chats.length) {
+        chatList.innerHTML = `<div class="side-empty">Әзірге чат жоқ.<br>Жаңа сұрақ жазсаң, осында сақталады.</div>`;
+        return;
+      }
+
+      chatList.innerHTML = "";
+
+      data.chats.forEach((chat) => {
+        const item = document.createElement("button");
+        item.type = "button";
+        item.className = "chat-item";
+        if (String(chat.id) === String(currentChatId)) item.classList.add("active");
+
+        item.innerHTML = `
+          <div class="chat-item-title"></div>
+          <div class="chat-item-preview"></div>
+          <div class="chat-item-bottom">
+            <span>${chat.updated_at}</span>
+            <button type="button" class="delete-chat-btn" data-id="${chat.id}">✕</button>
+          </div>
+        `;
+
+        item.querySelector(".chat-item-title").textContent = chat.title || "Жаңа чат";
+        item.querySelector(".chat-item-preview").textContent = chat.last_message || "Хабарлама жоқ";
+
+        item.addEventListener("click", function(e) {
+          if (e.target.closest(".delete-chat-btn")) return;
+          openChat(chat.id);
+        });
+
+        chatList.appendChild(item);
+      });
+
+    } catch (error) {
+      chatList.innerHTML = `<div class="side-empty">Сервермен байланыс жоқ.</div>`;
+    }
+  }
+
+  async function openChat(chatId) {
+    try {
+      const response = await fetch(`/api/ai-chats/${chatId}/`);
+      const data = await response.json();
+
+      if (!data.ok) {
+        showError("Чатты ашу қатесі.");
+        return;
+      }
+
+      currentChatId = data.chat.id;
+      currentChatTitle.textContent = data.chat.title || "EduMentor AI Chat";
+
+      chatWindow.innerHTML = `<div class="ai-chat-day">Бүгін</div>`;
+
+      if (!data.chat.messages.length) {
+        renderEmptyState("Бұл чатта хабарлама жоқ.");
+      } else {
+        data.chat.messages.forEach((msg) => {
+          if (msg.role === "user") {
+            renderUserMessage(msg.text);
+            lastUserMessage = msg.text;
+          } else {
+            renderBotMessage(msg.text, false);
+          }
+        });
+      }
+
+      await loadChatList();
+      scrollChatBottom();
+
+    } catch (error) {
+      showError("Чатты ашу кезінде қате шықты.");
+    }
+  }
+
+  async function deleteChat(chatId) {
+    try {
+      const response = await fetch(`/api/ai-chats/${chatId}/delete/`, {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": getCookie("csrftoken")
+        }
+      });
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        showError("Чатты өшіру қатесі.");
+        return;
+      }
+
+      if (String(currentChatId) === String(chatId)) {
+        clearChatWindow();
+      }
+
+      await loadChatList();
+
+    } catch (error) {
+      showError("Чатты өшіру кезінде қате шықты.");
+    }
   }
 
   function detectSpeechRecognition() {
@@ -1055,7 +1297,7 @@
       finalMessage = `${selectedSubject} пәні бойынша: ${cleanText}`;
     }
 
-    renderUserMessage(finalMessage, true);
+    renderUserMessage(finalMessage);
 
     chatInput.value = "";
     updateCharCount();
@@ -1070,7 +1312,10 @@
           "Content-Type": "application/json",
           "X-CSRFToken": getCookie("csrftoken")
         },
-        body: JSON.stringify({ message: finalMessage })
+        body: JSON.stringify({
+          message: finalMessage,
+          chat_id: currentChatId
+        })
       });
 
       const data = await response.json();
@@ -1081,7 +1326,17 @@
         renderBotMessage(msg, true);
         showError(msg);
       } else {
+        currentChatId = data.chat_id;
         renderBotMessage(data.answer || "Жауап бос қайтты.", true);
+        await loadChatList();
+
+        if (currentChatId) {
+          const active = document.querySelector(`.delete-chat-btn[data-id="${currentChatId}"]`);
+          if (active) {
+            const item = active.closest(".chat-item");
+            if (item) item.classList.add("active");
+          }
+        }
       }
 
     } catch (error) {
@@ -1108,6 +1363,36 @@
   chatInput.addEventListener("input", updateCharCount);
   voiceBtn.addEventListener("click", handleVoiceClick);
 
+  newChatBtn.addEventListener("click", function() {
+    clearChatWindow();
+    document.querySelectorAll(".chat-item").forEach((item) => item.classList.remove("active"));
+    chatInput.value = "";
+    updateCharCount();
+    chatInput.focus();
+  });
+
+  clearChatBtn.addEventListener("click", function() {
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+    }
+
+    clearChatWindow();
+    chatInput.value = "";
+    updateCharCount();
+    chatInput.focus();
+  });
+
+  chatList.addEventListener("click", function(e) {
+    const deleteBtn = e.target.closest(".delete-chat-btn");
+    if (!deleteBtn) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const chatId = deleteBtn.dataset.id;
+    deleteChat(chatId);
+  });
+
   toggleVoiceReadBtn.addEventListener("click", function() {
     autoSpeakEnabled = !autoSpeakEnabled;
     this.classList.toggle("is-off", !autoSpeakEnabled);
@@ -1119,19 +1404,6 @@
     assistantStatus.textContent = autoSpeakEnabled
       ? "Онлайн • жауапты дауыспен оқиды"
       : "Онлайн • дауыспен оқу өшірулі";
-  });
-
-  clearChatBtn.addEventListener("click", function() {
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.cancel();
-    }
-
-    clearChatHistory();
-    removeTypingRow();
-    renderEmptyState("Жаңа чат басталды. Төменге сұрағыңды жаз.");
-    chatInput.value = "";
-    updateCharCount();
-    chatInput.focus();
   });
 
   subjectChips.forEach((chip) => {
@@ -1188,10 +1460,10 @@
     }
   });
 
-  window.addEventListener("load", function() {
-    loadChatHistory();
+  window.addEventListener("load", async function() {
     updateCharCount();
     checkVoiceSupport();
+    await loadChatList();
     scrollChatBottom();
   });
 </script>
