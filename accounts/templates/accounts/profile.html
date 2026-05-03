@@ -3,181 +3,869 @@
 <html lang="kk">
 <head>
 <meta charset="UTF-8">
-<title>Profile</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduMentor AI — Профиль</title>
 
 <style>
-body{
-  font-family:Arial;
-  background:#eef4ff;
-  margin:0;
+:root{
+  --bg-main:#f4f8ff;
+  --card-bg:#ffffff;
+  --text-main:#23395d;
+  --text-soft:#7e91b4;
+  --blue:#4a86f7;
+  --blue-dark:#2f5fb8;
+  --blue-soft:#edf4ff;
+  --line:#dbe7fb;
+  --shadow:0 12px 35px rgba(67,115,208,.08);
 }
 
-/* КНОПКА */
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:"Inter","Segoe UI",Arial,sans-serif;
+  color:var(--text-main);
+  background:
+    radial-gradient(circle at left bottom,rgba(108,209,180,.12),transparent 18%),
+    linear-gradient(180deg,#f8fbff 0%,#eef5ff 100%);
+}
+
+a{text-decoration:none;color:inherit}
+
+.container{
+  width:min(1380px,calc(100% - 40px));
+  margin:0 auto;
+}
+
+.site-header{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:rgba(255,255,255,.96);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid #edf2fc;
+}
+
+.nav-wrap{
+  min-height:92px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  min-width:240px;
+}
+
+.brand-logo{
+  width:64px;
+  height:64px;
+  border-radius:20px;
+  background:linear-gradient(135deg,#5d97ff,#4a86f7);
+  color:white;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  font-weight:800;
+}
+
+.brand-title{
+  font-size:18px;
+  font-weight:800;
+}
+
+.brand-subtitle{
+  margin-top:4px;
+  font-size:14px;
+  color:var(--text-soft);
+}
+
+.main-nav{
+  display:flex;
+  align-items:center;
+  gap:22px;
+  flex-wrap:wrap;
+}
+
+.main-nav a{
+  color:#4d6793;
+  font-size:16px;
+  font-weight:700;
+  padding:10px 4px;
+}
+
+.main-nav a:hover{color:var(--blue-dark)}
+
+.nav-actions{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.nav-btn,.nav-btn-light{
+  border-radius:18px;
+  padding:14px 22px;
+  font-size:16px;
+  font-weight:800;
+}
+
+.nav-btn{
+  color:white;
+  background:var(--blue);
+}
+
+.nav-btn-light{
+  color:var(--blue-dark);
+  background:var(--blue-soft);
+  border:1px solid #d9e6fd;
+}
+
+.nav-avatar,.nav-avatar-fallback{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  border:3px solid white;
+  object-fit:cover;
+  box-shadow:0 8px 18px rgba(35,57,93,.15);
+}
+
+.nav-avatar-fallback{
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#5d97ff,#4a86f7);
+  color:white;
+  font-weight:800;
+}
+
+.page{padding:28px 0 60px}
+
+.layout{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  gap:24px;
+  align-items:start;
+}
+
+.sidebar{
+  position:sticky;
+  top:112px;
+}
+
+.sidebar-card{
+  background:rgba(255,255,255,.88);
+  border:1px solid #e7eefc;
+  border-radius:26px;
+  padding:18px;
+  box-shadow:var(--shadow);
+}
+
+.sidebar-title{
+  font-size:14px;
+  font-weight:800;
+  color:#95a6c8;
+  text-transform:uppercase;
+  margin-bottom:14px;
+}
+
+.sidebar-link{
+  display:block;
+  color:#4f668f;
+  font-weight:700;
+  padding:13px 14px;
+  border-radius:16px;
+  margin-bottom:8px;
+}
+
+.sidebar-link:hover{
+  background:#f4f8ff;
+  color:var(--blue-dark);
+}
+
+.sidebar-link.active{
+  background:linear-gradient(135deg,#5f99ff,#4a86f7);
+  color:white;
+}
+
+.content{
+  display:flex;
+  flex-direction:column;
+  gap:22px;
+}
+
+.card{
+  background:var(--card-bg);
+  border:1px solid #e8effc;
+  border-radius:28px;
+  box-shadow:var(--shadow);
+}
+
+.hero{
+  padding:28px;
+  display:grid;
+  grid-template-columns:1.2fr .9fr;
+  gap:24px;
+  align-items:center;
+}
+
+.hero-left{
+  display:flex;
+  align-items:center;
+  gap:24px;
+}
+
+.avatar-wrap{position:relative}
+
+.avatar-lg,.avatar-fallback-lg{
+  width:150px;
+  height:150px;
+  border-radius:50%;
+  object-fit:cover;
+  border:6px solid #eef4ff;
+}
+
+.avatar-fallback-lg{
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#5d97ff,#4a86f7);
+  color:white;
+  font-size:52px;
+  font-weight:800;
+}
+
+.online-dot{
+  width:22px;
+  height:22px;
+  background:#2ecc71;
+  border-radius:50%;
+  border:4px solid white;
+  position:absolute;
+  right:10px;
+  bottom:10px;
+}
+
+.badge{
+  display:inline-block;
+  padding:9px 16px;
+  border-radius:999px;
+  background:#edf4ff;
+  color:var(--blue-dark);
+  font-weight:800;
+  margin-bottom:12px;
+}
+
+.hero-title{
+  margin:0 0 14px;
+  font-size:58px;
+  line-height:1.02;
+  color:#213a63;
+}
+
+.meta{
+  font-size:17px;
+  color:#7185aa;
+  margin-bottom:10px;
+}
+
+.meta strong{color:#28436f}
+
+.hero-right{
+  display:grid;
+  grid-template-columns:1fr 150px;
+  gap:18px;
+}
+
+.level-box,.streak-box{
+  background:#fbfdff;
+  border:1px solid #e4edff;
+  border-radius:22px;
+  padding:22px;
+}
+
+.level-title{
+  font-size:24px;
+  font-weight:800;
+  color:#f2a11e;
+}
+
+.level-sub,.level-bottom,.streak-label{
+  color:var(--text-soft);
+  font-size:15px;
+}
+
+.bar,.small-bar{
+  border-radius:999px;
+  background:#e7eefc;
+  overflow:hidden;
+}
+
+.bar{height:12px;margin:12px 0 10px}
+.small-bar{height:10px}
+
+.fill{
+  height:100%;
+  background:linear-gradient(90deg,#5e98ff,#2e67da);
+}
+
+.w-53{width:53%}
+.w-68{width:68%}
+
+.streak-box{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+}
+
+.streak-number{
+  font-size:34px;
+  font-weight:800;
+  color:#f29d20;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:18px;
+}
+
+.stat-card{
+  padding:28px 18px;
+  text-align:center;
+}
+
+.stat-number{
+  font-size:48px;
+  font-weight:800;
+  color:#2e67da;
+}
+
+.stat-label{
+  font-size:17px;
+  color:var(--text-soft);
+  font-weight:700;
+}
+
+.section{padding:28px}
+
+.section-title{
+  margin:0 0 18px;
+  font-size:30px;
+  color:#203963;
+}
+
+.notice{
+  background:#fff8e9;
+  border:1px solid #f4deb0;
+  color:#b67c11;
+  border-radius:18px;
+  padding:16px 18px;
+  font-weight:700;
+  margin-bottom:20px;
+}
+
+.form-shell{
+  display:grid;
+  grid-template-columns:220px 1fr;
+  gap:24px;
+  background:#f8fbff;
+  border:1px solid #e1ebfb;
+  border-radius:24px;
+  padding:22px;
+}
+
+.preview-img,.preview-fallback{
+  width:160px;
+  height:160px;
+  border-radius:28px;
+  object-fit:cover;
+  border:1px solid #dce7fb;
+}
+
+.preview-fallback{
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#5c95ff,#4a86f7);
+  color:white;
+  font-size:48px;
+  font-weight:800;
+}
+
+.form-title{
+  margin:0 0 8px;
+  font-size:26px;
+  color:#23406b;
+}
+
+.form-help{
+  margin:0 0 18px;
+  color:var(--text-soft);
+}
+
+.field{margin-bottom:18px}
+
+.field label{
+  display:block;
+  margin-bottom:10px;
+  font-weight:800;
+  color:#36527e;
+}
+
+input[type="file"],input[type="text"],input[type="email"],textarea,select{
+  width:100%;
+  border:1px solid #d9e6fb;
+  background:white;
+  border-radius:18px;
+  padding:16px 18px;
+  font-size:16px;
+  color:#28446f;
+  outline:none;
+  font-family:inherit;
+}
+
+textarea{
+  min-height:170px;
+  resize:vertical;
+}
+
+.actions{
+  display:flex;
+  gap:14px;
+  margin-top:16px;
+}
+
+.btn-primary,.btn-secondary{
+  border:none;
+  cursor:pointer;
+  border-radius:18px;
+  padding:16px 28px;
+  font-size:17px;
+  font-weight:800;
+  font-family:inherit;
+}
+
+.btn-primary{
+  background:linear-gradient(135deg,#5c95ff,#4a86f7);
+  color:white;
+}
+
+.btn-secondary{
+  background:#edf4ff;
+  color:#2e67da;
+  border:1px solid #d8e6fc;
+}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+}
+
+.progress-row{margin-bottom:22px}
+
+.progress-top{
+  display:flex;
+  justify-content:space-between;
+  margin-bottom:10px;
+  font-weight:700;
+  color:#38527a;
+}
+
+.item{
+  display:flex;
+  gap:16px;
+  padding:16px;
+  border-radius:18px;
+  background:#f8fbff;
+  border:1px solid #e6eefc;
+  margin-bottom:14px;
+}
+
+.icon,.goal-num{
+  width:52px;
+  height:52px;
+  border-radius:18px;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  flex-shrink:0;
+}
+
+.blue{background:#eaf2ff;color:#3d74e3}
+.green{background:#e8f8ef;color:#25b768}
+.orange{background:#fff3e2;color:#e29518}
+
+.item-title{
+  font-size:19px;
+  font-weight:800;
+  color:#29456f;
+  margin-bottom:6px;
+}
+
+.item-text{
+  font-size:15px;
+  color:var(--text-soft);
+  line-height:1.45;
+}
+
+.next-step{
+  background:#f8fbff;
+  border:1px solid #e6eefc;
+  border-radius:18px;
+  padding:18px 20px;
+  color:#466284;
+  font-weight:700;
+  margin-bottom:14px;
+}
+
+/* AI BUTTON */
 .ai-float{
   position:fixed;
-  right:25px;
-  bottom:25px;
-  width:80px;
-  height:80px;
+  right:28px;
+  bottom:28px;
+  width:96px;
+  height:96px;
   border-radius:50%;
+  border:none;
+  outline:none;
   background:linear-gradient(135deg,#5d97ff,#4a86f7);
-  color:#fff;
+  color:white;
   display:flex;
   align-items:center;
   justify-content:center;
+  text-align:center;
+  font-size:16px;
   font-weight:900;
+  line-height:1.15;
   cursor:pointer;
-  box-shadow:0 10px 30px rgba(0,0,0,.2);
+  z-index:999;
+  box-shadow:0 15px 35px rgba(74,134,247,.35);
+  transition:.25s ease;
+  overflow:hidden;
 }
 
-/* POPUP */
-.ai-popup{
-  position:fixed;
-  right:25px;
-  bottom:120px;
-  width:320px;
-  height:420px;
-  background:white;
-  border-radius:20px;
-  display:none;
-  flex-direction:column;
-  box-shadow:0 20px 50px rgba(0,0,0,.2);
+.ai-float::before{
+  content:"";
+  position:absolute;
+  inset:-3px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#7db0ff,#4a86f7,#2f5fb8);
+  opacity:.35;
+  z-index:-1;
+  animation:aiGlow 2.4s infinite;
 }
 
-/* HEADER */
-.ai-header{
-  padding:12px;
-  background:#4a86f7;
-  color:white;
-  font-weight:700;
-  border-radius:20px 20px 0 0;
-  display:flex;
-  justify-content:space-between;
+.ai-float::after{
+  content:"";
+  position:absolute;
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  border:2px solid rgba(74,134,247,.35);
+  animation:aiPulse 2s infinite;
 }
 
-/* CHAT */
-.ai-messages{
-  flex:1;
-  padding:10px;
-  overflow:auto;
-  font-size:14px;
+.ai-float span{
+  position:relative;
+  z-index:2;
 }
 
-/* INPUT */
-.ai-input{
-  display:flex;
-  border-top:1px solid #eee;
+.ai-float:hover{
+  transform:translateY(-6px) scale(1.05);
+  box-shadow:0 25px 50px rgba(74,134,247,.5);
 }
 
-.ai-input input{
-  flex:1;
-  border:none;
-  padding:10px;
+@keyframes aiPulse{
+  0%{transform:scale(1);opacity:.55}
+  70%{transform:scale(1.45);opacity:0}
+  100%{opacity:0}
 }
 
-.ai-input button{
-  background:#4a86f7;
-  color:white;
-  border:none;
-  padding:10px;
-  cursor:pointer;
+@keyframes aiGlow{
+  0%,100%{filter:blur(0);opacity:.28}
+  50%{filter:blur(4px);opacity:.45}
 }
 
-/* MESSAGE */
-.msg-user{
-  text-align:right;
-  margin:5px;
+/* DARK MODE */
+body.theme-dark{
+  --card-bg:rgba(17,24,39,.92);
+  --text-main:#e5eefc;
+  --text-soft:#9fb0cc;
+  --blue-soft:#17345f;
+  --shadow:0 20px 50px rgba(0,0,0,.32);
+  background:linear-gradient(180deg,#0f172a 0%,#111827 55%,#172033 100%) !important;
 }
 
-.msg-bot{
-  text-align:left;
-  margin:5px;
+body.theme-dark .site-header,
+body.theme-dark .card,
+body.theme-dark .sidebar-card,
+body.theme-dark .level-box,
+body.theme-dark .streak-box,
+body.theme-dark .form-shell,
+body.theme-dark .item,
+body.theme-dark .next-step{
+  background:rgba(17,24,39,.92) !important;
+  border-color:#2d3b55 !important;
+}
+
+body.theme-dark .brand-title,
+body.theme-dark .hero-title,
+body.theme-dark .section-title,
+body.theme-dark .form-title,
+body.theme-dark .item-title,
+body.theme-dark .meta strong,
+body.theme-dark .field label,
+body.theme-dark .progress-top{
+  color:#f3f7ff !important;
+}
+
+body.theme-dark .brand-subtitle,
+body.theme-dark .main-nav a,
+body.theme-dark .sidebar-title,
+body.theme-dark .sidebar-link,
+body.theme-dark .meta,
+body.theme-dark .stat-label,
+body.theme-dark .form-help,
+body.theme-dark .item-text{
+  color:#9fb0cc !important;
+}
+
+body.theme-dark input,
+body.theme-dark textarea,
+body.theme-dark select{
+  background:#111827 !important;
+  border-color:#2d3b55 !important;
+  color:#f3f7ff !important;
+}
+
+body.theme-dark .bar,
+body.theme-dark .small-bar{
+  background:#2d3b55 !important;
+}
+
+body.theme-dark .badge,
+body.theme-dark .btn-secondary{
+  background:#17345f !important;
+  color:#dbe7ff !important;
+  border-color:#2d3b55 !important;
+}
+
+@media(max-width:1080px){
+  .layout{grid-template-columns:1fr}
+  .sidebar{position:static}
+  .grid-2{grid-template-columns:1fr}
+  .main-nav{display:none}
+  .form-shell{grid-template-columns:1fr}
+  .hero{grid-template-columns:1fr}
+}
+
+@media(max-width:760px){
+  .container{width:min(100% - 24px,100%)}
+  .hero-left{flex-direction:column;align-items:flex-start}
+  .hero-title{font-size:42px}
+  .hero-right{grid-template-columns:1fr}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .ai-float{
+    width:82px;
+    height:82px;
+    right:18px;
+    bottom:18px;
+    font-size:14px;
+  }
 }
 </style>
 </head>
 
-<body>
+<body class="{% if dark_mode %}theme-dark{% endif %}">
 
-<h2 style="padding:20px;">Профиль беті</h2>
+<header class="site-header">
+  <div class="container nav-wrap">
+    <a href="{% url 'home' %}" class="brand">
+      <div class="brand-logo">EM</div>
+      <div>
+        <div class="brand-title">EduMentor AI</div>
+        <div class="brand-subtitle">Ақылды оқу платформасы</div>
+      </div>
+    </a>
 
-<!-- КНОПКА -->
-<div class="ai-float" onclick="toggleChat()">
-  AI
+    <nav class="main-nav">
+      <a href="{% url 'home' %}">Басты бет</a>
+      <a href="{% url 'courses' %}">Курстар</a>
+      <a href="{% url 'guide' %}">Нұсқаулық</a>
+      <a href="{% url 'contact' %}">Байланыс</a>
+      <a href="{% url 'quiz' %}">Quiz</a>
+    </nav>
+
+    <div class="nav-actions">
+      <a href="{% url 'profile' %}" class="nav-avatar-link">
+        {% if user.profile_image %}
+          <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="nav-avatar">
+        {% else %}
+          <div class="nav-avatar-fallback">{{ user.username|default:"U"|slice:":1"|upper }}</div>
+        {% endif %}
+      </a>
+      <a href="{% url 'logout' %}" class="nav-btn">Шығу</a>
+    </div>
+  </div>
+</header>
+
+<main class="page">
+<div class="container layout">
+
+<aside class="sidebar">
+  <div class="sidebar-card">
+    <div class="sidebar-title">Профиль менюсы</div>
+    <a class="sidebar-link active" href="{% url 'profile' %}">Профиль</a>
+    <a class="sidebar-link" href="{% url 'profile_progress' %}">Прогресс</a>
+    <a class="sidebar-link" href="{% url 'profile_grants' %}">Грант калькуляторы</a>
+    <a class="sidebar-link" href="{% url 'profile_leaderboard' %}">Лидерборд</a>
+    <a class="sidebar-link" href="{% url 'profile_settings' %}">Настройкалар</a>
+  </div>
+</aside>
+
+<section class="content">
+
+<section class="card hero">
+  <div class="hero-left">
+    <div class="avatar-wrap">
+      {% if user.profile_image %}
+        <img src="{{ user.profile_image.url }}" alt="{{ user.username }}" class="avatar-lg">
+      {% else %}
+        <div class="avatar-fallback-lg">{{ user.username|default:"U"|slice:":1"|upper }}</div>
+      {% endif %}
+      <span class="online-dot"></span>
+    </div>
+
+    <div>
+      <div class="badge">Жеке кабинет</div>
+      <h1 class="hero-title">Менің профилім</h1>
+      <div class="meta"><strong>Пайдаланушы:</strong> {{ user.username }}</div>
+      <div class="meta"><strong>Email:</strong> {{ user.email|default:"Email көрсетілмеген" }}</div>
+      <div class="meta"><strong>Деңгей:</strong> Орта деңгей</div>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="level-box">
+      <div class="level-title">⚡ Level 4</div>
+      <div class="level-sub">{{ xp|default:320 }} XP</div>
+      <div class="bar"><div class="fill w-53"></div></div>
+      <div class="level-bottom">{{ xp|default:320 }} / 600 XP</div>
+    </div>
+
+    <div class="streak-box">
+      <div class="streak-number">{{ streak_days|default:7 }} күн</div>
+      <div class="streak-label">Серия</div>
+    </div>
+  </div>
+</section>
+
+<section class="stats">
+  <div class="card stat-card"><div class="stat-number">{{ completed_topics|default:24 }}</div><div class="stat-label">Өткен тақырып</div></div>
+  <div class="card stat-card"><div class="stat-number">{{ accuracy|default:71 }}%</div><div class="stat-label">Дәлдік</div></div>
+  <div class="card stat-card"><div class="stat-number">{{ active_days|default:7 }}</div><div class="stat-label">Белсенді күн</div></div>
+  <div class="card stat-card"><div class="stat-number">{{ profile_fill|default:76 }}%</div><div class="stat-label">Профиль толуы</div></div>
+  <div class="card stat-card"><div class="stat-number">{{ total_tests|default:120 }}</div><div class="stat-label">Жалпы тест</div></div>
+</section>
+
+<section class="card section">
+  <h2 class="section-title">Профильді жаңарту</h2>
+  <div class="notice">Өзгерістерді енгізіп, сақтау батырмасын басыңыз</div>
+
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-shell">
+      <div>
+        {% if user.profile_image %}
+          <img src="{{ user.profile_image.url }}" alt="preview" class="preview-img">
+        {% else %}
+          <div class="preview-fallback">{{ user.username|default:"U"|slice:":1"|upper }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        <h3 class="form-title">Профиль мәліметтері</h3>
+        <p class="form-help">Өзіңіз туралы ақпаратты жаңартыңыз.</p>
+
+        {% if form.username %}
+        <div class="field">
+          <label>Пайдаланушы аты</label>
+          {{ form.username }}
+        </div>
+        {% endif %}
+
+        {% if form.email %}
+        <div class="field">
+          <label>Email</label>
+          {{ form.email }}
+        </div>
+        {% endif %}
+
+        {% if form.profile_image %}
+        <div class="field">
+          <label>Профиль суреті</label>
+          {{ form.profile_image }}
+        </div>
+        {% endif %}
+
+        {% if form.bio %}
+        <div class="field">
+          <label>Өзіңіз туралы</label>
+          {{ form.bio }}
+        </div>
+        {% endif %}
+
+        <div class="actions">
+          <button type="submit" class="btn-primary">Сақтау</button>
+          <a href="{% url 'profile' %}" class="btn-secondary">Тазарту</a>
+        </div>
+      </div>
+    </div>
+  </form>
+</section>
+
+<section class="grid-2">
+  <div class="card section">
+    <h2 class="section-title">Жалпы прогресс</h2>
+    <div class="progress-row">
+      <div class="progress-top"><span>Апталық прогресс</span><strong>{{ weekly_progress|default:68 }}%</strong></div>
+      <div class="bar"><div class="fill w-68"></div></div>
+    </div>
+  </div>
+
+  <div class="card section">
+    <h2 class="section-title">Соңғы белсенділік</h2>
+    <div class="item"><div class="icon blue">Q</div><div><div class="item-title">Quiz аяқталды</div><div class="item-text">Математика бойынша нәтиже алдыңыз.</div></div></div>
+    <div class="item"><div class="icon green">C</div><div><div class="item-title">Курс ашылды</div><div class="item-text">Жаңа материал қаралды.</div></div></div>
+    <div class="item"><div class="icon orange">AI</div><div><div class="item-title">AI көмекші қолданылды</div><div class="item-text">Жаңа сұрақ қойылып, түсіндірме алынды.</div></div></div>
+  </div>
+
+  <div class="card section">
+    <h2 class="section-title">Бүгінгі мақсаттар</h2>
+    <div class="item"><div class="goal-num blue">1</div><div><div class="item-title">1 курс материалын аяқтау</div><div class="item-text">Курстар бөлімінен сабақ оқу.</div></div></div>
+    <div class="item"><div class="goal-num green">2</div><div><div class="item-title">1 тест тапсыру</div><div class="item-text">Quiz бөлімінде тест орындау.</div></div></div>
+    <div class="item"><div class="goal-num orange">3</div><div><div class="item-title">AI Chat пайдалану</div><div class="item-text">Түсінбеген тақырыпты сұрау.</div></div></div>
+  </div>
+
+  <div class="card section">
+    <h2 class="section-title">Ұсынылған келесі қадамдар</h2>
+    <div class="next-step">Әлсіз тақырыптарға 20 минут бөлу</div>
+    <div class="next-step">Математикадан 1 тест тапсыру</div>
+    <div class="next-step">Курстар бөлімінен жаңа материал ашу</div>
+    <div class="next-step">Қазақстан тарихынан қайталау жасау</div>
+  </div>
+</section>
+
+</section>
 </div>
+</main>
 
-<!-- POPUP -->
-<div class="ai-popup" id="chatPopup">
-
-  <div class="ai-header">
-    AI Chat
-    <span style="cursor:pointer" onclick="toggleChat()">✕</span>
-  </div>
-
-  <div class="ai-messages" id="chatBox">
-    <div class="msg-bot">Сәлем 👋</div>
-  </div>
-
-  <div class="ai-input">
-    <input type="text" id="chatInput" placeholder="Сұрақ жаз...">
-    <button onclick="sendMessage()">➤</button>
-  </div>
-
-</div>
-
-<script>
-let opened=false;
-
-function toggleChat(){
-  const popup=document.getElementById("chatPopup");
-  opened=!opened;
-  popup.style.display=opened?"flex":"none";
-}
-
-function addMessage(text,type){
-  const box=document.getElementById("chatBox");
-  const div=document.createElement("div");
-  div.className= type==="user"?"msg-user":"msg-bot";
-  div.innerText=text;
-  box.appendChild(div);
-  box.scrollTop=box.scrollHeight;
-}
-
-async function sendMessage(){
-  const input=document.getElementById("chatInput");
-  const text=input.value.trim();
-  if(!text) return;
-
-  addMessage(text,"user");
-  input.value="";
-
-  addMessage("Жүктелуде...","bot");
-
-  try{
-    const res=await fetch("{% url 'ai_web_chat_api' %}",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "X-CSRFToken":getCookie("csrftoken")
-      },
-      body:JSON.stringify({message:text})
-    });
-
-    const data=await res.json();
-
-    document.querySelector("#chatBox .msg-bot:last-child").remove();
-
-    addMessage(data.answer,"bot");
-
-  }catch{
-    addMessage("Қате шықты","bot");
-  }
-}
-
-function getCookie(name){
-  let v=document.cookie.split("; ").find(row=>row.startsWith(name+"="));
-  return v?v.split("=")[1]:"";
-}
-</script>
+<a href="{% url 'ai_chat' %}" class="ai-float">
+  <span>AI<br>чат</span>
+</a>
 
 </body>
 </html>
