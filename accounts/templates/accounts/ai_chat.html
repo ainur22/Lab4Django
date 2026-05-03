@@ -2,36 +2,35 @@
 <!doctype html>
 <html lang="kk">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EduMentor AI — AI Chat</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     :root {
-      --bg-1: #eef4ff;
-      --bg-2: #f8fbff;
-      --bg-3: #eefbf5;
+      --bg1: #eef4ff;
+      --bg2: #f8fbff;
+      --bg3: #ecfdf5;
       --text: #233454;
       --muted: #7b8ca7;
-      --card: rgba(255, 255, 255, 0.82);
-      --blue-1: #2563eb;
-      --blue-2: #60a5fa;
-      --green-1: #10b981;
-      --danger: #ef4444;
+      --card: rgba(255,255,255,.86);
+      --white: #fff;
+      --blue: #2563eb;
+      --blue2: #60a5fa;
+      --green: #10b981;
+      --red: #ef4444;
       --line: #dfe8f3;
-      --shadow: 0 18px 46px rgba(68, 88, 126, 0.12);
+      --shadow: 0 18px 46px rgba(68, 88, 126, .12);
     }
 
     html, body {
       margin: 0;
       padding: 0;
       font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, var(--bg1), var(--bg2), var(--bg3));
       color: var(--text);
-      background: linear-gradient(180deg, var(--bg-1), var(--bg-2), var(--bg-3));
     }
 
     body.ai-page {
@@ -47,14 +46,14 @@
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 30;
+      z-index: 50;
       height: 76px;
       padding: 0 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: rgba(255,255,255,0.84);
-      border-bottom: 1px solid rgba(70,95,140,0.1);
+      background: rgba(255,255,255,.86);
+      border-bottom: 1px solid rgba(70,95,140,.1);
       backdrop-filter: blur(14px);
     }
 
@@ -62,6 +61,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
     }
 
     .logo {
@@ -70,38 +70,37 @@
       border-radius: 16px;
       display: grid;
       place-items: center;
-      color: #fff;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
+      box-shadow: 0 10px 22px rgba(37,99,235,.22);
+      flex-shrink: 0;
     }
 
     .brand-title {
       font-size: 16px;
-      font-weight: 800;
+      font-weight: 900;
+      line-height: 1.1;
+      color: #21375c;
     }
 
     .brand-subtitle {
-      margin-top: 2px;
+      margin-top: 3px;
       color: var(--muted);
       font-size: 13px;
     }
 
-    .top-actions {
-      display: flex;
-      gap: 10px;
-    }
-
     .chip {
       min-height: 42px;
-      padding: 0 15px;
-      display: inline-flex;
-      align-items: center;
+      padding: 0 16px;
       border-radius: 14px;
       background: #eff6ff;
       color: #2554b8;
       border: 1px solid #d4e3ff;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
+      display: inline-flex;
+      align-items: center;
     }
 
     .ai-wrap {
@@ -112,7 +111,7 @@
 
     .ai-chat-shell {
       padding: 18px;
-      border-radius: 28px;
+      border-radius: 30px;
       background: var(--card);
       border: 1px solid #e3eaf3;
       box-shadow: var(--shadow);
@@ -121,8 +120,8 @@
 
     .ai-chat-head {
       display: flex;
-      align-items: center;
       justify-content: space-between;
+      align-items: center;
       gap: 14px;
       padding: 16px 18px;
       border-radius: 24px;
@@ -135,33 +134,35 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      min-width: 0;
     }
 
-    .ai-avatar,
-    .ai-msg-avatar {
+    .ai-avatar, .ai-msg-avatar {
       display: grid;
       place-items: center;
-      color: #fff;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      color: white;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
     }
 
     .ai-avatar {
       width: 48px;
       height: 48px;
-      border-radius: 16px;
+      border-radius: 17px;
       flex-shrink: 0;
     }
 
     .ai-chat-title {
-      font-size: 17px;
-      font-weight: 800;
+      font-size: 18px;
+      font-weight: 900;
+      color: #21375c;
     }
 
     .ai-chat-status {
       margin-top: 4px;
       font-size: 13px;
       color: var(--muted);
+      font-weight: 600;
     }
 
     .ai-head-actions {
@@ -171,7 +172,6 @@
     }
 
     .ai-icon-btn {
-      min-width: 44px;
       height: 44px;
       padding: 0 14px;
       border: 1px solid #cfd9ea;
@@ -179,11 +179,12 @@
       background: linear-gradient(180deg, #fff, #edf4ff);
       color: #4d6da3;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 800;
+      box-shadow: 0 6px 16px rgba(79,106,156,.08);
     }
 
     .ai-icon-btn.is-off {
-      opacity: 0.55;
+      opacity: .55;
     }
 
     .ai-summary-row {
@@ -194,22 +195,23 @@
     }
 
     .ai-summary-card {
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,.9);
       border: 1px solid #e4edf8;
       border-radius: 18px;
       padding: 14px 16px;
+      box-shadow: 0 10px 20px rgba(84,108,150,.05);
     }
 
     .ai-summary-label {
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--muted);
-      margin-bottom: 6px;
+      margin-bottom: 7px;
     }
 
     .ai-summary-value {
       font-size: 15px;
-      font-weight: 800;
+      font-weight: 900;
       color: #28416d;
     }
 
@@ -222,11 +224,10 @@
       border: 1px solid #fecaca;
       color: #b91c1c;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
-    .ai-subject-row,
-    .ai-quick-row {
+    .ai-subject-row, .ai-quick-row {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
@@ -235,32 +236,34 @@
 
     .ai-subject-chip {
       min-height: 38px;
-      padding: 0 14px;
+      padding: 0 15px;
       border: 1px solid #d7e5ff;
       border-radius: 999px;
       background: #fff;
       color: #3460b8;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
     }
 
     .ai-subject-chip.active {
-      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
       color: #fff;
       border-color: transparent;
+      box-shadow: 0 10px 20px rgba(37,99,235,.15);
     }
 
     .ai-quick-pill {
       min-height: 42px;
-      padding: 0 16px;
+      padding: 0 17px;
       border: 0;
       border-radius: 14px;
       background: linear-gradient(135deg, #3b82f6, #60a5fa);
       color: #fff;
       font-size: 14px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
+      box-shadow: 0 8px 18px rgba(90,125,191,.16);
     }
 
     .ai-chat-window {
@@ -282,7 +285,7 @@
       background: #eef4ff;
       color: #6f84a7;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .ai-empty-state {
@@ -298,8 +301,9 @@
       max-width: 420px;
       padding: 28px 22px;
       border-radius: 24px;
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,.92);
       border: 1px solid #e5edf9;
+      box-shadow: 0 14px 32px rgba(76,95,132,.08);
     }
 
     .ai-empty-emoji {
@@ -309,8 +313,9 @@
 
     .ai-empty-title {
       font-size: 20px;
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 8px;
+      color: #29406a;
     }
 
     .ai-empty-text {
@@ -336,6 +341,7 @@
       flex-shrink: 0;
       font-size: 12px;
       margin-top: 2px;
+      box-shadow: 0 8px 16px rgba(37,99,235,.14);
     }
 
     .ai-msg-body {
@@ -356,6 +362,7 @@
       line-height: 1.65;
       word-break: break-word;
       white-space: pre-wrap;
+      box-shadow: 0 8px 18px rgba(75,95,128,.05);
     }
 
     .ai-bubble-bot {
@@ -366,7 +373,7 @@
     }
 
     .ai-bubble-user {
-      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
       color: #fff;
       border-top-right-radius: 8px;
     }
@@ -387,8 +394,7 @@
       flex-wrap: wrap;
     }
 
-    .ai-mini-btn,
-    .speak-btn {
+    .ai-mini-btn, .speak-btn {
       min-height: 28px;
       padding: 0 10px;
       border: 1px solid #d8e3f3;
@@ -396,7 +402,7 @@
       background: #fff;
       color: #5372a6;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       cursor: pointer;
     }
 
@@ -456,10 +462,11 @@
       height: 56px;
       border: 0;
       border-radius: 18px;
-      background: linear-gradient(135deg, var(--green-1), #34d399);
+      background: linear-gradient(135deg, var(--green), #34d399);
       color: #fff;
       cursor: pointer;
       font-size: 20px;
+      box-shadow: 0 12px 24px rgba(16,185,129,.2);
     }
 
     .ai-voice-btn.is-listening {
@@ -472,15 +479,14 @@
       padding: 0 22px;
       border: 0;
       border-radius: 18px;
-      background: linear-gradient(135deg, var(--blue-1), var(--blue-2));
+      background: linear-gradient(135deg, var(--blue), var(--blue2));
       color: #fff;
-      font-weight: 800;
+      font-weight: 900;
       cursor: pointer;
     }
 
-    .ai-send-btn:disabled,
-    .ai-voice-btn:disabled {
-      opacity: 0.55;
+    .ai-send-btn:disabled, .ai-voice-btn:disabled {
+      opacity: .55;
       cursor: not-allowed;
     }
 
@@ -499,23 +505,12 @@
       animation: aiDots 1.2s infinite ease-in-out;
     }
 
-    .ai-typing span:nth-child(2) {
-      animation-delay: .15s;
-    }
-
-    .ai-typing span:nth-child(3) {
-      animation-delay: .3s;
-    }
+    .ai-typing span:nth-child(2) { animation-delay: .15s; }
+    .ai-typing span:nth-child(3) { animation-delay: .3s; }
 
     @keyframes aiDots {
-      0%, 80%, 100% {
-        opacity: .35;
-        transform: translateY(0);
-      }
-      40% {
-        opacity: 1;
-        transform: translateY(-3px);
-      }
+      0%, 80%, 100% { opacity: .35; transform: translateY(0); }
+      40% { opacity: 1; transform: translateY(-3px); }
     }
 
     @keyframes aiPulse {
@@ -525,19 +520,19 @@
     }
 
     body.theme-dark {
-      --bg-1: #0f172a;
-      --bg-2: #111827;
-      --bg-3: #172033;
+      --bg1: #0f172a;
+      --bg2: #111827;
+      --bg3: #172033;
       --text: #e5eefc;
       --muted: #9fb0cc;
-      --card: rgba(17,24,39,0.92);
+      --card: rgba(17,24,39,.92);
     }
 
     body.theme-dark .topbar,
     body.theme-dark .ai-chat-shell,
     body.theme-dark .ai-summary-card,
     body.theme-dark .ai-empty-card {
-      background: rgba(17,24,39,0.92) !important;
+      background: rgba(17,24,39,.92) !important;
       border-color: #2d3b55 !important;
     }
 
@@ -546,6 +541,13 @@
     body.theme-dark .ai-chat-window {
       background: linear-gradient(180deg, #111827, #1e293b) !important;
       border-color: #2d3b55 !important;
+    }
+
+    body.theme-dark .brand-title,
+    body.theme-dark .ai-chat-title,
+    body.theme-dark .ai-summary-value,
+    body.theme-dark .ai-empty-title {
+      color: #f3f7ff !important;
     }
 
     body.theme-dark .ai-bubble-bot {
@@ -565,75 +567,26 @@
     }
 
     @media (max-width: 900px) {
-      .ai-summary-row {
-        grid-template-columns: 1fr;
-      }
+      .ai-summary-row { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 700px) {
-      .topbar {
-        padding: 0 12px;
-      }
-
-      .brand-subtitle {
-        display: none;
-      }
-
-      .ai-wrap {
-        width: calc(100% - 18px);
-        padding-top: 18px;
-      }
-
-      .ai-chat-shell {
-        border-radius: 22px;
-        padding: 12px;
-      }
-
-      .ai-chat-head {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .ai-head-actions {
-        width: 100%;
-      }
-
-      .ai-icon-btn {
-        flex: 1;
-      }
-
-      .ai-chat-window {
-        min-height: 380px;
-        max-height: 55vh;
-        padding: 14px;
-      }
-
-      .ai-msg-body {
-        max-width: 92%;
-      }
-
-      .ai-chat-form {
-        grid-template-columns: 52px 1fr;
-      }
-
-      .ai-send-btn {
-        grid-column: 1 / -1;
-        width: 100%;
-        height: 52px;
-      }
-
-      .ai-voice-btn,
-      .ai-input-box input {
-        height: 52px;
-      }
-
-      .ai-input-tip {
-        display: none;
-      }
+      .topbar { padding: 0 12px; }
+      .brand-subtitle { display: none; }
+      .ai-wrap { width: calc(100% - 18px); padding-top: 18px; }
+      .ai-chat-shell { border-radius: 22px; padding: 12px; }
+      .ai-chat-head { flex-direction: column; align-items: flex-start; }
+      .ai-head-actions { width: 100%; }
+      .ai-icon-btn { flex: 1; }
+      .ai-chat-window { min-height: 380px; max-height: 55vh; padding: 14px; }
+      .ai-msg-body { max-width: 92%; }
+      .ai-chat-form { grid-template-columns: 52px 1fr; }
+      .ai-send-btn { grid-column: 1 / -1; width: 100%; height: 52px; }
+      .ai-voice-btn, .ai-input-box input { height: 52px; }
+      .ai-input-tip { display: none; }
     }
   </style>
 </head>
-
 <body class="ai-page {% if dark_mode %}theme-dark{% endif %}">
 
 <header class="topbar">
@@ -645,9 +598,7 @@
     </div>
   </div>
 
-  <div class="top-actions">
-    <a class="chip" href="{% url 'home' %}">Басты бет</a>
-  </div>
+  <a class="chip" href="{% url 'home' %}">Басты бет</a>
 </header>
 
 <main class="ai-wrap">
@@ -673,12 +624,10 @@
         <div class="ai-summary-label">Қалай қолдану керек</div>
         <div class="ai-summary-value">Сұрақ жаз немесе микрофонды бас</div>
       </div>
-
       <div class="ai-summary-card">
         <div class="ai-summary-label">Недавний чат</div>
         <div class="ai-summary-value">Чат автоматты сақталады</div>
       </div>
-
       <div class="ai-summary-card">
         <div class="ai-summary-label">AI модель</div>
         <div class="ai-summary-value">Gemini арқылы жауап береді</div>
@@ -727,7 +676,7 @@
           autocomplete="off"
           maxlength="500"
           required
-        />
+        >
         <div class="ai-input-tip" id="voiceHint">Enter — жіберу</div>
         <div class="ai-char-count" id="charCount">0 / 500</div>
       </div>
@@ -753,14 +702,14 @@
   const charCount = document.getElementById("charCount");
   const subjectChips = document.querySelectorAll(".ai-subject-chip");
 
-  let autoSpeakEnabled = true;
+  const CHAT_KEY = "edumentor_ai_chat_history_v2";
+
+  let autoSpeakEnabled = false;
   let isSending = false;
   let selectedSubject = "";
   let lastUserMessage = "";
   let recognition = null;
   let isRecognizing = false;
-
-  const CHAT_KEY = "edumentor_ai_chat_history";
 
   function getCookie(name) {
     const value = "; " + document.cookie;
@@ -774,8 +723,7 @@
   }
 
   function getCurrentTime() {
-    const now = new Date();
-    return now.toLocaleTimeString("kk-KZ", {
+    return new Date().toLocaleTimeString("kk-KZ", {
       hour: "2-digit",
       minute: "2-digit"
     });
@@ -788,7 +736,7 @@
     setTimeout(() => {
       errorBox.style.display = "none";
       errorBox.textContent = "";
-    }, 3500);
+    }, 3200);
   }
 
   function updateCharCount() {
@@ -802,7 +750,7 @@
     if (emptyState) emptyState.remove();
   }
 
-  function renderEmptyState(message = "Жаңа чат басталды. Сұрағыңды жаз.") {
+  function renderEmptyState(message) {
     chatWindow.innerHTML = `
       <div class="ai-chat-day">Бүгін</div>
       <div class="ai-empty-state" id="emptyState">
@@ -813,7 +761,6 @@
         </div>
       </div>
     `;
-    scrollChatBottom();
   }
 
   function saveChatMessage(text, sender) {
@@ -855,7 +802,10 @@
   }
 
   function speakText(text) {
-    if (!("speechSynthesis" in window) || !text) return;
+    if (!("speechSynthesis" in window) || !text) {
+      showError("Бұл браузер дауыспен оқуды қолдамайды.");
+      return;
+    }
 
     window.speechSynthesis.cancel();
 
@@ -886,7 +836,6 @@
     chatWindow.appendChild(div);
 
     if (shouldSave) saveChatMessage(text, "user");
-
     scrollChatBottom();
   }
 
@@ -948,21 +897,138 @@
     if (typingRow) typingRow.remove();
   }
 
+  function detectSpeechRecognition() {
+    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  }
+
+  function isIOS() {
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }
+
+  function checkVoiceSupport() {
+    const SR = detectSpeechRecognition();
+
+    if (!SR || isIOS()) {
+      voiceBtn.disabled = true;
+      voiceBtn.style.opacity = "0.45";
+      voiceBtn.title = "Бұл браузер voice recognition қолдамайды";
+      voiceHint.textContent = "Voice бұл браузерде жоқ";
+      assistantStatus.textContent = "Онлайн • мәтін арқылы сұра";
+      return false;
+    }
+
+    voiceBtn.disabled = false;
+    voiceBtn.style.opacity = "1";
+    voiceBtn.title = "Дауыспен жазу";
+    return true;
+  }
+
+  function initSpeechRecognition() {
+    const SR = detectSpeechRecognition();
+
+    if (!SR || isIOS()) {
+      checkVoiceSupport();
+      return false;
+    }
+
+    recognition = new SR();
+    recognition.lang = "kk-KZ";
+    recognition.interimResults = true;
+    recognition.continuous = false;
+
+    let finalTranscript = "";
+
+    recognition.onstart = () => {
+      isRecognizing = true;
+      finalTranscript = "";
+      voiceBtn.classList.add("is-listening");
+      assistantStatus.textContent = "Тыңдап тұр...";
+      voiceHint.textContent = "Сөйлей бер";
+    };
+
+    recognition.onresult = (event) => {
+      let interimText = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interimText += transcript;
+        }
+      }
+
+      chatInput.value = (finalTranscript + interimText).trim();
+      updateCharCount();
+    };
+
+    recognition.onerror = (event) => {
+      isRecognizing = false;
+      voiceBtn.classList.remove("is-listening");
+
+      if (event.error === "network") {
+        showError("Браузер voice recognition-ды қоса алмады. Мәтінмен жаза бер.");
+      } else if (event.error === "not-allowed") {
+        showError("Микрофонға рұқсат берілмеген.");
+      } else {
+        showError("Voice қатесі: " + event.error);
+      }
+
+      assistantStatus.textContent = "Онлайн • мәтін арқылы сұра";
+      voiceHint.textContent = "Enter — жіберу";
+    };
+
+    recognition.onend = () => {
+      isRecognizing = false;
+      voiceBtn.classList.remove("is-listening");
+      assistantStatus.textContent = "Онлайн • Gemini дайын";
+      voiceHint.textContent = "Enter — жіберу";
+      chatInput.focus();
+    };
+
+    return true;
+  }
+
+  function handleVoiceClick() {
+    if (isSending) return;
+
+    if (!checkVoiceSupport()) {
+      showError("Бұл браузерде voice істемейді. Сұрақты мәтінмен жаз.");
+      return;
+    }
+
+    if (!recognition) {
+      const ok = initSpeechRecognition();
+      if (!ok) return;
+    }
+
+    try {
+      if (isRecognizing) {
+        recognition.stop();
+      } else {
+        recognition.start();
+      }
+    } catch (error) {
+      showError("Voice қайта басып көр.");
+    }
+  }
+
   function setSendingState(sending) {
     isSending = sending;
     sendBtn.disabled = sending;
-    voiceBtn.disabled = sending;
     chatInput.disabled = sending;
 
     if (sending) {
+      voiceBtn.disabled = true;
       assistantStatus.textContent = "Gemini жауап дайындап жатыр...";
       voiceHint.textContent = "Күте тұр";
     } else {
+      chatInput.disabled = false;
       assistantStatus.textContent = "Онлайн • Gemini дайын";
       voiceHint.textContent = "Enter — жіберу";
-      chatInput.disabled = false;
-      chatInput.focus();
       checkVoiceSupport();
+      chatInput.focus();
     }
   }
 
@@ -1004,13 +1070,10 @@
           "Content-Type": "application/json",
           "X-CSRFToken": getCookie("csrftoken")
         },
-        body: JSON.stringify({
-          message: finalMessage
-        })
+        body: JSON.stringify({ message: finalMessage })
       });
 
       const data = await response.json();
-
       removeTypingRow();
 
       if (!response.ok || !data.ok) {
@@ -1030,115 +1093,12 @@
     }
   }
 
-  function detectSpeechRecognition() {
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-  }
-
-  function checkVoiceSupport() {
-    const SR = detectSpeechRecognition();
-
-    if (!SR) {
-      voiceBtn.disabled = true;
-      voiceBtn.style.opacity = "0.5";
-      voiceBtn.title = "Бұл браузер voice recognition қолдамайды";
-      voiceHint.textContent = "Voice бұл браузерде жоқ";
-      return false;
-    }
-
-    voiceBtn.disabled = false;
-    voiceBtn.style.opacity = "1";
-    voiceBtn.title = "Дауыспен жазу";
-    return true;
-  }
-
-  function initSpeechRecognition() {
-    const SR = detectSpeechRecognition();
-
-    if (!SR) {
-      checkVoiceSupport();
-      return false;
-    }
-
-    recognition = new SR();
-    recognition.lang = "kk-KZ";
-    recognition.interimResults = true;
-    recognition.continuous = false;
-
-    let finalTranscript = "";
-
-    recognition.onstart = () => {
-      isRecognizing = true;
-      finalTranscript = "";
-      voiceBtn.classList.add("is-listening");
-      assistantStatus.textContent = "Тыңдап тұр...";
-      voiceHint.textContent = "Сөйлей бер";
-    };
-
-    recognition.onresult = (event) => {
-      let interimText = "";
-
-      for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-
-        if (event.results[i].isFinal) {
-          finalTranscript += transcript + " ";
-        } else {
-          interimText += transcript;
-        }
-      }
-
-      chatInput.value = (finalTranscript + interimText).trim();
-      updateCharCount();
-    };
-
-    recognition.onerror = (event) => {
-      isRecognizing = false;
-      voiceBtn.classList.remove("is-listening");
-      assistantStatus.textContent = "Voice қатесі";
-      voiceHint.textContent = "Қайта байқап көр";
-      showError("Дауысты оқу кезінде қате шықты: " + event.error);
-    };
-
-    recognition.onend = () => {
-      isRecognizing = false;
-      voiceBtn.classList.remove("is-listening");
-      assistantStatus.textContent = "Дауыстық мәтін дайын";
-      voiceHint.textContent = "Enter — жіберу";
-      chatInput.focus();
-    };
-
-    return true;
-  }
-
-  function handleVoiceClick() {
-    if (isSending) return;
-
-    if (!recognition) {
-      const ok = initSpeechRecognition();
-
-      if (!ok) {
-        showError("Бұл браузерде микрофон арқылы мәтін тану істемейді. iPhone/Safari-де жиі қолдамайды.");
-        return;
-      }
-    }
-
-    try {
-      if (isRecognizing) {
-        recognition.stop();
-      } else {
-        recognition.start();
-      }
-    } catch (error) {
-      showError("Voice қайта қосып көр.");
-    }
-  }
-
-  chatForm.addEventListener("submit", function (e) {
+  chatForm.addEventListener("submit", function(e) {
     e.preventDefault();
     sendMessage(chatInput.value);
   });
 
-  chatInput.addEventListener("keydown", function (e) {
+  chatInput.addEventListener("keydown", function(e) {
     if (e.key === "Enter") {
       e.preventDefault();
       sendMessage(chatInput.value);
@@ -1146,10 +1106,9 @@
   });
 
   chatInput.addEventListener("input", updateCharCount);
-
   voiceBtn.addEventListener("click", handleVoiceClick);
 
-  toggleVoiceReadBtn.addEventListener("click", function () {
+  toggleVoiceReadBtn.addEventListener("click", function() {
     autoSpeakEnabled = !autoSpeakEnabled;
     this.classList.toggle("is-off", !autoSpeakEnabled);
 
@@ -1158,11 +1117,11 @@
     }
 
     assistantStatus.textContent = autoSpeakEnabled
-      ? "Онлайн • дауыспен оқу қосулы"
-      : "Онлайн • дауыспен оқу сөндірулі";
+      ? "Онлайн • жауапты дауыспен оқиды"
+      : "Онлайн • дауыспен оқу өшірулі";
   });
 
-  clearChatBtn.addEventListener("click", function () {
+  clearChatBtn.addEventListener("click", function() {
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -1176,7 +1135,7 @@
   });
 
   subjectChips.forEach((chip) => {
-    chip.addEventListener("click", function () {
+    chip.addEventListener("click", function() {
       subjectChips.forEach((c) => c.classList.remove("active"));
       this.classList.add("active");
       selectedSubject = this.dataset.subject || "";
@@ -1185,14 +1144,14 @@
   });
 
   quickPills.forEach((btn) => {
-    btn.addEventListener("click", function () {
+    btn.addEventListener("click", function() {
       chatInput.value = this.dataset.text || "";
       updateCharCount();
       chatInput.focus();
     });
   });
 
-  document.addEventListener("click", async function (e) {
+  document.addEventListener("click", async function(e) {
     const copyBtn = e.target.closest(".copy-btn");
 
     if (copyBtn) {
@@ -1203,10 +1162,7 @@
       if (text) {
         await navigator.clipboard.writeText(text);
         copyBtn.textContent = "Көшірілді";
-
-        setTimeout(() => {
-          copyBtn.textContent = "Көшіру";
-        }, 1200);
+        setTimeout(() => copyBtn.textContent = "Көшіру", 1200);
       }
 
       return;
@@ -1232,11 +1188,10 @@
     }
   });
 
-  window.addEventListener("load", () => {
+  window.addEventListener("load", function() {
     loadChatHistory();
-    checkVoiceSupport();
-    initSpeechRecognition();
     updateCharCount();
+    checkVoiceSupport();
     scrollChatBottom();
   });
 </script>
